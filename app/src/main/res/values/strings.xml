@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Farhan</string>
+    <string name="notification_service_name">Notification service</string>
+</resources>

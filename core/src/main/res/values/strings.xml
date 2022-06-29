@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usage">Usage</string>
+    <string name="notifications">Notifications</string>
+    <string name="grayscale">Grayscale</string>
+    <string name="infinite_scrolling">Infinite scrolling</string>
+    <string name="hello">Hello</string>
+    <string name="one_hour">1H</string>
+    <string name="two_hours">2H</string>
+    <string name="minutes">m</string>
+    <string name="hours">h</string>
+    <string name="previous_day">Previous day</string>
+    <string name="next_day">Next day</string>
+    <string name="daily_limit">Daily limit</string>
+    <string name="social">social</string>
+    <string name="productivity">productivity</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="no_results">No results</string>
+    <string name="category_maps">Maps</string>
+    <string name="category_social">Social</string>
+    <string name="category_productivity">Productivity</string>
+    <string name="category_game">Game</string>
+    <string name="category_video">Video</string>
+    <string name="category_news">News</string>
+    <string name="category_other">Other</string>
+    <string name="total_usage">Total usage:</string>
+    <string name="package_not_found_error">Unknown error: are sure the app is installed?</string>
+    <string name="search">Search</string>
+    <string name="close_search">Close search</string>
+    <string name="open_search_field">Open search field</string>
+    <string name="notify_me_channel_id">notify_me</string>
+    <string name="notify_me_channel">Notify me</string>
+    <string name="notify_me_channel_description">A reminder to check your filtered notification at your desired time.</string>
+    <string name="check_filtered_notifications">Check your filtered notifications</string>
+    <string name="you_have_unchecked_filtered_notifications">You have filtered notifications you havent checked</string>
+    <string name="back">Back</string>
+    <string name="notifications_filter_settings">Notification filter settings</string>
+    <string name="clear_all">Clear All</string>
+    <string name="tap_to_set_new_time">Tap to set a new time</string>
+    <string name="notify_me">Notify Me</string>
+    <string name="notify_me_description">Notify me to check filtered notifications daily</string>
+    <string name="exceptions">Exceptions</string>
+    <string name="notifications_filter">Notifications Filter</string>
+    <string name="percent">%</string>
+
+</resources>

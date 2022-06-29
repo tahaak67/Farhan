@@ -1,0 +1,11 @@
+package ly.com.tahaben.notification_filter_domain.use_cases.settings
+
+import ly.com.tahaben.notification_filter_domain.preferences.Preferences
+
+class SetServiceState(
+    private val sharedPref: Preferences
+) {
+    operator fun invoke(isEnabled: Boolean) {
+        sharedPref.setServiceState(isEnabled)
+    }
+}
