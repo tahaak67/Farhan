@@ -8,5 +8,6 @@ object Routes {
     const val NOTIFICATION_FILTER_SETTINGS = "notification_filter_settings"
     const val NOTIFICATION_FILTER_EXCEPTIONS = "notification_filter_exceptions"
     const val INFINITE_SCROLLING = "infinite_scrolling"
+    const val INFINITE_SCROLLING_EXCEPTIONS = "infinite_scrolling_exceptions"
     const val SCREEN_GRAY_SCALE = "screen_grayscale"
 }

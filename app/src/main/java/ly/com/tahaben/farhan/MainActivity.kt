@@ -13,10 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
-import ly.com.tahaben.farhan.ui.theme.FarhanTheme
+import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
+import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
-import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
 
@@ -58,7 +59,11 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {
-
+                            //startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION), 0)
+                            InfiniteScrollingBlockerScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToExceptions = { navController.navigate(Routes.INFINITE_SCROLLING_EXCEPTIONS) }
+                            )
                         }
                         composable(Routes.SCREEN_GRAY_SCALE) {
 
@@ -76,15 +81,19 @@ class MainActivity : ComponentActivity() {
                                 onNavigateUp = { navController.navigateUp() }
                             )
                         }
-                        composable(Routes.NOTIFICATION_FILTER_EXCEPTIONS) {
-                            NotificationFilterExceptionsScreen(
+                        composable(Routes.INFINITE_SCROLLING_EXCEPTIONS) {
+                            InfiniteScrollExceptionsScreen(
                                 scaffoldState = scaffoldState,
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
                             )
                         }
                     }
                 }
             }
         }
+    }
+
+    fun checkAccessibilityServiceState() {
+
     }
 }

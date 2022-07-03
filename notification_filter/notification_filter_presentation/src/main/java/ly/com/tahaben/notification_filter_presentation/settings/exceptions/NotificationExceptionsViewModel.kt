@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import timber.log.Timber
@@ -29,8 +29,6 @@ class NotificationExceptionsViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    private var getInstalledAppsJob: Job? = null
-
     init {
         getInstalledApps()
     }
@@ -43,7 +41,7 @@ class NotificationExceptionsViewModel @Inject constructor(
                     .sortedBy { it.name }
                 apps.forEach {
                     it.isException =
-                        notificationFilterUseCases.isPackageInNotificationException(it.pckg)
+                        notificationFilterUseCases.isPackageInNotificationException(it.packageName)
                 }
                 apps.forEach {
                     Timber.d("app: $it")
@@ -61,7 +59,7 @@ class NotificationExceptionsViewModel @Inject constructor(
         val apps = state.searchResults
         apps.forEach {
             it.isException =
-                notificationFilterUseCases.isPackageInNotificationException(it.pckg)
+                notificationFilterUseCases.isPackageInNotificationException(it.packageName)
         }
         state = state.copy(
             searchResults = apps

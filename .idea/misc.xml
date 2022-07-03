@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/StudioProjects/Farhan/app/src/main/res/layout/infinite_scroll_warning_layout.xml" value="0.3684210526315789" />
+        <entry key="..\:/StudioProjects/Farhan/core/src/main/res/drawable/ic_notification.xml" value="0.107" />
         <entry key="..\:/StudioProjects/Farhan/core/src/main/res/drawable/ic_tip.xml" value="0.1" />
         <entry key="..\:/StudioProjects/Farhan/core/src/main/res/layout/activity_test.xml" value="0.2328125" />
+        <entry key="..\:/StudioProjects/Farhan/core/src/main/res/layout/infinite_scroll_warning_layout.xml" value="0.23541666666666666" />
+        <entry key="..\:/StudioProjects/Farhan/infinite_scroll_blocker/infinite_scroll_blocker_presentation/src/main/res/layout/infinite_scroll_warning_layout.xml" value="0.28958333333333336" />
       </map>
     </option>
   </component>

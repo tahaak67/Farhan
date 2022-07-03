@@ -74,7 +74,7 @@ fun MainScreen(
                 text = stringResource(R.string.infinite_scrolling),
                 status = "التذكير معطل",
                 iconId = null,
-                onClick = { navController.navigate(Routes.USAGE) })
+                onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
         }
     }
 }

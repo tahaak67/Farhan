@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ly.com.tahaben.core">
+<manifest package="ly.com.tahaben.core">
 
-    <application>
-        <activity
-            android:name=".testActivity"
-            android:exported="false" />
-    </application>
 
 </manifest>

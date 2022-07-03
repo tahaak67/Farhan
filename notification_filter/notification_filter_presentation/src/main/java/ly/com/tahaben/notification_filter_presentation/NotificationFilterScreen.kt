@@ -25,10 +25,10 @@ import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
-import ly.com.tahaben.notification_filter_presentation.util.OnLifecycleEvent
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)

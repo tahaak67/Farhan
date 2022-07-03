@@ -22,11 +22,11 @@ class DefaultInstalledAppsRepository(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             apps.forEach { ai ->
                 val isSys = (ai.flags and isSystemAppMask) != 0
-                Timber.d("app: ${ai.packageName} isSys: ${isSys}")
+                Timber.d("app: ${ai.packageName} isSys: $isSys")
                 appItemList.add(
                     AppItem(
                         name = ai.loadLabel(pm) as String,
-                        pckg = ai.packageName,
+                        packageName = ai.packageName,
                         category = ApplicationInfo.getCategoryTitle(context, ai.category)
                             ?.toString(),
                         isSystemApp = isSys

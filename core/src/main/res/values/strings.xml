@@ -34,7 +34,7 @@
     <string name="notify_me_channel">Notify me</string>
     <string name="notify_me_channel_description">A reminder to check your filtered notification at your desired time.</string>
     <string name="check_filtered_notifications">Check your filtered notifications</string>
-    <string name="you_have_unchecked_filtered_notifications">You have filtered notifications you havent checked</string>
+    <string name="you_have_unchecked_filtered_notifications">You have filtered notifications you haven\'t checked</string>
     <string name="back">Back</string>
     <string name="notifications_filter_settings">Notification filter settings</string>
     <string name="clear_all">Clear All</string>
@@ -44,5 +44,13 @@
     <string name="exceptions">Exceptions</string>
     <string name="notifications_filter">Notifications Filter</string>
     <string name="percent">%</string>
+    <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
+    <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>
+    <string name="hey">Hey !!</string>
+    <string name="infinite_scroll_dialog_message">Looks like you are stuck in an infinite scrolling.</string>
+    <string name="take_me_out_of_here">TAKE ME OUT OF HERE</string>
+    <string name="continue_scrolling">Continue scrolling …</string>
+    <string name="exclude_this_app_press_and_hold">Exclude this app (Press and hold)</string>
+    <string name="app_excluded">App excluded</string>
 
 </resources>

@@ -57,7 +57,20 @@
                 android:name="android.service.notification.disabled_filter_types"
                 android:value="ongoing|silent"></meta-data>
         </service>
+        <service
+            android:name="ly.com.tahaben.infinite_scroll_blocker_data.service.AccessibilityService"
+            android:description="@string/infinite_scrolling"
+            android:label="for infinite scrolling"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
     </application>
 
 </manifest>

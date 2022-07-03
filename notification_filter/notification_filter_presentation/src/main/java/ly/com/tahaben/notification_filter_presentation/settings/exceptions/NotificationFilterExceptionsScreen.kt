@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.White
@@ -174,10 +175,10 @@ fun NotificationFilterExceptionsScreen(
                             onClick = { isChecked ->
                                 Timber.d("switched $isChecked")
                                 if (isChecked) {
-                                    viewModel.addAppToExceptions(app.pckg)
+                                    viewModel.addAppToExceptions(app.packageName)
 
                                 } else {
-                                    viewModel.removeAppFromExceptions(app.pckg)
+                                    viewModel.removeAppFromExceptions(app.packageName)
                                 }
                             }
                         )

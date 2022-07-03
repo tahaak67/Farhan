@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import ly.com.tahaben.core.R
-import timber.log.Timber
 
 const val NOTIFICATION_ID = 101
 const val TITLE_EXTRA = "title_Extra"
@@ -17,12 +16,12 @@ class BroadcastReceiverNotification : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val pm = context.packageManager
 
-        val intentt = pm.getLaunchIntentForPackage("ly.com.tahaben.farhan")?.apply {
+        val farhanIntent = pm.getLaunchIntentForPackage("ly.com.tahaben.farhan")?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("navigate", NOTIFICATION_ID)
         }
         val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(context, 0, intentt, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(context, 0, farhanIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val notification =
             NotificationCompat.Builder(context, context.getString(R.string.notify_me_channel_id))
@@ -35,10 +34,5 @@ class BroadcastReceiverNotification : BroadcastReceiver() {
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(NOTIFICATION_ID, notification)
-
-        val action = intent.getStringExtra("action")
-        if (action == "showFN") {
-            Timber.d("action performed :)")
-        }
     }
 }
