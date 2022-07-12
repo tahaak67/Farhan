@@ -25,7 +25,7 @@ class InfiniteScrollBlockerViewModel @Inject constructor(
 
     fun checkServiceStats() {
         state = state.copy(
-            isServiceEnabled = infiniteScrollUseCases.isServiceEnabled()
+            isServiceEnabled = infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
         )
     }
 

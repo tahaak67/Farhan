@@ -63,11 +63,14 @@ class AccessibilityService : AccessibilityService() {
             if (event.isFullScreen || event.contentChangeTypes == AccessibilityEvent.CONTENT_CHANGE_TYPE_UNDEFINED
                 || !softInputPackages.contains(event.packageName)
             ) {
-                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(event.packageName.toString())) {
-                    Timber.d("package in whitelist")
+                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(
+                        event.packageName?.toString() ?: return
+                    )
+                ) {
+                    Timber.d("package ${event.packageName} in whitelist")
                     grayscaleScreen()
                 } else if (event.isFullScreen) {
-                    Timber.d("package not in whitelist")
+                    Timber.d("package ${event.packageName} not in whitelist")
                     unGrayscaleScreen()
                 }
             }
