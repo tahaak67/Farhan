@@ -16,14 +16,21 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:name=".FarhanApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_farhan_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_farhan_icon_round"
         android:supportsRtl="true"
         android:appCategory="productivity"
         android:theme="@style/Theme.Farhan"
@@ -52,13 +59,13 @@
 
             <meta-data
                 android:name="android.service.notification.default_filter_types"
-                android:value="conversations|alerting"></meta-data>
+                android:value="conversations|alerting" />
             <meta-data
                 android:name="android.service.notification.disabled_filter_types"
-                android:value="ongoing|silent"></meta-data>
+                android:value="ongoing|silent" />
         </service>
         <service
-            android:name="ly.com.tahaben.infinite_scroll_blocker_data.service.AccessibilityService"
+            android:name=".service.AccessibilityService"
             android:description="@string/infinite_scrolling"
             android:label="for infinite scrolling"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"

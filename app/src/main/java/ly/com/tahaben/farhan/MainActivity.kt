@@ -18,13 +18,24 @@ import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBloc
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
+import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
+import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
+import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
+import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteListScreen
+import ly.com.tahaben.screen_grayscale_presentation.onboarding.GrayscaleOnBoardingScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var grayscaleUseCases: GrayscaleUseCases
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -50,6 +61,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.MAIN) {
                             MainScreen(
+                                isGrayscaleEnabled = isGrayscaleEnabled,
                                 navController = navController,
                             )
                         }
@@ -66,7 +78,19 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Routes.SCREEN_GRAY_SCALE) {
-
+                            if (grayscaleUseCases.loadShouldShowOnBoarding()) {
+                                GrayscaleOnBoardingScreen(
+                                    onNextClick = {
+                                        navController.navigate(Routes.SCREEN_GRAY_SCALE) {
+                                            popUpTo(Routes.MAIN)
+                                        }
+                                    }
+                                )
+                            } else {
+                                GrayscaleScreen(
+                                    onNavigateUp = { navController.navigateUp() },
+                                    onNavigateToExceptions = { navController.navigate(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) })
+                            }
                         }
                         composable(Routes.NOTIFICATION_FILTER) {
                             NotificationFilterScreen(
@@ -87,13 +111,20 @@ class MainActivity : ComponentActivity() {
                                 onNavigateUp = { navController.navigateUp() },
                             )
                         }
+                        composable(Routes.NOTIFICATION_FILTER_EXCEPTIONS) {
+                            NotificationFilterExceptionsScreen(
+                                scaffoldState = scaffoldState,
+                                onNavigateUp = { navController.navigateUp() },
+                            )
+                        }
+                        composable(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) {
+                            GrayscaleWhiteListScreen(
+                                scaffoldState = scaffoldState,
+                                onNavigateUp = { navController.navigateUp() })
+                        }
                     }
                 }
             }
         }
-    }
-
-    fun checkAccessibilityServiceState() {
-
     }
 }

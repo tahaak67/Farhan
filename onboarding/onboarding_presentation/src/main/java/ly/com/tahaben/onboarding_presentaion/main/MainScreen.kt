@@ -17,6 +17,7 @@ import ly.com.tahaben.onboarding_presentaion.components.MainScreenCard
 @androidx.compose.runtime.Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    isGrayscaleEnabled: Boolean,
     navController: NavHostController
 ) {
     val spacing = LocalSpacing.current
@@ -39,7 +40,7 @@ fun MainScreen(
             )
             Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
             Text(
-                text = "لتركيز اكثر، أثناء ساعات العمل، ضع هاتفك على وضع الصامت و ابقه بعيدا عن ناظريك (داخل الدرج مثلاً)",
+                text = "To improve productivity during work hours switch you phone to silent and keep it out of sight (Ex: in a drawer)",
                 style = MaterialTheme.typography.h5,
                 color = Black
             )
@@ -51,12 +52,12 @@ fun MainScreen(
         ) {
             MainScreenCard(
                 text = stringResource(R.string.usage),
-                status = "9 س",
+                status = "",
                 iconId = R.drawable.ic_usage,
                 onClick = { navController.navigate(Routes.USAGE) })
             MainScreenCard(
                 text = stringResource(R.string.notifications),
-                status = "11",
+                status = "",
                 iconId = R.drawable.ic_notification,
                 onClick = { navController.navigate(Routes.NOTIFICATION_FILTER) })
         }
@@ -67,12 +68,14 @@ fun MainScreen(
         ) {
             MainScreenCard(
                 text = stringResource(R.string.grayscale),
-                status = "فعال",
+                status = if (isGrayscaleEnabled) stringResource(id = R.string.enabled) else stringResource(
+                    id = R.string.disabled
+                ),
                 iconId = null,
-                onClick = { navController.navigate(Routes.USAGE) })
+                onClick = { navController.navigate(Routes.SCREEN_GRAY_SCALE) })
             MainScreenCard(
                 text = stringResource(R.string.infinite_scrolling),
-                status = "التذكير معطل",
+                status = "",
                 iconId = null,
                 onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
         }
