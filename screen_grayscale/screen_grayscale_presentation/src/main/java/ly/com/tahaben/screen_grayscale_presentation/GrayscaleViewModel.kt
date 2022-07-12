@@ -30,7 +30,7 @@ class GrayscaleViewModel @Inject constructor(
 
     fun checkServiceStats() {
         state = state.copy(
-            isServiceEnabled = grayscaleUseCases.isGrayscaleEnabled(),
+            isServiceEnabled = grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted(),
             isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted()
         )
     }

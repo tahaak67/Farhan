@@ -66,8 +66,8 @@
         </service>
         <service
             android:name=".service.AccessibilityService"
-            android:description="@string/infinite_scrolling"
-            android:label="for infinite scrolling"
+            android:description="@string/accessibility_service_description"
+            android:label="@string/accessibility_service_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="false">
             <intent-filter>

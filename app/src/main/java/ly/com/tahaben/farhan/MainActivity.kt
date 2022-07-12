@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled()
+        val isGrayscaleEnabled =
+            grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()

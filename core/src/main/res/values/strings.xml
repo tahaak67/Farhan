@@ -59,5 +59,7 @@
     <string name="next">Next</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="accessibility_service_name">Farhan Accessibility service</string>
+    <string name="accessibility_service_description">This service is required for functionalities like infinite scroll blocker or screen grayscale to work</string>
 
 </resources>
