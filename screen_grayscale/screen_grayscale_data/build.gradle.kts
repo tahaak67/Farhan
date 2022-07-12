@@ -4,4 +4,6 @@ apply {
 
 dependencies {
     "implementation"(project(Modules.core))
+    "implementation"(project(Modules.grayScaleDomain))
+    "implementation"(RootBeer.rootBeer)
 }

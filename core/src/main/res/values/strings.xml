@@ -52,5 +52,12 @@
     <string name="continue_scrolling">Continue scrolling …</string>
     <string name="exclude_this_app_press_and_hold">Exclude this app (Press and hold)</string>
     <string name="app_excluded">App excluded</string>
+    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for white listed apps</string>
+    <string name="white_lited_apps">White listed apps</string>
+    <string name="grayscale_onboarding_message">One of the ways apps compete for your time and attention is through colors, using grayscale you can disable colors for selected apps eliminating their effect on you!</string>
+    <string name="on_boarding_image_description">Onboarding image</string>
+    <string name="next">Next</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 
 </resources>

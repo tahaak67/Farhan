@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +33,7 @@ class InfiniteScrollBlockerViewModel @Inject constructor(
         state = state.copy(
             isAccessibilityPermissionGranted = infiniteScrollUseCases.isAccessibilityPermissionGranted()
         )
+        Timber.d("state = ${state.isAccessibilityPermissionGranted}")
     }
 
     fun setServiceStats(isEnabled: Boolean) {

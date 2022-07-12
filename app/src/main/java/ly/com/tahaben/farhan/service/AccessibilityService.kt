@@ -1,11 +1,15 @@
-package ly.com.tahaben.infinite_scroll_blocker_data.service
+package ly.com.tahaben.farhan.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Build
+import android.provider.Settings
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -13,17 +17,33 @@ import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
 import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
+import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+const val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
+const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
 
 @AndroidEntryPoint
 class AccessibilityService : AccessibilityService() {
 
     private var recentScrollViews: HashMap<Int, ScrollViewInfo> = hashMapOf()
+    private val softInputPackages = mutableListOf<String>()
 
     @Inject
     lateinit var infiniteScrollUseCases: InfiniteScrollUseCases
+
+    @Inject
+    lateinit var grayscaleUseCases: GrayscaleUseCases
+
+    override fun onCreate() {
+        super.onCreate()
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
+            Timber.d("packageName: $it")
+            softInputPackages.add(it.packageName)
+        }
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
@@ -35,7 +55,23 @@ class AccessibilityService : AccessibilityService() {
                 }
             }
         }
+        if (grayscaleUseCases.isGrayscaleEnabled()) {
+            Timber.d("grayscale enabled")
+            Timber.d("event type ${event.eventType}")
 
+            //the statement below helps us determine if we need to skip this event or not
+            if (event.isFullScreen || event.contentChangeTypes == AccessibilityEvent.CONTENT_CHANGE_TYPE_UNDEFINED
+                || !softInputPackages.contains(event.packageName)
+            ) {
+                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(event.packageName.toString())) {
+                    Timber.d("package in whitelist")
+                    grayscaleScreen()
+                } else if (event.isFullScreen) {
+                    Timber.d("package not in whitelist")
+                    unGrayscaleScreen()
+                }
+            }
+        }
     }
 
     private fun listenToScrollEvent(event: AccessibilityEvent) {
@@ -47,8 +83,8 @@ class AccessibilityService : AccessibilityService() {
         }
         if (event.source == null || event.className == null) return
 
-        if (maxY == -1) {
-            //For video scrolling like Tiktok, (its not necessarily a viewPager some apps use
+        if (maxY == -1 && event.scrollX == 0) {
+            //For vertical video scrolling like Tiktok, (its not necessarily a viewPager some apps use
             // a recyclerview with a viewPager like behaviour)
             val viewPagerId = (
                     event.className.hashCode() +
@@ -167,12 +203,55 @@ class AccessibilityService : AccessibilityService() {
         }
     }
 
+    private fun grayscaleScreen() {
+        if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
+            != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val contentResolver = this.contentResolver
+        Settings.Secure.putInt(
+            contentResolver,
+            DISPLAY_DALTONIZER_ENABLED,
+            1
+        )
+        Settings.Secure.putInt(
+            contentResolver,
+            DISPLAY_DALTONIZER,
+            0
+        )
+    }
+
+    private fun unGrayscaleScreen() {
+        if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
+            != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val contentResolver = this.contentResolver
+        Settings.Secure.putInt(
+            contentResolver,
+            DISPLAY_DALTONIZER_ENABLED,
+            0
+        )
+        Settings.Secure.putInt(
+            contentResolver,
+            DISPLAY_DALTONIZER,
+            -1
+        )
+    }
+
     override fun onInterrupt() {
 
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+        recentScrollViews.clear()
+        softInputPackages.clear()
+        return super.onUnbind(intent)
+    }
+
     override fun onDestroy() {
         recentScrollViews.clear()
+        softInputPackages.clear()
         super.onDestroy()
     }
 }
