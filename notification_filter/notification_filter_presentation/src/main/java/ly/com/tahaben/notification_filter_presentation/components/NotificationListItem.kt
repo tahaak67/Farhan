@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -25,7 +24,6 @@ fun NotificationListItem(
     modifier: Modifier = Modifier
 ) {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
@@ -35,7 +33,6 @@ fun NotificationListItem(
                 shape = RoundedCornerShape(5.dp)
             )
             .background(MaterialTheme.colors.secondary)
-            .padding(end = spacing.spaceMedium)
             .clickable {
                 onClick()
             },
@@ -61,10 +58,10 @@ fun NotificationListItem(
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
 
         }
-        Spacer(modifier = Modifier.width(spacing.spaceMedium))
         Text(
             text = notification.time,
             style = MaterialTheme.typography.body2
         )
+        Spacer(modifier = Modifier.width(spacing.spaceMedium))
     }
 }

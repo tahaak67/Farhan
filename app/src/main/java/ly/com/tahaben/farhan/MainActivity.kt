@@ -18,7 +18,9 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUse
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding.InfiniteScrollOnBoardingScreen
+import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
+import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
@@ -38,12 +40,17 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var infiniteScrollUseCases: InfiniteScrollUseCases
 
+    @Inject
+    lateinit var notificationFilterUseCases: NotificationFilterUseCases
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isGrayscaleEnabled =
             grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted()
         val isInfiniteScrollBlockerEnabled =
             infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
+        val isNotificationFilterEnabled =
+            notificationFilterUseCases.checkIfNotificationServiceIsEnabled()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -71,6 +78,7 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 isGrayscaleEnabled = isGrayscaleEnabled,
                                 isInfiniteScrollBlockerEnabled = isInfiniteScrollBlockerEnabled,
+                                isNotificationFilterEnabled = isNotificationFilterEnabled,
                                 navController = navController,
                             )
                         }
@@ -112,11 +120,24 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(Routes.NOTIFICATION_FILTER) {
-                            NotificationFilterScreen(
-                                navigateToNotificationSettings = {
-                                    navController.navigate(Routes.NOTIFICATION_FILTER_SETTINGS)
+                            if (notificationFilterUseCases.loadShouldShowOnBoarding()) {
+                                NotificationFilterOnBoardingScreen(onNextClick = {
+                                    navController.navigate(Routes.NOTIFICATION_FILTER) {
+                                        popUpTo(Routes.MAIN)
+                                    }
                                 }
-                            )
+                                )
+                            } else {
+                                NotificationFilterScreen(
+                                    navigateToNotificationSettings = {
+                                        navController.navigate(Routes.NOTIFICATION_FILTER_SETTINGS)
+                                    },
+                                    onNavigateUp = {
+                                        navController.navigateUp()
+                                    }
+                                )
+                            }
+
                         }
                         composable(Routes.NOTIFICATION_FILTER_SETTINGS) {
                             NotificationFilterSettingsScreen(

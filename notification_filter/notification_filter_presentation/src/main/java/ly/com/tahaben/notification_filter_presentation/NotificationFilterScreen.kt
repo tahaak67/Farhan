@@ -3,16 +3,20 @@ package ly.com.tahaben.notification_filter_presentation
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -23,23 +27,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.Black
-import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.OnLifecycleEvent
-import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.*
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NotificationFilterScreen(
     viewModel: NotificationFilterViewModel = hiltViewModel(),
-    navigateToNotificationSettings: () -> Unit
+    navigateToNotificationSettings: () -> Unit,
+    onNavigateUp: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     val state = viewModel.state
-
+    val openDialog = remember { mutableStateOf(false) }
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -57,6 +59,14 @@ fun NotificationFilterScreen(
 
             },
             backgroundColor = White,
+            navigationIcon = {
+                IconButton(onClick = onNavigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(id = R.string.back)
+                    )
+                }
+            },
             actions = {
                 IconButton(onClick = navigateToNotificationSettings) {
                     Icon(
@@ -73,37 +83,16 @@ fun NotificationFilterScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
-            if (!state.isServiceEnabled) {
-                Column(
+            if (!state.isPermissionGranted) {
+                PermissionNotGrantedContent(
                     modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Notification permission is not granted :(",
-                        style = MaterialTheme.typography.h1,
-                        color = Black
-                    )
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    Text(
-                        text = "Farhan needs notification access for Notification filter to work",
-                        style = MaterialTheme.typography.h3,
-                        color = Black
-                    )
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    Button(onClick = { viewModel.startNotificationService() }) {
-                        Text(
-                            text = "Grant access",
-                            style = MaterialTheme.typography.button,
-                            color = Black
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                }
-
+                    message = stringResource(R.string.notification_permission_not_granted),
+                    subMessage = stringResource(R.string.notification_filter_needed_message),
+                    onGrantClick = viewModel::startNotificationService,
+                    onHowClick = { openDialog.value = true }
+                )
             } else {
                 if (state.filteredNotifications.isEmpty()) {
-
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,7 +102,7 @@ fun NotificationFilterScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No notifications",
+                                text = stringResource(R.string.no_notifications),
                                 style = MaterialTheme.typography.body2,
                                 color = Black,
                                 textAlign = TextAlign.Center
@@ -172,7 +161,7 @@ fun NotificationFilterScreen(
                                     ) {
                                         Icon(
                                             imageVector = icon,
-                                            contentDescription = "Delete Icon",
+                                            contentDescription = stringResource(R.string.delete_icon),
                                             modifier = Modifier.scale(scale)
                                         )
                                     }
@@ -220,5 +209,11 @@ fun NotificationFilterScreen(
             }
         }
     }
-
+    if (openDialog.value) {
+        HowDialog(
+            gifId = R.drawable.notification_permission_howto,
+            gifDescription = stringResource(R.string.how_to_enable_permission),
+            onDismiss = { openDialog.value = false }
+        )
+    }
 }

@@ -2,10 +2,10 @@ package ly.com.tahaben.notification_filter_domain.use_cases
 
 import ly.com.tahaben.notification_filter_domain.util.ServiceUtil
 
-class CheckIfNotificationServiceIsEnabled(
+class CheckIfNotificationAccessIsGranted(
     private val serviceUtil: ServiceUtil
 ) {
     operator fun invoke(): Boolean {
-        return serviceUtil.isNotificationServiceEnabled()
+        return serviceUtil.isNotificationAccessPermissionGranted()
     }
 }

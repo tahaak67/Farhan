@@ -2,6 +2,8 @@ package ly.com.tahaben.notification_filter_domain.preferences
 
 interface Preferences {
 
+    fun loadShouldShowOnBoarding(): Boolean
+    fun saveShouldShowOnBoarding(shouldShow: Boolean)
     fun isServiceEnabled(): Boolean
     fun setServiceState(isEnabled: Boolean)
     fun savePackageToNotificationExceptions(packageName: String)
@@ -20,5 +22,7 @@ interface Preferences {
         const val KEY_NOTIFY_ME_SCHEDULE_DATE = "notify_me_schedule_date"
         const val KEY_NOTIFY_ME_HOUR = "notify_me_hour"
         const val KEY_NOTIFY_ME_MINUTE = "notify_me_minute"
+        const val KEY_NOTIFICATION_FILTER_SHOULD_SHOW_ON_BOARDING =
+            "notification_filter_should_show_on_boarding"
     }
 }

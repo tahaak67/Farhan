@@ -30,6 +30,7 @@ object NotificationFilterDomainModule {
     ): NotificationFilterUseCases {
         return NotificationFilterUseCases(
             CheckIfNotificationServiceIsEnabled(serviceUtil),
+            CheckIfNotificationAccessIsGranted(serviceUtil),
             DeleteNotificationFromDB(notificationRepository),
             DeleteNotificationIntentFromHashmap(serviceUtil),
             DeleteAllNotifications(notificationRepository),
@@ -48,7 +49,9 @@ object NotificationFilterDomainModule {
             SetServiceState(preferences),
             ScheduleNotifyMeNotification(serviceUtil),
             CreateNotifyMeNotificationChannel(serviceUtil),
-            SetNotifyMeScheduleDate(preferences)
+            SetNotifyMeScheduleDate(preferences),
+            SaveShouldShowOnBoarding(preferences),
+            LoadShouldShowOnBoarding(preferences)
         )
     }
 

@@ -34,12 +34,17 @@ class NotificationFilterViewModel @Inject constructor(
     }
 
     fun checkServiceStats() {
-
         state = state.copy(
             isServiceEnabled = notificationFilterUseCases
                 .checkIfNotificationServiceIsEnabled()
         )
+        checkIfNotificationAccessGranted()
+    }
 
+    private fun checkIfNotificationAccessGranted() {
+        state = state.copy(
+            isPermissionGranted = notificationFilterUseCases.checkIfNotificationAccessIsGranted()
+        )
     }
 
     fun startNotificationService() {
@@ -47,7 +52,7 @@ class NotificationFilterViewModel @Inject constructor(
         setServiceEnabled()
     }
 
-    fun getNotifications() {
+    private fun getNotifications() {
         getNotificationsJob?.cancel()
         getNotificationsJob =
             notificationFilterUseCases.getNotificationsFromDB()
