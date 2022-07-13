@@ -33,17 +33,10 @@ class UsageRepositoryImpl(
     override suspend fun getUsageEvents(date: LocalDate): Flow<List<UsageDataItem>> {
         val usageDataItems = arrayListOf<UsageDataItem>()
         if (checkUsagePermission()) {
-            // Implement further app logic here ...
-            var foregroundAppPackageName: String? = null
-            val currentTime = System.currentTimeMillis()
-// The `queryEvents` method takes in the `beginTime` and `endTime` to retrieve the usage events.
-// In our case, beginTime = currentTime - 10 minutes ( 1000 * 60 * 10 milliseconds )
-// and endTime = currentTime
             val usageStatsManager =
                 context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager // Context.USAGE_STATS_SERVICE);
 
             val cly = Calendar.getInstance()
-            //cly.set(date.year,date.monthValue,date.dayOfMonth)
             val d = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
             val calendar = Calendar.getInstance()
             calendar.time = d
@@ -55,7 +48,6 @@ class UsageRepositoryImpl(
             calendar.add(Calendar.DATE, 1)
             val to = calendar.timeInMillis
             val toD = calendar.time
-            //cly.set(cl.year,cl.monthValue,cl.dayOfMonth,0,0,0)
 
             Timber.d("from= ${from} to = $to")
             Timber.d("from date= ${fromD} to date = ${toD}")
@@ -94,13 +86,6 @@ class UsageRepositoryImpl(
                     )
                 }
             }
-
-            /* val fl = FilterUsageEvents().invoke(usageDataItems)
-             val fl2 = CalculateUsageDuration().invoke(fl)
-             fl2.forEach {
-                 Timber.d("filtered App" +
-                 "data: $it")
-             }*/
             return flowOf(usageDataItems)
         } else {
             // Navigate the user to the permission settings

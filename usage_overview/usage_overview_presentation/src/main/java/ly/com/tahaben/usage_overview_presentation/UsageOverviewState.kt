@@ -13,5 +13,6 @@ data class UsageOverviewState(
     val date: LocalDate = LocalDate.now(),
     val trackedApps: List<UsageDurationDataItem> = emptyList(),
     val isLoading: Boolean = false,
-    val isDateToday: Boolean = true
+    val isDateToday: Boolean = true,
+    val isUsagePermissionGranted: Boolean = true
 )
