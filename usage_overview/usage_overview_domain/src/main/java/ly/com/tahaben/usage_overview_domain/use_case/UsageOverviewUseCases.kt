@@ -5,5 +5,6 @@ data class UsageOverviewUseCases(
     val filterUsageEvents: FilterUsageEvents,
     val getDurationFromMilliseconds: GetDurationFromMilliseconds,
     val getUsageDataForDate: GetUsageDataForDate,
-    val isDateToDay: IsDateToday
+    val isDateToDay: IsDateToday,
+    val isUsagePermissionGranted: IsUsagePermissionGranted
 )

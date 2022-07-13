@@ -21,7 +21,8 @@ object UsageOverviewDomainModule {
             filterUsageEvents = FilterUsageEvents(),
             getDurationFromMilliseconds = GetDurationFromMilliseconds(),
             getUsageDataForDate = GetUsageDataForDate(repository),
-            isDateToDay = IsDateToday()
+            isDateToDay = IsDateToday(),
+            isUsagePermissionGranted = IsUsagePermissionGranted(repository)
         )
     }
 }

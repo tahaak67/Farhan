@@ -61,5 +61,11 @@
     <string name="disabled">Disabled</string>
     <string name="accessibility_service_name">Farhan Accessibility service</string>
     <string name="accessibility_service_description">This service is required for functionalities like infinite scroll blocker or screen grayscale to work</string>
+    <string name="usage_permission_msg">Usage permission is not granted :(</string>
+    <string name="usage_permission_sub_msg">Farhan needs usage access to display your usage information</string>
+    <string name="grant_access">Grant access</string>
+    <string name="how">How?</string>
+    <string name="how_to_enable_permission">How to enable permission</string>
+    <string name="ok">Ok</string>
 
 </resources>

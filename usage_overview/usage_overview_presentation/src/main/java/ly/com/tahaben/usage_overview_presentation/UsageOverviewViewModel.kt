@@ -32,7 +32,17 @@ class UsageOverviewViewModel @Inject constructor(
 
     private var getUsageDataJob: Job? = null
 
-    init {
+
+    fun checkUsagePermissionState() {
+        state = state.copy(
+            isUsagePermissionGranted = usageOverviewUseCases.isUsagePermissionGranted()
+        )
+        if (state.isUsagePermissionGranted) {
+            refreshUsageData()
+        }
+    }
+
+    fun askForUsagePermission() {
         refreshUsageData()
     }
 
