@@ -2,6 +2,7 @@
 
 package ly.com.tahaben.infinite_scroll_blocker_data.preferences
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
 import timber.log.Timber
@@ -9,6 +10,17 @@ import timber.log.Timber
 class DefaultPreferences(
     private val sharedPref: SharedPreferences
 ) : Preferences {
+
+    override fun loadShouldShowOnBoarding(): Boolean {
+        return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SHOULD_SHOW_ON_BOARDING, true)
+    }
+
+    @SuppressLint("ApplySharedPref")
+    override fun saveShouldShowOnBoarding(shouldShow: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.KEY_INFINITE_SCROLL_SHOULD_SHOW_ON_BOARDING, shouldShow)
+            .commit()
+    }
 
     override fun isServiceEnabled(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SERVICE_STATS, false)

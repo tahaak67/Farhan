@@ -67,5 +67,15 @@
     <string name="how">How?</string>
     <string name="how_to_enable_permission">How to enable permission</string>
     <string name="ok">Ok</string>
+    <string name="show_system_apps">Show system apps</string>
+    <string name="appear_on_top_permission_not_granted">Appear on top permission is not granted :(</string>
+    <string name="appear_on_top_permission_needed_message">Farhan needs Appear on top access to help you break Infinite scrolling</string>
+    <string name="remind_me_to_stop_scrolling_after">Remind me to stop after</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="confirm">Confirm</string>
+    <string name="accessibility_permission_not_granted">Accessibility Service is not running :(</string>
+    <string name="accessibility_permission_needed_message">Farhan needs accessibility service to help you break infinite scrolling</string>
+    <string name="one_more_thing">One more thing!</string>
+    <string name="infinite_scroll_onboarding_message">Infinite scrolling is a technique used by apps to keep giving you new content no matter how much you scroll thus reducing your control over your time, Farhan can try to detect when you are stuck in an infinite scroll and remind you to get out of that app!</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package ly.com.tahaben.screen_grayscale_presentation.components
+package ly.com.tahaben.core_ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

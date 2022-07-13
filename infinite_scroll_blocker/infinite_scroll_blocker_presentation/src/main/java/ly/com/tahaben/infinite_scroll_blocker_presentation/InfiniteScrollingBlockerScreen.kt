@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
@@ -32,11 +31,12 @@ fun InfiniteScrollingBlockerScreen(
     viewModel: InfiniteScrollBlockerViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
     val state = viewModel.state
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
     val timeOutDuration = remember { mutableStateOf(state.timeoutDuration) }
     val openDialog = remember { mutableStateOf(false) }
+    val openHowDialog = remember { mutableStateOf(false) }
+    val openHowAccessibilityDialog = remember { mutableStateOf(false) }
     isServiceChecked.value = state.isServiceEnabled
 
     OnLifecycleEvent { _, event ->
@@ -53,7 +53,6 @@ fun InfiniteScrollingBlockerScreen(
         TopAppBar(
             title = {
                 Text(text = stringResource(id = R.string.infinite_scroll_blocker_settings))
-
             },
             backgroundColor = White,
             navigationIcon = {
@@ -67,40 +66,37 @@ fun InfiniteScrollingBlockerScreen(
             }
         )
         if (!state.isAppearOnTopPermissionGranted) {
+            PermissionNotGrantedContent(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(R.string.appear_on_top_permission_not_granted),
+                subMessage = stringResource(R.string.appear_on_top_permission_needed_message),
+                onGrantClick = viewModel::askForAppearOnTopPermission,
+                onHowClick = { openHowDialog.value = true }
+            )
+
+        } else if (!state.isAccessibilityPermissionGranted) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = spacing.spaceMedium),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Appear on top permission is not granted :(",
-                    style = MaterialTheme.typography.h1,
-                    color = Black
-                )
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                Text(
-                    text = "Farhan needs Appear on top access to help you break Infinite scrolling",
+                    text = stringResource(R.string.one_more_thing),
                     style = MaterialTheme.typography.h3,
-                    color = Black
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                Button(onClick = { viewModel.askForAppearOnTopPermission() }) {
-                    Text(
-                        text = "Grant access",
-                        style = MaterialTheme.typography.button,
-                        color = Black
-                    )
-                }
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                PermissionNotGrantedContent(
+                    modifier = Modifier,
+                    message = stringResource(R.string.accessibility_permission_not_granted),
+                    subMessage = stringResource(R.string.accessibility_permission_needed_message),
+                    onGrantClick = viewModel::askForAccessibilityPermission,
+                    onHowClick = { openHowAccessibilityDialog.value = true }
+                )
             }
         } else {
-
             Column(
                 Modifier.fillMaxSize()
             ) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,9 +131,7 @@ fun InfiniteScrollingBlockerScreen(
                         textAlign = TextAlign.Justify
                     )
                 }
-
                 AnimatedVisibility(visible = true) {
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -152,24 +146,14 @@ fun InfiniteScrollingBlockerScreen(
 
                         Text(text = state.timeoutDuration.toString() + stringResource(id = R.string.minutes))
                         Text(text = stringResource(R.string.tap_to_set_new_time))
-
                     }
-
                 }
-
             }
         }
     }
 
-
-    // below line is to check if the
-    // dialog box is open or not.
     if (openDialog.value) {
-        // below line is use to
-        // display a alert dialog.
         Dialog(
-            // on dialog dismiss we are setting
-            // our dialog value to false.
             onDismissRequest = { openDialog.value = false },
             properties = DialogProperties(),
         ) {
@@ -181,7 +165,7 @@ fun InfiniteScrollingBlockerScreen(
             ) {
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 Text(
-                    text = "Remind me to stop after",
+                    text = stringResource(R.string.remind_me_to_stop_scrolling_after),
                     style = MaterialTheme.typography.h4
                 )
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -214,14 +198,12 @@ fun InfiniteScrollingBlockerScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
-                        // adding on click listener for this button
                         onClick = {
                             openDialog.value = false
                         }
                     ) {
-                        // adding text to our button.
                         Text(
-                            "Dismiss",
+                            stringResource(R.string.dismiss),
                             style = MaterialTheme.typography.h5
                         )
                     }
@@ -232,19 +214,28 @@ fun InfiniteScrollingBlockerScreen(
                             viewModel.setTimeoutDuration(npVal.value)
                         }
                     ) {
-                        // in this line we are adding
-                        // text for our confirm button.
                         Text(
-                            "Confirm",
+                            stringResource(id = R.string.confirm),
                             style = MaterialTheme.typography.h5
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
             }
-
         }
     }
+    if (openHowDialog.value) {
+        HowDialog(
+            gifId = R.drawable.appear_on_top_permission_howto,
+            gifDescription = stringResource(R.string.how_to_enable_permission),
+            onDismiss = { openHowDialog.value = false }
+        )
+    }
+    if (openHowAccessibilityDialog.value) {
+        HowDialog(
+            gifId = R.drawable.accessibility_permission_howto,
+            gifDescription = stringResource(R.string.how_to_enable_permission),
+            onDismiss = { openHowAccessibilityDialog.value = false }
+        )
+    }
 }
-
-

@@ -15,6 +15,6 @@ interface Preferences {
     companion object {
         const val KEY_GRAYSCALE_SERVICE_STATS = "grayscale_service_stats"
         const val KEY_GRAYSCALE_WHITE_LIST = "grayscale_white_list"
-        const val KEY_SHOULD_SHOW_ON_BOARDING = "should_show_on_boarding"
+        const val KEY_GRAYSCALE_SHOULD_SHOW_ON_BOARDING = "grayscale_should_show_on_boarding"
     }
 }

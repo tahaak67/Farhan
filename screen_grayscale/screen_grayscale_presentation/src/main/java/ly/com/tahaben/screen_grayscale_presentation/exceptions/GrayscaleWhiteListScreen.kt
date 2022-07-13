@@ -30,8 +30,8 @@ import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.SearchTextField
 import ly.com.tahaben.screen_grayscale_presentation.components.AppExceptionListItem
-import ly.com.tahaben.screen_grayscale_presentation.components.SearchTextField
 import timber.log.Timber
 
 
@@ -128,11 +128,7 @@ fun GrayscaleWhiteListScreen(
                     expanded = mDisplayMenu,
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
-
-                    // Creating dropdown menu item, on click
-                    // would create a Toast message
                     DropdownMenuItem(onClick = {
-
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -149,12 +145,10 @@ fun GrayscaleWhiteListScreen(
                                 }
                             )
                             Text(
-                                text = "Show system apps",
+                                text = stringResource(R.string.show_system_apps),
                                 textAlign = TextAlign.Center
                             )
                         }
-
-
                     }
                 }
             }

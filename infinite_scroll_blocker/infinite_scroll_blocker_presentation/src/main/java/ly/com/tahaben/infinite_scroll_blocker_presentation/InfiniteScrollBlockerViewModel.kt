@@ -20,10 +20,10 @@ class InfiniteScrollBlockerViewModel @Inject constructor(
     init {
         checkServiceStats()
         getTimeoutDuration()
-        checkAccessibilityPermissionStats()
     }
 
     fun checkServiceStats() {
+        checkAccessibilityPermissionStats()
         state = state.copy(
             isServiceEnabled = infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
         )
@@ -67,6 +67,10 @@ class InfiniteScrollBlockerViewModel @Inject constructor(
 
     fun askForAppearOnTopPermission() {
         infiniteScrollUseCases.askForAppearOnTopPermission()
+    }
+
+    fun askForAccessibilityPermission() {
+        infiniteScrollUseCases.askForAccessibilityPermission()
     }
 
 }

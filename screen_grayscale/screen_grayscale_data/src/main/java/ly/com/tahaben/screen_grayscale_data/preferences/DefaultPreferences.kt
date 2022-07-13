@@ -2,6 +2,7 @@
 
 package ly.com.tahaben.screen_grayscale_data.preferences
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
 import timber.log.Timber
@@ -10,16 +11,17 @@ class DefaultPreferences(
     private val sharedPref: SharedPreferences
 ) : Preferences {
 
+    @SuppressLint("ApplySharedPref")
     override fun saveShouldShowOnBoarding(shouldShow: Boolean) {
         //need to use commit to make sure the value is saved because we might read
         // the value again as soon as we finish calling this function
         sharedPref.edit()
-            .putBoolean(Preferences.KEY_SHOULD_SHOW_ON_BOARDING, shouldShow)
+            .putBoolean(Preferences.KEY_GRAYSCALE_SHOULD_SHOW_ON_BOARDING, shouldShow)
             .commit()
     }
 
     override fun loadShouldShowOnBoarding(): Boolean {
-        return sharedPref.getBoolean(Preferences.KEY_SHOULD_SHOW_ON_BOARDING, true)
+        return sharedPref.getBoolean(Preferences.KEY_GRAYSCALE_SHOULD_SHOW_ON_BOARDING, true)
     }
 
     override fun isGrayscaleEnabled(): Boolean {
