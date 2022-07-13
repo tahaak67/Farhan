@@ -14,8 +14,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
+import ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding.InfiniteScrollOnBoardingScreen
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
@@ -33,10 +35,15 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var grayscaleUseCases: GrayscaleUseCases
 
+    @Inject
+    lateinit var infiniteScrollUseCases: InfiniteScrollUseCases
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isGrayscaleEnabled =
             grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted()
+        val isInfiniteScrollBlockerEnabled =
+            infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -63,6 +70,7 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.MAIN) {
                             MainScreen(
                                 isGrayscaleEnabled = isGrayscaleEnabled,
+                                isInfiniteScrollBlockerEnabled = isInfiniteScrollBlockerEnabled,
                                 navController = navController,
                             )
                         }
@@ -73,10 +81,20 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.INFINITE_SCROLLING) {
                             //startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION), 0)
-                            InfiniteScrollingBlockerScreen(
-                                onNavigateUp = { navController.navigateUp() },
-                                onNavigateToExceptions = { navController.navigate(Routes.INFINITE_SCROLLING_EXCEPTIONS) }
-                            )
+                            if (infiniteScrollUseCases.loadShouldShowOnBoarding()) {
+                                InfiniteScrollOnBoardingScreen(
+                                    onNextClick = {
+                                        navController.navigate(Routes.INFINITE_SCROLLING) {
+                                            popUpTo(Routes.MAIN)
+                                        }
+                                    }
+                                )
+                            } else {
+                                InfiniteScrollingBlockerScreen(
+                                    onNavigateUp = { navController.navigateUp() },
+                                    onNavigateToExceptions = { navController.navigate(Routes.INFINITE_SCROLLING_EXCEPTIONS) }
+                                )
+                            }
                         }
                         composable(Routes.SCREEN_GRAY_SCALE) {
                             if (grayscaleUseCases.loadShouldShowOnBoarding()) {

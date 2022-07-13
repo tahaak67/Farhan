@@ -14,4 +14,6 @@ data class InfiniteScrollUseCases(
     val setTimeOutDuration: SetTimeOutDuration,
     val getTimeOutDuration: GetTimeOutDuration,
     val getInstalledAppsList: GetInstalledAppsList,
+    val saveShouldShowOnBoarding: SaveShouldShowOnBoarding,
+    val loadShouldShowOnBoarding: LoadShouldShowOnBoarding
 )

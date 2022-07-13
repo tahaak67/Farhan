@@ -14,7 +14,7 @@ import ly.com.tahaben.core.R
 
 @Composable
 fun PermissionNotGrantedContent(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     message: String,
     subMessage: String,
     onGrantClick: () -> Unit,
@@ -23,7 +23,6 @@ fun PermissionNotGrantedContent(
     val spacing = LocalSpacing.current
     Column(
         modifier = modifier
-            .fillMaxSize()
             .padding(horizontal = spacing.spaceMedium),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center

@@ -2,6 +2,8 @@ package ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,15 +23,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.flow.collect
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.SearchTextField
 import ly.com.tahaben.infinite_scroll_blocker_presentation.components.AppExceptionListItem
-import ly.com.tahaben.infinite_scroll_blocker_presentation.components.SearchTextField
 import timber.log.Timber
 
 
@@ -69,7 +70,8 @@ fun InfiniteScrollExceptionsScreen(
             title = {
                 AnimatedVisibility(
                     visible = !displaySearchField,
-                    exit = fadeOut()
+                    enter = fadeIn(animationSpec = tween(1000)),
+                    exit = fadeOut(animationSpec = tween(1))
                 ) {
                     Text(text = stringResource(id = R.string.exceptions))
                 }
@@ -96,7 +98,6 @@ fun InfiniteScrollExceptionsScreen(
                         Icon(Icons.Default.Search, stringResource(id = R.string.open_search_field))
                     }
                 }
-
                 AnimatedVisibility(visible = displaySearchField) {
                     SearchTextField(
                         text = state.query,
@@ -113,22 +114,14 @@ fun InfiniteScrollExceptionsScreen(
                         }
                     )
                 }
-
-                // Creating Icon button for dropdown menu
                 IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
                     Icon(Icons.Default.MoreVert, "")
                 }
-
-                // Creating a dropdown menu
                 DropdownMenu(
                     expanded = mDisplayMenu,
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
-
-                    // Creating dropdown menu item, on click
-                    // would create a Toast message
                     DropdownMenuItem(onClick = {
-
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -145,12 +138,10 @@ fun InfiniteScrollExceptionsScreen(
                                 }
                             )
                             Text(
-                                text = "Show system apps",
+                                text = stringResource(R.string.show_system_apps),
                                 textAlign = TextAlign.Center
                             )
                         }
-
-
                     }
                 }
             }
@@ -192,6 +183,4 @@ fun InfiniteScrollExceptionsScreen(
             }
         }
     }
-
-
 }

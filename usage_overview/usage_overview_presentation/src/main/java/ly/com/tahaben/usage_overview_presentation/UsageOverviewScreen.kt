@@ -111,6 +111,7 @@ fun UsageOverviewScreen(
             }
         } else {
             PermissionNotGrantedContent(
+                modifier = Modifier.fillMaxSize(),
                 message = stringResource(R.string.usage_permission_msg),
                 subMessage = stringResource(R.string.usage_permission_sub_msg),
                 onGrantClick = viewModel::askForUsagePermission,

@@ -18,6 +18,7 @@ import ly.com.tahaben.onboarding_presentaion.components.MainScreenCard
 fun MainScreen(
     modifier: Modifier = Modifier,
     isGrayscaleEnabled: Boolean,
+    isInfiniteScrollBlockerEnabled: Boolean,
     navController: NavHostController
 ) {
     val spacing = LocalSpacing.current
@@ -75,7 +76,9 @@ fun MainScreen(
                 onClick = { navController.navigate(Routes.SCREEN_GRAY_SCALE) })
             MainScreenCard(
                 text = stringResource(R.string.infinite_scrolling),
-                status = "",
+                status = if (isInfiniteScrollBlockerEnabled) stringResource(id = R.string.enabled) else stringResource(
+                    id = R.string.disabled
+                ),
                 iconId = null,
                 onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
         }

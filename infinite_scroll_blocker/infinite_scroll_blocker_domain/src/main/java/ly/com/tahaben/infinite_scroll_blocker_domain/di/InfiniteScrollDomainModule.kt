@@ -35,7 +35,9 @@ object InfiniteScrollDomainModule {
             SetServiceState(preferences),
             SetTimeOutDuration(preferences),
             GetTimeOutDuration(preferences),
-            GetInstalledAppsList(installedAppsRepo)
+            GetInstalledAppsList(installedAppsRepo),
+            SaveShouldShowOnBoarding(preferences),
+            LoadShouldShowOnBoarding(preferences)
         )
     }
 }
