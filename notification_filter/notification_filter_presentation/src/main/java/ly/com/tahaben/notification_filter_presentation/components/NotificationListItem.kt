@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -44,19 +45,28 @@ fun NotificationListItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+            Text(
+                text = notification.appName ?: "",
+                style = MaterialTheme.typography.body1,
+                fontWeight = FontWeight.Normal,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
             Text(
                 text = notification.title ?: "",
                 style = MaterialTheme.typography.body1,
+                fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
             Text(
                 text = notification.text ?: "",
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.body2,
+                fontWeight = FontWeight.Normal,
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
-
         }
         Text(
             text = notification.time,

@@ -3,7 +3,6 @@ package ly.com.tahaben.notification_filter_presentation
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,7 +31,7 @@ import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotificationFilterScreen(
     viewModel: NotificationFilterViewModel = hiltViewModel(),
@@ -68,11 +67,13 @@ fun NotificationFilterScreen(
                 }
             },
             actions = {
-                IconButton(onClick = navigateToNotificationSettings) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = stringResource(id = R.string.notifications_filter_settings)
-                    )
+                if (state.isPermissionGranted) {
+                    IconButton(onClick = navigateToNotificationSettings) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = stringResource(id = R.string.notifications_filter_settings)
+                        )
+                    }
                 }
             }
         )
