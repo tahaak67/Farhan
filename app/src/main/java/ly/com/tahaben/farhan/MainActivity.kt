@@ -45,12 +45,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isGrayscaleEnabled =
-            grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted()
-        val isInfiniteScrollBlockerEnabled =
-            infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
-        val isNotificationFilterEnabled =
-            notificationFilterUseCases.checkIfNotificationServiceIsEnabled()
+
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -76,9 +71,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.MAIN) {
                             MainScreen(
-                                isGrayscaleEnabled = isGrayscaleEnabled,
-                                isInfiniteScrollBlockerEnabled = isInfiniteScrollBlockerEnabled,
-                                isNotificationFilterEnabled = isNotificationFilterEnabled,
+                                isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
+                                        grayscaleUseCases.isAccessibilityPermissionGranted(),
+                                isInfiniteScrollBlockerEnabled = infiniteScrollUseCases.isServiceEnabled() &&
+                                        infiniteScrollUseCases.isAccessibilityPermissionGranted(),
+                                isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
+                                        notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 navController = navController,
                             )
                         }
@@ -88,7 +86,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {
-                            //startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION), 0)
                             if (infiniteScrollUseCases.loadShouldShowOnBoarding()) {
                                 InfiniteScrollOnBoardingScreen(
                                     onNextClick = {
