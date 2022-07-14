@@ -26,20 +26,20 @@ class ServiceUtilImpl(
 
     private val NOTIFICATION_SERVICES_SPLITTER = ":"
 
-    override fun isNotificationListenerServiceEnabled(): Boolean {
-        if (sharedPref.isServiceEnabled()) {
-            val notificationListenerName =
-                context.packageName + "/" + NotificationService::class.java.name
-            Timber.d("notificationListener Name: $notificationListenerName")
-            val enabledNotificationListeners =
-                Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+    override fun isNotificationAccessPermissionGranted(): Boolean {
+        val notificationListenerName =
+            context.packageName + "/" + NotificationService::class.java.name
+        Timber.d("notificationListener Name: $notificationListenerName")
+        val enabledNotificationListeners =
+            Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
 
-            return enabledNotificationListeners != null && enabledNotificationListeners.split(
-                NOTIFICATION_SERVICES_SPLITTER
-            ).contains(notificationListenerName)
-        } else {
-            return false
-        }
+        return enabledNotificationListeners != null && enabledNotificationListeners.split(
+            NOTIFICATION_SERVICES_SPLITTER
+        ).contains(notificationListenerName)
+    }
+
+    override fun isNotificationServiceEnabled(): Boolean {
+        return sharedPref.isServiceEnabled()
     }
 
     override fun startNotificationListenerService() {

@@ -25,9 +25,10 @@ class NotificationSettingsViewModel @Inject constructor(
     }
 
 
-    fun checkServiceStats() {
+    private fun checkServiceStats() {
         state = state.copy(
             isServiceEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled()
+                    && notificationFilterUseCases.checkIfNotificationAccessIsGranted()
         )
     }
 
@@ -48,13 +49,13 @@ class NotificationSettingsViewModel @Inject constructor(
         )
     }
 
-    fun getNotifyMeHour() {
+    private fun getNotifyMeHour() {
         state = state.copy(
             notifyMeHour = notificationFilterUseCases.getNotifyMeHour()
         )
     }
 
-    fun getNotifyState() {
+    private fun getNotifyState() {
         if (notificationFilterUseCases.getNotifyMeHour() == -1) {
             state = state.copy(
                 isNotifyMeEnabled = false
@@ -66,11 +67,9 @@ class NotificationSettingsViewModel @Inject constructor(
         }
     }
 
-    fun getNotifyMeMinute() {
+    private fun getNotifyMeMinute() {
         state = state.copy(
             notifyMeMinute = notificationFilterUseCases.getNotifyMeMinute()
         )
     }
-
-
 }

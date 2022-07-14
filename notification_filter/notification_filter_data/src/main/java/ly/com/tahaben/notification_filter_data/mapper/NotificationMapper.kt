@@ -12,6 +12,7 @@ fun NotificationItem.toNotificationEntity(): NotificationItemEntity {
 
     return NotificationItemEntity(
         id = id,
+        appName = appName,
         title = title,
         text = text,
         time = time,
@@ -23,6 +24,7 @@ fun NotificationItemEntity.toNotificationItem(): NotificationItem {
 
     return NotificationItem(
         id = id,
+        appName = appName,
         title = title,
         text = text,
         time = time,
@@ -51,7 +53,7 @@ fun Notification.toNotificationEntity(): NotificationItemEntity{
     )
 }*/
 
-fun StatusBarNotification.toNotificationItem(): NotificationItem {
+fun StatusBarNotification.toNotificationItem(appName: String?): NotificationItem {
     val notification = notification
     val extras = notification.extras
     val title = extras?.getString(Notification.EXTRA_TITLE)?.toString()
@@ -63,6 +65,7 @@ fun StatusBarNotification.toNotificationItem(): NotificationItem {
 
     return NotificationItem(
         id = key,
+        appName = appName,
         title = title,
         text = text,
         time = time,

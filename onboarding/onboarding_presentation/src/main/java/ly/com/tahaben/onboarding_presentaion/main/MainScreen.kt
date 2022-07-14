@@ -19,6 +19,7 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     isGrayscaleEnabled: Boolean,
     isInfiniteScrollBlockerEnabled: Boolean,
+    isNotificationFilterEnabled: Boolean,
     navController: NavHostController
 ) {
     val spacing = LocalSpacing.current
@@ -57,8 +58,10 @@ fun MainScreen(
                 iconId = R.drawable.ic_usage,
                 onClick = { navController.navigate(Routes.USAGE) })
             MainScreenCard(
-                text = stringResource(R.string.notifications),
-                status = "",
+                text = stringResource(R.string.notifications_filter),
+                status = if (isGrayscaleEnabled) stringResource(id = R.string.enabled) else stringResource(
+                    id = R.string.disabled
+                ),
                 iconId = R.drawable.ic_notification,
                 onClick = { navController.navigate(Routes.NOTIFICATION_FILTER) })
         }

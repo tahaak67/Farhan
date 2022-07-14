@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class NotificationItemEntity(
     @PrimaryKey(autoGenerate = false)
     val id: String,
+    val appName: String?,
     val title: String?,
     val text: String?,
     val time: String,

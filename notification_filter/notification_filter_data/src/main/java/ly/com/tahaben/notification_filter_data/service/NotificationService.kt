@@ -2,11 +2,12 @@ package ly.com.tahaben.notification_filter_data.service
 
 import android.app.Notification
 import android.app.PendingIntent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.notification_filter_data.mapper.toNotificationItem
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
@@ -15,8 +16,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationService : NotificationListenerService() {
-
-    private var job: Job? = null
 
     @Inject
     lateinit var notificationFilterUseCases: NotificationFilterUseCases
@@ -48,7 +47,6 @@ class NotificationService : NotificationListenerService() {
                 notification?.category != Notification.CATEGORY_MISSED_CALL &&
                 notification?.category != Notification.CATEGORY_SYSTEM
             ) {
-                job?.cancel()
                 notification?.contentIntent?.let {
                     intentHashmap.put(sbn.key, it)
                 }
@@ -56,8 +54,17 @@ class NotificationService : NotificationListenerService() {
                     super.onNotificationPosted(sbn)
                 } else {
                     cancelNotification(sbn?.key)
+                    val pm: PackageManager = this.packageManager
+                    val ai: ApplicationInfo? = try {
+                        pm.getApplicationInfo(appPackageName, 0)
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        e.printStackTrace()
+                        null
+                    }
+                    val applicationName =
+                        (if (ai != null) pm.getApplicationLabel(ai) else appPackageName) as String?
                     runBlocking(Dispatchers.IO) {
-                        sbn?.toNotificationItem()
+                        sbn?.toNotificationItem(applicationName)
                             ?.let { notificationFilterUseCases.insertNotificationToDB(it) }
                     }
                     if (notificationFilterUseCases.getNotifyMeHour() != -1) {

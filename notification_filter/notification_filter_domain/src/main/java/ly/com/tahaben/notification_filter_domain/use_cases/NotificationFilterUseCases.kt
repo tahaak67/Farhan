@@ -4,6 +4,7 @@ import ly.com.tahaben.notification_filter_domain.use_cases.settings.*
 
 data class NotificationFilterUseCases(
     val checkIfNotificationServiceIsEnabled: CheckIfNotificationServiceIsEnabled,
+    val checkIfNotificationAccessIsGranted: CheckIfNotificationAccessIsGranted,
     val deleteNotificationFromDB: DeleteNotificationFromDB,
     val deleteNotificationIntentFromHashmap: DeleteNotificationIntentFromHashmap,
     val deleteAllNotifications: DeleteAllNotifications,
@@ -22,5 +23,7 @@ data class NotificationFilterUseCases(
     val setServiceState: SetServiceState,
     val scheduleNotifyMeNotification: ScheduleNotifyMeNotification,
     val createNotifyMeNotificationChannel: CreateNotifyMeNotificationChannel,
-    val setNotifyMeScheduleDate: SetNotifyMeScheduleDate
+    val setNotifyMeScheduleDate: SetNotifyMeScheduleDate,
+    val saveShouldShowOnBoarding: SaveShouldShowOnBoarding,
+    val loadShouldShowOnBoarding: LoadShouldShowOnBoarding
 )

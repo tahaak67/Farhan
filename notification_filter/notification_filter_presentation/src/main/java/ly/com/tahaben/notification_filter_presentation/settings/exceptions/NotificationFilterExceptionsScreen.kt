@@ -2,6 +2,8 @@ package ly.com.tahaben.notification_filter_presentation.settings.exceptions
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,10 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.SearchTextField
 import ly.com.tahaben.notification_filter_presentation.components.AppExceptionListItem
-import ly.com.tahaben.notification_filter_presentation.components.SearchTextField
 import timber.log.Timber
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -64,7 +67,8 @@ fun NotificationFilterExceptionsScreen(
             title = {
                 AnimatedVisibility(
                     visible = !displaySearchField,
-                    exit = fadeOut()
+                    enter = fadeIn(animationSpec = tween(1000)),
+                    exit = fadeOut(animationSpec = tween(1))
                 ) {
                     Text(text = stringResource(id = R.string.exceptions))
                 }
@@ -109,19 +113,15 @@ fun NotificationFilterExceptionsScreen(
                     )
                 }
 
-                // Creating Icon button for dropdown menu
                 IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
                     Icon(Icons.Default.MoreVert, "")
                 }
 
-                // Creating a dropdown menu
                 DropdownMenu(
                     expanded = mDisplayMenu,
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
 
-                    // Creating dropdown menu item, on click
-                    // would create a Toast message
                     DropdownMenuItem(onClick = {
 
                     }) {
@@ -137,10 +137,11 @@ fun NotificationFilterExceptionsScreen(
                                             checked
                                         )
                                     )
-                                }
+                                },
+                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                             Text(
-                                text = "Show system apps",
+                                text = stringResource(id = R.string.show_system_apps),
                                 textAlign = TextAlign.Center
                             )
                         }

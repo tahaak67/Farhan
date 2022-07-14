@@ -77,5 +77,10 @@
     <string name="accessibility_permission_needed_message">Farhan needs accessibility service to help you break infinite scrolling</string>
     <string name="one_more_thing">One more thing!</string>
     <string name="infinite_scroll_onboarding_message">Infinite scrolling is a technique used by apps to keep giving you new content no matter how much you scroll thus reducing your control over your time, Farhan can try to detect when you are stuck in an infinite scroll and remind you to get out of that app!</string>
+    <string name="notification_filter_onboarding_message">Notifications are like an alarm except that they can distract you at any time without you event knowing when, Farhan can eliminate this distraction by filtering notification so you wont be distracted, you can exclude important apps that you want to get notifications from and the rest will get filtered and you can come to the app and see them at any time!</string>
+    <string name="notification_permission_not_granted">Notification permission is not granted :(</string>
+    <string name="notification_filter_needed_message">Farhan needs notification access for Notification filter to work</string>
+    <string name="no_notifications">No notifications</string>
+    <string name="delete_icon">Delete Icon</string>
 
 </resources>
