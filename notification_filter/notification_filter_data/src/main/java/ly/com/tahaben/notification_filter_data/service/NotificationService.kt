@@ -50,7 +50,9 @@ class NotificationService : NotificationListenerService() {
                 notification?.contentIntent?.let {
                     intentHashmap.put(sbn.key, it)
                 }
-                if (notificationFilterUseCases.isPackageInNotificationException(appPackageName)) {
+                if (notificationFilterUseCases.isPackageInNotificationException(appPackageName) ||
+                    appPackageName == this.packageName
+                ) {
                     super.onNotificationPosted(sbn)
                 } else {
                     cancelNotification(sbn?.key)

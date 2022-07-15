@@ -9,3 +9,7 @@ val Shapes = Shapes(
     medium = RoundedCornerShape(4.dp),
     large = RoundedCornerShape(0.dp)
 )
+
+val BottomCardShape = Shapes(
+    large = RoundedCornerShape(topStart = 80.dp, topEnd = 80.dp)
+)

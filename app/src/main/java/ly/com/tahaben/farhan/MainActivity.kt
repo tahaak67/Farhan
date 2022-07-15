@@ -11,9 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
@@ -23,6 +25,7 @@ import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
+import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
@@ -30,6 +33,8 @@ import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteLis
 import ly.com.tahaben.screen_grayscale_presentation.onboarding.GrayscaleOnBoardingScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
 import javax.inject.Inject
+import kotlin.random.Random
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,14 +48,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var notificationFilterUseCases: NotificationFilterUseCases
 
+    @Inject
+    lateinit var onBoardingPref: Preferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isGrayscaleEnabled =
-            grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted()
-        val isInfiniteScrollBlockerEnabled =
-            infiniteScrollUseCases.isServiceEnabled() && infiniteScrollUseCases.isAccessibilityPermissionGranted()
-        val isNotificationFilterEnabled =
-            notificationFilterUseCases.checkIfNotificationServiceIsEnabled()
+        val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -67,18 +70,32 @@ class MainActivity : ComponentActivity() {
                             ) == NOTIFICATION_ID
                         ) {
                             Routes.NOTIFICATION_FILTER
+                        } else if (shouldShowOnBoarding) {
+                            Routes.WELCOME
                         } else {
                             Routes.MAIN
                         },
                     ) {
                         composable(Routes.WELCOME) {
-
+                            OnBoardingScreen(
+                                onNavigateToMain = {
+                                    navController.navigate(Routes.MAIN) {
+                                        popUpTo(Routes.WELCOME) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
                         }
                         composable(Routes.MAIN) {
                             MainScreen(
-                                isGrayscaleEnabled = isGrayscaleEnabled,
-                                isInfiniteScrollBlockerEnabled = isInfiniteScrollBlockerEnabled,
-                                isNotificationFilterEnabled = isNotificationFilterEnabled,
+                                tip = getTip(),
+                                isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
+                                        grayscaleUseCases.isAccessibilityPermissionGranted(),
+                                isInfiniteScrollBlockerEnabled = infiniteScrollUseCases.isServiceEnabled() &&
+                                        infiniteScrollUseCases.isAccessibilityPermissionGranted(),
+                                isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
+                                        notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 navController = navController,
                             )
                         }
@@ -88,7 +105,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {
-                            //startActivityForResult(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION), 0)
                             if (infiniteScrollUseCases.loadShouldShowOnBoarding()) {
                                 InfiniteScrollOnBoardingScreen(
                                     onNextClick = {
@@ -121,11 +137,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.NOTIFICATION_FILTER) {
                             if (notificationFilterUseCases.loadShouldShowOnBoarding()) {
-                                NotificationFilterOnBoardingScreen(onNextClick = {
-                                    navController.navigate(Routes.NOTIFICATION_FILTER) {
-                                        popUpTo(Routes.MAIN)
+                                NotificationFilterOnBoardingScreen(
+                                    onNextClick = {
+                                        navController.navigate(Routes.NOTIFICATION_FILTER) {
+                                            popUpTo(Routes.MAIN)
+                                        }
                                     }
-                                }
                                 )
                             } else {
                                 NotificationFilterScreen(
@@ -166,5 +183,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun getTip(): String {
+        val array: Array<String> = this.resources.getStringArray(R.array.tips)
+        return array[Random.nextInt(array.size)]
     }
 }
