@@ -66,7 +66,7 @@
     <string name="grant_access">Grant access</string>
     <string name="how">How?</string>
     <string name="how_to_enable_permission">How to enable permission</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="show_system_apps">Show system apps</string>
     <string name="appear_on_top_permission_not_granted">Appear on top permission is not granted :(</string>
     <string name="appear_on_top_permission_needed_message">Farhan needs Appear on top access to help you break Infinite scrolling</string>
@@ -82,5 +82,22 @@
     <string name="notification_filter_needed_message">Farhan needs notification access for Notification filter to work</string>
     <string name="no_notifications">No notifications</string>
     <string name="delete_icon">Delete Icon</string>
+    <string name="tip_icon_description">Tip icon</string>
+    <string name="get_started">Get Started</string>
+    <string name="skip_now">Skip Now</string>
+    <string name="no_internet_permission">No Internet Permission!</string>
+    <string name="no_internet_permission_desc">Farhan does not connect to the internet in anyway, in fact it does\'nt even have an internet permission, so your data stays on your phone</string>
+    <string name="open_source">Open Source</string>
+    <string name="open_source_desc">Anyone can see how Farhan works by viewing the source code on github</string>
+    <string name="use_farhan_be_farhan">Use Farhan, Be Farhan!</string>
+    <string name="use_farhan_be_farhan_desc">Let your phone work for you, Not the other way around!</string>
 
+    <string-array name="tips">
+        <item>To improve productivity during work hours switch you phone to silent and keep it out of sight (Ex: in a drawer)</item>
+        <item>Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</item>
+        <item>When Grayscale is on, only white listed apps will be grayscaled</item>
+        <item>Infinite scroll blocker is experimental if you are facing a problem with an app you can add it to exceptions to avoid false detections</item>
+        <item>use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</item>
+
+    </string-array>
 </resources>

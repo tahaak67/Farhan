@@ -17,6 +17,7 @@ import ly.com.tahaben.onboarding_presentaion.components.MainScreenCard
 @androidx.compose.runtime.Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
+    tip: String,
     isGrayscaleEnabled: Boolean,
     isInfiniteScrollBlockerEnabled: Boolean,
     isNotificationFilterEnabled: Boolean,
@@ -38,11 +39,11 @@ fun MainScreen(
         Row(modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.ic_tip),
-                contentDescription = "tip icon"
+                contentDescription = stringResource(R.string.tip_icon_description)
             )
             Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
             Text(
-                text = "To improve productivity during work hours switch you phone to silent and keep it out of sight (Ex: in a drawer)",
+                text = tip,
                 style = MaterialTheme.typography.h5,
                 color = Black
             )
@@ -59,7 +60,7 @@ fun MainScreen(
                 onClick = { navController.navigate(Routes.USAGE) })
             MainScreenCard(
                 text = stringResource(R.string.notifications_filter),
-                status = if (isGrayscaleEnabled) stringResource(id = R.string.enabled) else stringResource(
+                status = if (isNotificationFilterEnabled) stringResource(id = R.string.enabled) else stringResource(
                     id = R.string.disabled
                 ),
                 iconId = R.drawable.ic_notification,

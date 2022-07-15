@@ -26,5 +26,6 @@ object Modules {
 
 
     const val onboardingDomain = ":onboarding:onboarding_domain"
+    const val onboardingData = ":onboarding:onboarding_data"
     const val onboardingPresentation = ":onboarding:onboarding_presentation"
 }

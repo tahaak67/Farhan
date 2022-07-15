@@ -76,6 +76,7 @@ dependencies {
     implementation(project(Modules.grayScaleDomain))
     implementation(project(Modules.grayScalePresentation))
     implementation(project(Modules.onboardingDomain))
+    implementation(project(Modules.onboardingData))
     implementation(project(Modules.onboardingPresentation))
     implementation(project(Modules.usageOverviewDomain))
     implementation(project(Modules.usageOverviewData))
