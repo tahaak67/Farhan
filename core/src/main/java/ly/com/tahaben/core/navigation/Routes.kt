@@ -11,4 +11,5 @@ object Routes {
     const val INFINITE_SCROLLING_EXCEPTIONS = "infinite_scrolling_exceptions"
     const val SCREEN_GRAY_SCALE = "screen_grayscale"
     const val SCREEN_GRAY_SCALE_WHITE_LIST = "screen_grayscale_exceptions"
+    const val ABOUT_APP = "about_app"
 }

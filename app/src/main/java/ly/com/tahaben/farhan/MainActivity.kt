@@ -26,6 +26,7 @@ import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFi
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
+import ly.com.tahaben.onboarding_presentaion.about.AboutScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
+        val tip = getTip()
         setContent {
             FarhanTheme {
                 val navController = rememberNavController()
@@ -89,7 +91,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.MAIN) {
                             MainScreen(
-                                tip = getTip(),
+                                tip = tip,
                                 isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
                                         grayscaleUseCases.isAccessibilityPermissionGranted(),
                                 isInfiniteScrollBlockerEnabled = infiniteScrollUseCases.isServiceEnabled() &&
@@ -178,6 +180,11 @@ class MainActivity : ComponentActivity() {
                             GrayscaleWhiteListScreen(
                                 scaffoldState = scaffoldState,
                                 onNavigateUp = { navController.navigateUp() })
+                        }
+                        composable(Routes.ABOUT_APP) {
+                            AboutScreen(
+                                onNavigateUp = { navController.navigateUp() }
+                            )
                         }
                     }
                 }

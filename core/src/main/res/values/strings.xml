@@ -3,7 +3,7 @@
     <string name="usage">Usage</string>
     <string name="notifications">Notifications</string>
     <string name="grayscale">Grayscale</string>
-    <string name="infinite_scrolling">Infinite scrolling</string>
+    <string name="infinite_scrolling">Infinite scrolling blocker</string>
     <string name="hello">Hello</string>
     <string name="one_hour">1H</string>
     <string name="two_hours">2H</string>
@@ -30,7 +30,7 @@
     <string name="search">Search</string>
     <string name="close_search">Close search</string>
     <string name="open_search_field">Open search field</string>
-    <string name="notify_me_channel_id">notify_me</string>
+    <string name="notify_me_channel_id" translatable="false">notify_me</string>
     <string name="notify_me_channel">Notify me</string>
     <string name="notify_me_channel_description">A reminder to check your filtered notification at your desired time.</string>
     <string name="check_filtered_notifications">Check your filtered notifications</string>
@@ -43,7 +43,7 @@
     <string name="notify_me_description">Notify me to check filtered notifications daily</string>
     <string name="exceptions">Exceptions</string>
     <string name="notifications_filter">Notifications Filter</string>
-    <string name="percent">%</string>
+    <string name="percent" translatable="false">%</string>
     <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
     <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>
     <string name="hey">Hey !!</string>
@@ -52,9 +52,9 @@
     <string name="continue_scrolling">Continue scrolling …</string>
     <string name="exclude_this_app_press_and_hold">Exclude this app (Press and hold)</string>
     <string name="app_excluded">App excluded</string>
-    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for white listed apps</string>
-    <string name="white_lited_apps">White listed apps</string>
-    <string name="grayscale_onboarding_message">One of the ways apps compete for your time and attention is through colors, using grayscale you can disable colors for selected apps eliminating their effect on you!</string>
+    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for whitelisted apps</string>
+    <string name="white_lited_apps">Whitelisted apps</string>
+    <string name="grayscale_onboarding_message">One of the ways apps compete for your time and attention is through colors, using grayscale Farhan can disable colors for selected apps when you lunch them eliminating their effect on you!</string>
     <string name="on_boarding_image_description">Onboarding image</string>
     <string name="next">Next</string>
     <string name="enabled">Enabled</string>
@@ -91,13 +91,27 @@
     <string name="open_source_desc">Anyone can see how Farhan works by viewing the source code on github</string>
     <string name="use_farhan_be_farhan">Use Farhan, Be Farhan!</string>
     <string name="use_farhan_be_farhan_desc">Let your phone work for you, Not the other way around!</string>
+    <string name="about_app">About app</string>
+    <string name="about_app_content">Farhan is an open source android project that offers different tools for you to help you lower the effect of apps manipulating strategies that are used to drain your time and attention, so you can use your phone but not the other way around!</string>
+    <string name="developer">Developer:</string>
+    <string name="taha_name_dev">Taha Benashur (Tahaak67)</string>
+    <string name="source_code">Source code:</string>
+    <string name="soon">Soon</string>
+    <string name="app_name">Farhan</string>
+    <string name="notification_service_name">Notification service</string>
+    <string name="drop_down_menu">Dropdown menu</string>
+    <string name="secure_settings_permission_msg">Secure settings permission is not granted :(</string>
+    <string name="secure_settings_permission_sub_msg">Farhan needs Secure settings permission to grayscale the screen for you</string>
+    <string name="device_root_detected_msg">Looks like your device is rooted!, use the button below if you want to grant the permission with root</string>
+    <string name="accessibility_permission_needed_grayscale_message">Farhan needs accessibility service to grayscale apps for you</string>
+    <string name="no_device_root_detected_msg">To Grant this permission you will need a PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
 
     <string-array name="tips">
         <item>To improve productivity during work hours switch you phone to silent and keep it out of sight (Ex: in a drawer)</item>
         <item>Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</item>
-        <item>When Grayscale is on, only white listed apps will be grayscaled</item>
+        <item>When Grayscale is on, only whitelisted apps will be grayscaled</item>
         <item>Infinite scroll blocker is experimental if you are facing a problem with an app you can add it to exceptions to avoid false detections</item>
-        <item>use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</item>
-
+        <item>Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</item>
+        <item>This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</item>
     </string-array>
 </resources>

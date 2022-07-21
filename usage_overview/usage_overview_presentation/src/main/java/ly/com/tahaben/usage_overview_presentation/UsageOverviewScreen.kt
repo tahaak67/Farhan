@@ -17,7 +17,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
+import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.HowDialog
+import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.usage_overview_presentation.components.DaySelector
 import ly.com.tahaben.usage_overview_presentation.components.TrackedAppItem
 import ly.com.tahaben.usage_overview_presentation.components.UsageOverviewHeader
@@ -49,6 +54,7 @@ fun UsageOverviewScreen(
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
+                        modifier = Modifier.mirror(),
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back)
                     )

@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.OnBoardingContent
+import ly.com.tahaben.core_ui.components.OnBoardingContent
 
 @Composable
 fun NotificationFilterOnBoardingScreen(

@@ -16,7 +16,7 @@ class BroadcastReceiverNotification : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val pm = context.packageManager
 
-        val farhanIntent = pm.getLaunchIntentForPackage("ly.com.tahaben.farhan")?.apply {
+        val farhanIntent = pm.getLaunchIntentForPackage(context.packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("navigate", NOTIFICATION_ID)
         }
@@ -25,7 +25,7 @@ class BroadcastReceiverNotification : BroadcastReceiver() {
 
         val notification =
             NotificationCompat.Builder(context, context.getString(R.string.notify_me_channel_id))
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_farhan_transparent)
                 .setContentTitle(intent.getStringExtra(TITLE_EXTRA))
                 .setContentText(intent.getStringExtra(MESSAGE_EXTRA))
                 .setContentIntent(pendingIntent)

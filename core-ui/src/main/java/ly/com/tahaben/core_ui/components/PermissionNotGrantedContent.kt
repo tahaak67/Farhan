@@ -1,4 +1,4 @@
-package ly.com.tahaben.core_ui
+package ly.com.tahaben.core_ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core_ui.Black
+import ly.com.tahaben.core_ui.LocalSpacing
 
 @Composable
 fun PermissionNotGrantedContent(

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">فرحان</string>
+    <string name="usage">الاستخدام</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="grayscale">إخفاء الألوان</string>
+    <string name="infinite_scrolling">مانع التمرير اللانهائي</string>
+    <string name="hello">مرحباً</string>
+    <string name="one_hour">1س</string>
+    <string name="two_hours">2س</string>
+    <string name="minutes">د</string>
+    <string name="hours">س</string>
+    <string name="previous_day">اليوم السابق</string>
+    <string name="next_day">اليوم التالي</string>
+    <string name="daily_limit">الحد اليومي</string>
+    <string name="social">اجتماعي</string>
+    <string name="productivity">الإنتاجية</string>
+    <string name="today">اليوم</string>
+    <string name="yesterday">الأمس</string>
+    <string name="tomorrow">الغد</string>
+    <string name="no_results">لا نتائج</string>
+    <string name="category_maps">خرائط</string>
+    <string name="category_social">اجتماعي</string>
+    <string name="category_productivity">الإنتاجية</string>
+    <string name="category_game">الألعاب</string>
+    <string name="category_video">الفيديو</string>
+    <string name="category_news">الأخبار</string>
+    <string name="category_other">اخرى</string>
+    <string name="total_usage">اجمالي الإستخدام:</string>
+    <string name="package_not_found_error">خطأ غير معروف: هل انت متأكد من ان هذا التطبيق مثبت؟</string>
+    <string name="search">بحث</string>
+    <string name="close_search">أغلق البحث</string>
+    <string name="open_search_field">افتح صندوق البحث</string>
+    <string name="notify_me_channel">ذكرني</string>
+    <string name="notify_me_channel_description">لتذكيرك بتفقد الإشعارات المفلترة في الوقت الذي تحدده</string>
+    <string name="check_filtered_notifications">تفقد اشعاراتك المفلترة</string>
+    <string name="you_have_unchecked_filtered_notifications">لديك اشعارات مفلترة لم تتفقدها بعد</string>
+    <string name="back">رجوع</string>
+    <string name="notifications_filter_settings">اعدادات فلترة الإشعارات</string>
+    <string name="clear_all">مسح الكل</string>
+    <string name="tap_to_set_new_time">اضغط لتحديد وقت جديد</string>
+    <string name="notify_me">ذكرني</string>
+    <string name="notify_me_description">ذكرني لكي اتفقد الإشعارات المفلترة يومياً</string>
+    <string name="exceptions">الإستثنائات</string>
+    <string name="notifications_filter">فلترة الإشعارات</string>
+    <string name="infinite_scroll_blocker_settings">إعدادات مانع التمرير اللانهائي</string>
+    <string name="infinite_scroll_blocker">مانع التمرير اللانهائي</string>
+    <string name="hey">مرحباً !!</string>
+    <string name="infinite_scroll_dialog_message">يبدو أنك علقت في حلقة تمرير لانهائية</string>
+    <string name="take_me_out_of_here">اخرجني من هنا</string>
+    <string name="continue_scrolling">استمر في التمرير</string>
+    <string name="exclude_this_app_press_and_hold">استثني هذا التطبيق (اضغط بإستمرار)</string>
+    <string name="app_excluded">تم استثناء التطبيق</string>
+    <string name="enable_grayscale_for_white_listed_apps">شغل إخفاء الألوان للتطبيقات المدرجة في القائمة البيضاء</string>
+    <string name="white_lited_apps">القائمة البيضاء</string>
+    <string name="grayscale_onboarding_message">واحدة من الطرق التي تستخدمها التطبيقات للتنافس على انتباهك ووقتك هي من خلال الألوان، بإستخدام إخفاء الألوان يستطيع فرحان أن يجرد بعض التطبيقات من الألوان عندما تفتحها وبالتالي يقل تأثيرها عليك!</string>
+    <string name="on_boarding_image_description">صورة ترحيب</string>
+    <string name="next">التالي</string>
+    <string name="enabled">مفعل</string>
+    <string name="disabled">معطل</string>
+    <string name="accessibility_service_name">خدمة إمكانية الوصول لفرحان</string>
+    <string name="accessibility_service_description">هذه الخدمة مطلوبة لبعض الوظائف مثل مانع التمرير اللانهائي وتجريد الألوان</string>
+    <string name="usage_permission_msg">إذن الوصول إلى الإستخدام غير ممنوح :(</string>
+    <string name="usage_permission_sub_msg">يحتاج فرحان إلى اذن الوصول إلى بيانات استخدام الجهاز لعرض بيانات الإستخدام الخاصة بك</string>
+    <string name="grant_access">منح الإذن</string>
+    <string name="how">كيف؟</string>
+    <string name="how_to_enable_permission">كيف تمنح الإذن</string>
+    <string name="ok">حسناً</string>
+    <string name="show_system_apps">إظهار تطبيقات النظام</string>
+    <string name="appear_on_top_permission_not_granted">إذن الإظهار فوق التطبيقات الأخرى غير ممنوح :(</string>
+    <string name="appear_on_top_permission_needed_message">فرحان يحتاج إلى إذن الظهور فوق التطبيقات الأخرى لكي يساعدك على الخروج من التمرير اللانهائي</string>
+    <string name="remind_me_to_stop_scrolling_after">ذكرني لأتوقف بعد</string>
+    <string name="dismiss">رفض</string>
+    <string name="confirm">تأكيد</string>
+    <string name="accessibility_permission_not_granted">خدمة إمكانية الوصول لا تعمل :(</string>
+    <string name="accessibility_permission_needed_message">يحتاج فرحان إلى  خدمة إمكانية الوصول ليساعدك على الخروج من التمرير اللانهائي</string>
+    <string name="one_more_thing">شيء آخر!</string>
+    <string name="infinite_scroll_onboarding_message">التمرير اللانهائي هو تقنية تستخدم من قبل التطبيقات لتستمر في اعطائك محتوى جديد مهما استمريت في التمرير، وبالتالي ينقص تحكمك في وقتك، يستطيع فرحان أن يحاول التعرف على ما إن كنت عالقاً في حلقة مفرغة من التمرير اللانهائي ويذكرك بالخروج من ذلك التطبيق!</string>
+    <string name="notification_filter_onboarding_message">الإشعارات كالمنبه إلا انها يمكن ان تشتت انتباهك في اي وقت بدون سابق إنذار، يستطيع فرحان استبعاد هذه المشتتات عن طريق فلترة الإشعارات وبهذا لن تستطيع التطبيقات تشتيتك بالإشعارات، يمكنك إستثناء التطبيقات المهمة التى ترغب في استقبال اشعارات منها وسيتم فلترة بقية الإشعارات وحفظها داخل التطبيق حيث يمكنك الإطلاع عليها وقتما تشاء!</string>
+    <string name="notification_permission_not_granted">إذن الوصول إلى الإشعارات غير ممنوح :(</string>
+    <string name="notification_filter_needed_message">فرحان يحتاج إلى إذن الوصول إلى الإشعارات لكي تعمل خاصية فلترة الإشعارات</string>
+    <string name="no_notifications">لا توجد اشعارات</string>
+    <string name="delete_icon">أيقونة الحذف</string>
+    <string name="tip_icon_description">أيقونة النصيحة</string>
+    <string name="get_started">ابدأ</string>
+    <string name="skip_now">تخطى</string>
+    <string name="no_internet_permission">بدون أذونات انترنت</string>
+    <string name="no_internet_permission_desc">فرحان لا يتصل بإنترنت بأي شكل من الأشكال، في الواقع هو لا يملك اي اذونات للوصول إلى الأنترنت وبهذا بياناتك لن تغادر هاتفك</string>
+    <string name="open_source">مفتوح المصدر</string>
+    <string name="open_source_desc">يمكن الأي شخص أن يطلع على طريقة عمل فرحان من خلال الكود المصدرى الموجود على github</string>
+    <string name="use_farhan_be_farhan">إستخدم فرحان، كن فرحان!</string>
+    <string name="use_farhan_be_farhan_desc">دع هاتفك يعمل الأجلك و ليس العكس!</string>
+    <string name="about_app">حول التطبيق</string>
+    <string name="about_app_content">فرحان هو مشروع مفتوح المصدر يوفر العديد من الأدوات المساعدة لك للتقليل من تأثير التقنيات المستخدمة لإستنزاف وقتك وانتباهك، وبالتالي تكون أنت من يستخدم هاتفك وليس العكس!</string>
+    <string name="developer">المطور:</string>
+    <string name="taha_name_dev">طه بن عاشور (tahaak67)</string>
+    <string name="source_code">الكود المصدري:</string>
+    <string name="soon">قريباً</string>
+    <string name="notification_service_name">خدمة الإشعارات</string>
+    <string name="drop_down_menu">القائمة المنسدلة</string>
+    <string name="secure_settings_permission_msg">إذن الوصول إلى الإعدادات الآمنة غير ممنوح :(</string>
+    <string name="secure_settings_permission_sub_msg">فرحان يحتاج إلى إذن الإعدادات الآمنة لتجريد الشاشة من الألوان لأجلك</string>
+    <string name="device_root_detected_msg">يبدو انك جهازك به صلاحيات رووت!، يمكنك استخدام الزر ادناه لمنح الإذن عن طريق صلاحيات  الرووت</string>
+    <string name="accessibility_permission_needed_grayscale_message">فرحان يحتاج إلى خدمة إمكانية الوصول لإخفاء ألوان الشاشة للتطبيقات التي تختارها</string>
+    <string name="no_device_root_detected_msg">لمنح هذا الإذن سوف تحتاج إلى حاسوب، لا تقلق لن تحتاج إلى القيام بهذا إلا مرة واحدة ولن يستغرق الأمر إلا بضع دقائق</string>
+    <string-array name="tips">
+        <item>لزيادة الإنتاجية خلال ساعات العمل ضع هاتفك على وضع الصامت وابقه بعيداً عن ناظريك (في الدرج مثلاً)</item>
+        <item>لا تريد أن يفوتك إشعار مهم من أحد التطبيقات؟، قم بإضافة التطبيقات المهمة إلى قائمة الإستثناءات في مفلتر الإشعارات</item>
+        <item>عندما يكون تجريد الألوان مفعل، سيتم فقط تجريد الألوان من التطبيقات المدرجة في القائمة البيضاء</item>
+        <item>مانع التمرير اللانهائي لايزال قيد الإختبار، إذا كنت تعاني من مشكلة مع أحد التطبيقات فيمكنك اضافته إلى الإستثناءات لتجنب أي تنبيهات كاذبة</item>
+        <item>إستخدم ميزة ذكرني في مفلتر الإشعارات واختر وقتاً ليتم تنبيهك بتفقد الإشعارات في الوقت الذي تريده كل يوم</item>
+        <item>هذه نسخة تجريبية من فرحان، قم بالتبليغ عن أي مشكلات للمطور وأرفقها بلقطات للشاشة كلما كان ذلك ممكناً</item>
+    </string-array>
+</resources>

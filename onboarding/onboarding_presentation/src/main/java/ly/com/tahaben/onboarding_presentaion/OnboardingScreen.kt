@@ -107,6 +107,7 @@ fun OnBoardingPager(
     val spacing = LocalSpacing.current
     Column(
         modifier = Modifier.fillMaxSize()
+
     ) {
         Box(
             modifier = modifier
@@ -137,7 +138,7 @@ fun OnBoardingPager(
                             modifier = Modifier
                                 .padding(spacing.spaceMedium)
                                 .fillMaxWidth()
-                                .height(300.dp)
+                                .aspectRatio(2f)
                         )
                     }
                 }
@@ -148,9 +149,9 @@ fun OnBoardingPager(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(340.dp),
+                        .height(380.dp)
+                        .padding(top = spacing.spaceLarge),
                     backgroundColor = MaterialTheme.colors.secondary,
-                    elevation = 0.dp,
                     shape = BottomCardShape.large
                 ) {
                     Box() {
@@ -162,7 +163,7 @@ fun OnBoardingPager(
                                 text = item[pagerState.currentPage].title,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 20.dp, end = 30.dp),
+                                    .padding(top = spacing.spaceMedium),
                                 color = Black,
                                 style = MaterialTheme.typography.h3,
                                 textAlign = TextAlign.Center,
@@ -172,9 +173,9 @@ fun OnBoardingPager(
                             Text(
                                 text = item[pagerState.currentPage].desc,
                                 modifier = Modifier.padding(
-                                    top = 20.dp,
-                                    start = 40.dp,
-                                    end = 20.dp
+                                    top = spacing.spaceMedium,
+                                    start = spacing.spaceMedium,
+                                    end = spacing.spaceMedium
                                 ),
                                 color = Black,
                                 style = MaterialTheme.typography.h4,

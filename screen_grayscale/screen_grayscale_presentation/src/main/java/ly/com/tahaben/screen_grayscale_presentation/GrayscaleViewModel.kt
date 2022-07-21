@@ -31,7 +31,8 @@ class GrayscaleViewModel @Inject constructor(
     fun checkServiceStats() {
         state = state.copy(
             isServiceEnabled = grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted(),
-            isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted()
+            isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted(),
+            isAccessibilityPermissionGranted = grayscaleUseCases.isAccessibilityPermissionGranted()
         )
     }
 
@@ -45,11 +46,15 @@ class GrayscaleViewModel @Inject constructor(
     fun setServiceStats(isEnabled: Boolean) {
         grayscaleUseCases.setGrayscaleState(isEnabled)
         if (!state.isAccessibilityPermissionGranted) {
-            grayscaleUseCases.askForAccessibilityPermission()
+            askForAccessibilityPermission()
         }
         state = state.copy(
             isServiceEnabled = isEnabled
         )
+    }
+
+    fun askForAccessibilityPermission() {
+        grayscaleUseCases.askForAccessibilityPermission()
     }
 
     private fun checkAccessibilityPermissionStats() {

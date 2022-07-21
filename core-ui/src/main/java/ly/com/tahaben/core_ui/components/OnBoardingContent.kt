@@ -1,15 +1,20 @@
-package ly.com.tahaben.core_ui
+package ly.com.tahaben.core_ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core_ui.LocalSpacing
 
 @Composable
 fun OnBoardingContent(
@@ -24,19 +29,21 @@ fun OnBoardingContent(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = spacing.spaceLarge, vertical = spacing.spaceLarge),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         GifImage(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+                .height(330.dp)
+                .align(CenterHorizontally),
             gifId = gifId,
             gifDescription = gifDescription,
         )
+        Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Text(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .wrapContentSize(),
             text = message,
             style = MaterialTheme.typography.h4
         )
