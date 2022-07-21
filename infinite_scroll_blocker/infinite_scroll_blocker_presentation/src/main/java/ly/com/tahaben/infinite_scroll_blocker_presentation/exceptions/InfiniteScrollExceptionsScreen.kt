@@ -27,9 +27,11 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
+import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.components.SearchTextField
+import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.infinite_scroll_blocker_presentation.components.AppExceptionListItem
 import timber.log.Timber
 
@@ -80,6 +82,7 @@ fun InfiniteScrollExceptionsScreen(
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
+                        modifier = Modifier.mirror(),
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back)
                     )
@@ -135,7 +138,8 @@ fun InfiniteScrollExceptionsScreen(
                                             checked
                                         )
                                     )
-                                }
+                                },
+                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                             Text(
                                 text = stringResource(R.string.show_system_apps),

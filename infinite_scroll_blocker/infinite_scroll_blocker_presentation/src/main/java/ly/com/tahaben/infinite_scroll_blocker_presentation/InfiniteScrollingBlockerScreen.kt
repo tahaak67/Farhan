@@ -21,7 +21,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
+import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.HowDialog
+import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.mirror
 import timber.log.Timber
 
 @Composable
@@ -100,8 +105,7 @@ fun InfiniteScrollingBlockerScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -118,17 +122,16 @@ fun InfiniteScrollingBlockerScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
                         .clickable {
                             onNavigateToExceptions()
                         },
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = stringResource(R.string.exceptions),
-                        textAlign = TextAlign.Justify
+                        textAlign = TextAlign.Start
                     )
                 }
                 AnimatedVisibility(visible = true) {

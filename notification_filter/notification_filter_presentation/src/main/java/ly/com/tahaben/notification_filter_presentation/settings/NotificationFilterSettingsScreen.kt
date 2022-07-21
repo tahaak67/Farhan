@@ -59,8 +59,7 @@ fun NotificationFilterSettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(spacing.spaceExtraLarge)
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
 
@@ -77,24 +76,22 @@ fun NotificationFilterSettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(spacing.spaceExtraLarge)
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
                 .clickable {
                     onNavigateToExceptions()
                 },
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(R.string.exceptions),
-                textAlign = TextAlign.Justify
+                textAlign = TextAlign.Start
             )
         }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(spacing.spaceExtraLarge)
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

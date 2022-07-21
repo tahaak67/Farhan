@@ -1,5 +1,7 @@
 package ly.com.tahaben.screen_grayscale_presentation
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,12 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 
 @Composable
 fun GrayscaleScreen(
@@ -24,6 +28,7 @@ fun GrayscaleScreen(
     viewModel: GrayscaleViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
     val state = viewModel.state
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
     isServiceChecked.value = state.isServiceEnabled
@@ -32,7 +37,6 @@ fun GrayscaleScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkServiceStats()
-                //viewModel.checkIfAppearOnTopPermissionGranted()
             }
             else -> Unit
         }
@@ -67,27 +71,49 @@ fun GrayscaleScreen(
                     CircularProgressIndicator()
                 } else {
                     Text(
-                        text = "Secure settings permission is not granted :(",
+                        text = stringResource(R.string.secure_settings_permission_msg),
                         style = MaterialTheme.typography.h1,
                         color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     Text(
-                        text = "Farhan needs Secure settings permission to grayscale the screen for you",
+                        text = stringResource(R.string.secure_settings_permission_sub_msg),
                         style = MaterialTheme.typography.h3,
                         color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     if (state.isDeviceRooted) {
                         Text(
-                            text = "Looks like your device is rooted!, use the button below if you want to grant the permission with root",
+                            text = stringResource(R.string.device_root_detected_msg),
                             style = MaterialTheme.typography.h3,
                             color = Black
                         )
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
                         Button(onClick = { viewModel.askForSecureSettingsPermissionWithRoot() }) {
                             Text(
-                                text = "Grant access",
+                                text = stringResource(id = R.string.grant_access),
+                                style = MaterialTheme.typography.button,
+                                color = Black
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    } else {
+                        Text(
+                            text = stringResource(R.string.no_device_root_detected_msg),
+                            style = MaterialTheme.typography.h3,
+                            color = Black
+                        )
+                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                        Button(onClick = {
+                            val url = Intent(Intent.ACTION_VIEW).apply {
+                                data =
+                                    Uri.parse("https://tahaben.com.ly/grant-secure-settings-permission-to-farhan/")
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            context.startActivity(url)
+                        }) {
+                            Text(
+                                text = stringResource(id = R.string.how),
                                 style = MaterialTheme.typography.button,
                                 color = Black
                             )
@@ -95,6 +121,15 @@ fun GrayscaleScreen(
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     }
                 }
+            }
+        } else if (!state.isAccessibilityPermissionGranted) {
+            PermissionNotGrantedContent(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(id = R.string.accessibility_permission_not_granted),
+                subMessage = stringResource(id = R.string.accessibility_permission_needed_grayscale_message),
+                onGrantClick = viewModel::askForAccessibilityPermission
+            ) {
+
             }
         } else {
             Column(
@@ -104,8 +139,7 @@ fun GrayscaleScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -122,17 +156,16 @@ fun GrayscaleScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
                         .clickable {
                             onNavigateToExceptions()
                         },
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = stringResource(R.string.white_lited_apps),
-                        textAlign = TextAlign.Justify
+                        textAlign = TextAlign.Start
                     )
                 }
             }

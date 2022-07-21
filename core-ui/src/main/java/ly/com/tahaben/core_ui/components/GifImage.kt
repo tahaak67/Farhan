@@ -1,4 +1,4 @@
-package ly.com.tahaben.core_ui
+package ly.com.tahaben.core_ui.components
 
 import android.os.Build
 import androidx.annotation.DrawableRes

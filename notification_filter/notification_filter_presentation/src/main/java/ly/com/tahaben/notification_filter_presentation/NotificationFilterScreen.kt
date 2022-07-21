@@ -27,6 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.components.HowDialog
+import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
 import timber.log.Timber
@@ -61,6 +63,7 @@ fun NotificationFilterScreen(
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
+                        modifier = Modifier.mirror(),
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back)
                     )
