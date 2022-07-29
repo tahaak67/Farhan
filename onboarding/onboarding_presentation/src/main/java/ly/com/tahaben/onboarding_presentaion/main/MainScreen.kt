@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import ly.com.tahaben.core.R
@@ -65,6 +66,8 @@ fun MainScreen(
                             TextButton(onClick = { navController.navigate(Routes.ABOUT_APP) }) {
                                 Text(
                                     text = stringResource(R.string.about_app),
+                                    style = MaterialTheme.typography.h4,
+                                    fontWeight = FontWeight.Normal,
                                     textAlign = TextAlign.Center,
                                     color = Black
                                 )
@@ -126,14 +129,14 @@ fun MainScreen(
                     status = if (isGrayscaleEnabled) stringResource(id = R.string.enabled) else stringResource(
                         id = R.string.disabled
                     ),
-                    iconId = null,
+                    iconId = R.drawable.ic_outline_color_lens_24,
                     onClick = { navController.navigate(Routes.SCREEN_GRAY_SCALE) })
                 MainScreenCard(
                     text = stringResource(R.string.infinite_scrolling),
                     status = if (isInfiniteScrollBlockerEnabled) stringResource(id = R.string.enabled) else stringResource(
                         id = R.string.disabled
                     ),
-                    iconId = null,
+                    iconId = R.drawable.ic_swipe_vertical_24,
                     onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
             }
         }

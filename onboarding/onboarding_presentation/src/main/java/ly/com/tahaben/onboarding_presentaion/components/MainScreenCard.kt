@@ -29,7 +29,7 @@ fun MainScreenCard(
     val spacing = LocalSpacing.current
     Card(
         modifier = Modifier
-            .height(130.dp)
+            .height(150.dp)
             .width(150.dp)
             .clip(
                 RoundedCornerShape(20)

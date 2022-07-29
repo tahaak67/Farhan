@@ -1,0 +1,6 @@
+Farhan is an open source application that offers many ways to eliminate manipulative strategies used by other apps on your phone, so you can eliminate distractions and use your phone!
+Included features:
+- Notifications filter
+- Infinite scrolling blocker
+- Screen Grayscale for selected apps
+- Check your usage with a simple interface

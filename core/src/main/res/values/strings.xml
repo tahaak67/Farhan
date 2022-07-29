@@ -77,7 +77,7 @@
     <string name="accessibility_permission_needed_message">Farhan needs accessibility service to help you break infinite scrolling</string>
     <string name="one_more_thing">One more thing!</string>
     <string name="infinite_scroll_onboarding_message">Infinite scrolling is a technique used by apps to keep giving you new content no matter how much you scroll thus reducing your control over your time, Farhan can try to detect when you are stuck in an infinite scroll and remind you to get out of that app!</string>
-    <string name="notification_filter_onboarding_message">Notifications are like an alarm except that they can distract you at any time without you event knowing when, Farhan can eliminate this distraction by filtering notification so you wont be distracted, you can exclude important apps that you want to get notifications from and the rest will get filtered and you can come to the app and see them at any time!</string>
+    <string name="notification_filter_onboarding_message">Notifications are like an alarm except that they can distract you at any time without you even knowing when, Farhan can eliminate this distraction by filtering notification so you won\’t be distracted, you can exclude important apps that you want to get notifications from and the rest will get filtered and you can come to the app and see them at any time!</string>
     <string name="notification_permission_not_granted">Notification permission is not granted :(</string>
     <string name="notification_filter_needed_message">Farhan needs notification access for Notification filter to work</string>
     <string name="no_notifications">No notifications</string>
@@ -88,13 +88,13 @@
     <string name="no_internet_permission">No Internet Permission!</string>
     <string name="no_internet_permission_desc">Farhan does not connect to the internet in anyway, in fact it does\'nt even have an internet permission, so your data stays on your phone</string>
     <string name="open_source">Open Source</string>
-    <string name="open_source_desc">Anyone can see how Farhan works by viewing the source code on github</string>
+    <string name="open_source_desc">Anyone can see how Farhan works by viewing the source code on GitHub</string>
     <string name="use_farhan_be_farhan">Use Farhan, Be Farhan!</string>
     <string name="use_farhan_be_farhan_desc">Let your phone work for you, Not the other way around!</string>
     <string name="about_app">About app</string>
     <string name="about_app_content">Farhan is an open source android project that offers different tools for you to help you lower the effect of apps manipulating strategies that are used to drain your time and attention, so you can use your phone but not the other way around!</string>
     <string name="developer">Developer:</string>
-    <string name="taha_name_dev">Taha Benashur (Tahaak67)</string>
+    <string name="taha_name_dev">Taha Ben Ashur (Tahaak67)</string>
     <string name="source_code">Source code:</string>
     <string name="soon">Soon</string>
     <string name="app_name">Farhan</string>
@@ -107,7 +107,7 @@
     <string name="no_device_root_detected_msg">To Grant this permission you will need a PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
 
     <string-array name="tips">
-        <item>To improve productivity during work hours switch you phone to silent and keep it out of sight (Ex: in a drawer)</item>
+        <item>To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</item>
         <item>Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</item>
         <item>When Grayscale is on, only whitelisted apps will be grayscaled</item>
         <item>Infinite scroll blocker is experimental if you are facing a problem with an app you can add it to exceptions to avoid false detections</item>

@@ -12,6 +12,9 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
@@ -79,14 +82,20 @@ class AccessibilityService : AccessibilityService() {
 
     private fun listenToScrollEvent(event: AccessibilityEvent) {
         Timber.d("event count = ${event.itemCount}")
+        Timber.d("content description = ${event.contentDescription}")
+        Timber.d("content describe = ${event.describeContents()}")
         val maxY = if (event.itemCount > 0) {
             event.itemCount
         } else {
             -1
         }
         if (event.source == null || event.className == null) return
-
-        if (maxY == -1 && event.scrollX == 0) {
+        val isViewPagerView = event.className == ViewPager::class.java.name ||
+                event.className == ViewPager2::class.java.name ||
+                event.className == RecyclerView::class.java.name
+        if (maxY == -1 && event.scrollX == 0 && event.itemCount == -1 && isViewPagerView
+        ) {
+            Timber.d("vertical video?")
             //For vertical video scrolling like Tiktok, (its not necessarily a viewPager some apps use
             // a recyclerview with a viewPager like behaviour)
             val viewPagerId = (
