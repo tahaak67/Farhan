@@ -65,7 +65,8 @@ class UsageOverviewViewModel @Inject constructor(
                     val filteredList = usageOverviewUseCases.filterUsageEvents(usageDataList)
                     val filteredListWithDuration = usageOverviewUseCases.calculateUsageDuration(
                         filteredList,
-                        usageOverviewUseCases.getDurationFromMilliseconds
+                        usageOverviewUseCases.getDurationFromMilliseconds,
+                        usageOverviewUseCases.filterDuration
                     ).sortedByDescending { it.usageDurationInMilliseconds }
                     val totalTimeInMilliSeconds =
                         filteredListWithDuration.sumOf { it.usageDurationInMilliseconds }
