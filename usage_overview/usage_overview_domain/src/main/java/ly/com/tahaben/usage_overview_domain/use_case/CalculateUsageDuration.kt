@@ -5,14 +5,13 @@ import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
 import timber.log.Timber
-import kotlin.math.abs
-import kotlin.time.Duration.Companion.milliseconds
 
 class CalculateUsageDuration {
 
     operator fun invoke(
         usageDataItem: List<UsageDataItem>,
-        getDurationFromMilliseconds: GetDurationFromMilliseconds
+        getDurationFromMilliseconds: GetDurationFromMilliseconds,
+        filterDuration: FilterDuration
     ): List<UsageDurationDataItem> {
         val usageDurationList = arrayListOf<UsageDurationDataItem>()
         usageDataItem
@@ -46,17 +45,5 @@ class CalculateUsageDuration {
 
             }
         return usageDurationList
-    }
-
-    private fun filterDuration(milliseconds: Long): Long {
-        val durationInMilli = milliseconds.milliseconds
-        //this sometimes returns an unrealistic large number for hours until this is fixed i will have to manually set it to 0 if its larger than 24 (since we only get usage for 1 day at a time)
-        return durationInMilli.toComponents { hours, minutes, _, _ ->
-            val hrs = if (abs(hours) > 24L) 0L else hours
-            val min = abs(minutes)
-            val t = (((hrs * 60) + min) * 60 * 1000).milliseconds.inWholeMilliseconds
-            Timber.d("durationinmilli= $t")
-            t
-        }
     }
 }

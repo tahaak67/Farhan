@@ -80,10 +80,11 @@ class UsageRepositoryImpl(
                     } else {
                         usageDataItems.add(usageEvent.toUsageDataItem(applicationName))
                     }
-                    Timber.e(
-                        "APP" +
-                                "${usageEvent.packageName} ${usageEvent.timeStamp} "
-                    )
+                    if (usageEvent.eventType == 1 || usageEvent.eventType == 2)
+                        Timber.e(
+                            "APP" +
+                                    "${usageEvent.packageName} ${usageEvent.timeStamp} "
+                        )
                 }
             }
             return flowOf(usageDataItems)
