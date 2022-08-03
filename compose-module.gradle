@@ -48,6 +48,8 @@ dependencies {
     implementation Compose.navigation
     implementation Compose.viewModelCompose
     implementation Compose.activityCompose
+    implementation Compose.constraintCompose
+    implementation Compose.materialExtended
 
 
     kapt DaggerHilt.hiltCompiler

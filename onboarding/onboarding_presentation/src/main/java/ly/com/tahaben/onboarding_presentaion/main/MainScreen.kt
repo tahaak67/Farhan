@@ -32,6 +32,7 @@ fun MainScreen(
     isGrayscaleEnabled: Boolean,
     isInfiniteScrollBlockerEnabled: Boolean,
     isNotificationFilterEnabled: Boolean,
+    isLauncherEnabled: Boolean,
     navController: NavHostController
 ) {
     val spacing = LocalSpacing.current
@@ -138,6 +139,19 @@ fun MainScreen(
                     ),
                     iconId = R.drawable.ic_swipe_vertical_24,
                     onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
+            }
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                MainScreenCard(
+                    text = stringResource(R.string.launcher),
+                    status = if (isLauncherEnabled) stringResource(id = R.string.enabled) else stringResource(
+                        id = R.string.disabled
+                    ),
+                    iconId = null,
+                    onClick = { navController.navigate(Routes.LAUNCHER_SETTINGS) })
             }
         }
     }

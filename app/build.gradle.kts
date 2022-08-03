@@ -81,6 +81,9 @@ dependencies {
     implementation(project(Modules.usageOverviewDomain))
     implementation(project(Modules.usageOverviewData))
     implementation(project(Modules.usageOverviewPresentation))
+    implementation(project(Modules.launcherData))
+    implementation(project(Modules.launcherDomain))
+    implementation(project(Modules.launcherPresentation))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
@@ -88,6 +91,7 @@ dependencies {
     implementation(Coil.coilCompose)
 
     implementation(Google.material)
+    implementation(Google.accompanistUiController)
 
     kapt(Room.roomCompiler)
     implementation(Room.roomKtx)

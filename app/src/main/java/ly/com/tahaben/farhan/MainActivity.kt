@@ -20,6 +20,8 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUse
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding.InfiniteScrollOnBoardingScreen
+import ly.com.tahaben.launcher_domain.preferences.Preference
+import ly.com.tahaben.launcher_presentation.settings.LauncherSettingsScreen
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
@@ -51,6 +53,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var onBoardingPref: Preferences
+
+    @Inject
+    lateinit var launcherPref: Preference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +103,7 @@ class MainActivity : ComponentActivity() {
                                         infiniteScrollUseCases.isAccessibilityPermissionGranted(),
                                 isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
+                                isLauncherEnabled = launcherPref.isLauncherEnabled(),
                                 navController = navController,
                             )
                         }
@@ -183,6 +189,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.ABOUT_APP) {
                             AboutScreen(
+                                onNavigateUp = { navController.navigateUp() }
+                            )
+                        }
+                        composable(Routes.LAUNCHER_SETTINGS) {
+                            LauncherSettingsScreen(
                                 onNavigateUp = { navController.navigateUp() }
                             )
                         }

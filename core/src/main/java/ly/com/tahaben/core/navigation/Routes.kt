@@ -12,4 +12,6 @@ object Routes {
     const val SCREEN_GRAY_SCALE = "screen_grayscale"
     const val SCREEN_GRAY_SCALE_WHITE_LIST = "screen_grayscale_exceptions"
     const val ABOUT_APP = "about_app"
+    const val LAUNCHER = "launcher"
+    const val LAUNCHER_SETTINGS = "launcher_settings"
 }

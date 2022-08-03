@@ -105,6 +105,14 @@
     <string name="device_root_detected_msg">Looks like your device is rooted!, use the button below if you want to grant the permission with root</string>
     <string name="accessibility_permission_needed_grayscale_message">Farhan needs accessibility service to grayscale apps for you</string>
     <string name="no_device_root_detected_msg">To Grant this permission you will need a PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
+    <string name="launcher_settings">Launcher Settings</string>
+    <string name="launcher">Launcher</string>
+    <string name="clear_text">Clear text</string>
+    <string name="set_default_launcher_title">Set Farhan as your launcher</string>
+    <string name="set_default_launcher_text">Please select Farhan to set it as your default launcher</string>
+    <string name="set_other_default_launcher_text">Please select the other launcher you want to use</string>
+    <string name="dialer">Dialer</string>
+    <string name="camera">Camera</string>
 
     <string-array name="tips">
         <item>To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</item>

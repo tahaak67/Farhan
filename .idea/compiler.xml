@@ -11,6 +11,9 @@
       <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_data" target="11" />
       <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_domain" target="11" />
       <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_presentation" target="11" />
+      <module name="Farhan.launcher.launcher_data" target="11" />
+      <module name="Farhan.launcher.launcher_domain" target="11" />
+      <module name="Farhan.launcher.launcher_presentation" target="11" />
       <module name="Farhan.notification_filter.notification_filter_data" target="11" />
       <module name="Farhan.notification_filter.notification_filter_domain" target="11" />
       <module name="Farhan.notification_filter.notification_filter_presentation" target="11" />

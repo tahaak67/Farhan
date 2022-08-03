@@ -1,0 +1,55 @@
+{
+  ConstraintSets: {
+    start: {
+      apps_list: {
+        start: [
+          'parent',
+          'start',
+          0
+        ],
+        custom: {
+          background: '#08ff04'
+        }
+      },
+      home_screen: {
+        end: [
+          'apps_list',
+          'start',
+          0
+        ],
+        custom: {
+          background: '#08ff04'
+        }
+      }
+    },
+    end: {
+      apps_list: {
+        start: [
+          'parent',
+          'end',
+          0
+        ],
+        custom: {
+          background: '#ffffff'
+        }
+      },
+      home_screen: {
+        end: [
+          'apps_list',
+          'start',
+          0
+        ],
+        custom: {
+          background: '#08ff04'
+        }
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startHorizontal',
+    }
+  }
+}

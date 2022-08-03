@@ -23,6 +23,8 @@
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+
     <application
         android:name=".FarhanApplication"
         android:allowBackup="true"
@@ -39,16 +41,28 @@
         <receiver
             android:name="ly.com.tahaben.core.util.BroadcastReceiverNotification"
             android:enabled="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Farhan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="ly.com.tahaben.launcher_presentation.LauncherActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FarhanLauncher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name="ly.com.tahaben.notification_filter_data.service.NotificationService"
             android:label="@string/notification_service_name"

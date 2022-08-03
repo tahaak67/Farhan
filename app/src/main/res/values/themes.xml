@@ -4,4 +4,10 @@
     <style name="Theme.Farhan" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/darker_yellow</item>
     </style>
+
+    <style name="Theme.FarhanLauncher" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>
