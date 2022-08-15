@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ly.com.tahaben.core.model.AppItem
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.launcher_domain.use_case.LauncherUseCases
 import javax.inject.Inject
@@ -82,5 +83,25 @@ class LauncherViewModel @Inject constructor(
         state = state.copy(
             searchResults = searchResults
         )
+    }
+
+    fun launchMainActivityForApp(app: AppItem) {
+        launcherUseCases.launchMainActivityForApp(app)
+    }
+
+    fun launchAppInfo(app: AppItem) {
+        launcherUseCases.launchAppInfo(app)
+    }
+
+    fun launchDefaultDialerApp() {
+        launcherUseCases.launchDefaultDialer()
+    }
+
+    fun launchDefaultCameraApp() {
+        launcherUseCases.launchDefaultCameraApp()
+    }
+
+    fun launchDefaultAlarmApp() {
+        launcherUseCases.launchDefaultAlarmApp()
     }
 }

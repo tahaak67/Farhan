@@ -24,7 +24,12 @@ object LauncherDomainModule {
             GetInstalledActivities(activitiesRepository),
             CheckIfCurrentLauncher(context),
             OpenDefaultLauncherSettings(context),
-            SetBlackWallpaper(context)
+            SetBlackWallpaper(context),
+            LaunchMainActivityForApp(activitiesRepository),
+            LaunchAppInfo(activitiesRepository),
+            LaunchDefaultDialer(activitiesRepository),
+            LaunchDefaultCameraApp(activitiesRepository),
+            LaunchDefaultAlarmApp(activitiesRepository)
         )
     }
 

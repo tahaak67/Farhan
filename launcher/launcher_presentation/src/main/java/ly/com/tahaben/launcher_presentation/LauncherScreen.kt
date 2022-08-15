@@ -1,13 +1,9 @@
 package ly.com.tahaben.launcher_presentation
 
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
-import android.provider.MediaStore
-import android.provider.Settings
 import android.widget.TextClock
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -15,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
@@ -23,16 +20,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
@@ -40,13 +34,12 @@ import androidx.constraintlayout.compose.MotionScene
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.util.HomeWatcher
 import ly.com.tahaben.core.util.SearchEvent
-import ly.com.tahaben.core_ui.BlackTP
-import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
-import ly.com.tahaben.core_ui.Yellow
+import ly.com.tahaben.core_ui.*
 import ly.com.tahaben.launcher_presentation.component.AppListItem
 import ly.com.tahaben.launcher_presentation.component.SearchTextFieldLauncher
+import timber.log.Timber
 import kotlin.math.abs
 
 @OptIn(
@@ -55,6 +48,7 @@ import kotlin.math.abs
 )
 @Composable
 fun LauncherScreen(
+    homeWatcher: HomeWatcher,
     viewModel: LauncherViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -70,7 +64,15 @@ fun LauncherScreen(
     var componentWidth by remember { mutableStateOf(10000f) }
     val swipeableState = rememberSwipeableState("End")
     val anchors = mapOf(0f to "Start", componentWidth to "End")
+    val scope = rememberCoroutineScope()
     val mprogress = (swipeableState.offset.value / componentWidth)
+    homeWatcher.setOnHomePressedListener(object : HomeWatcher.OnHomePressedListener {
+        override fun onHomePressed() {
+            scope.launch {
+                swipeableState.animateTo("End")
+            }
+        }
+    })
     MotionLayout(
         motionScene = MotionScene(content = motionScene),
         progress = mprogress,
@@ -106,6 +108,9 @@ fun LauncherScreen(
                             keyboardController?.hide()
                             viewModel.onEvent(SearchEvent.HideSearch)
                         },
+                        onSearchPressed = {
+                            keyboardController?.hide()
+                        },
                         onFocusChanged = {
                             viewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
                         }
@@ -131,25 +136,16 @@ fun LauncherScreen(
                     ) {
                         items(state.searchResults) { app ->
                             AppListItem(app = app, onItemClick = {
-                                val launchIntent =
-                                    context.packageManager.getLaunchIntentForPackage(app.packageName)
-                                launchIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                context.startActivity(launchIntent)
+                                viewModel.launchMainActivityForApp(app)
                             },
                                 onItemLongClick = {
-                                    val appInfoIntent = Intent()
-                                    appInfoIntent.action =
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                                    appInfoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    appInfoIntent.data =
-                                        Uri.fromParts("package", app.packageName, null)
-                                    context.startActivity(appInfoIntent)
+                                    viewModel.launchAppInfo(app)
                                 })
                         }
                     }
                     val offsets = remember { mutableStateMapOf<Int, Float>() }
                     var selectedHeaderIndex by remember { mutableStateOf(0) }
-                    val scope = rememberCoroutineScope()
+                    val coroutineScope = rememberCoroutineScope()
 
                     fun updateSelectedIndexIfNeeded(offset: Float) {
                         val index = offsets
@@ -162,86 +158,85 @@ fun LauncherScreen(
                         val selectedItemIndex = state.appsList.indexOfFirst {
                             it.name?.first()?.uppercase() == headers[selectedHeaderIndex]
                         }
-                        scope.launch {
-                            listState.scrollToItem(selectedItemIndex)
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(selectedItemIndex)
                         }
                     }
-
-                    Column(
-                        verticalArrangement = Arrangement.SpaceEvenly,
+                    Box(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .background(BlackTP)
-                            .pointerInput(Unit) {
-                                detectTapGestures {
-                                    updateSelectedIndexIfNeeded(it.y)
-                                }
-                            }
-                            .pointerInput(Unit) {
-                                detectVerticalDragGestures { change, _ ->
-                                    updateSelectedIndexIfNeeded(change.position.y)
-                                }
-                            }
+                            .padding(
+                                vertical = spacing.spaceLarge,
+                            )
+                            .clip(
+                                RoundedCornerShape(20.dp, 0.dp, 0.dp, 20.dp)
+                            )
+                            .background(color = LightGray),
                     ) {
-                        headers.forEachIndexed { i, header ->
-                            if (header != null) {
-                                Text(
-                                    header,
-                                    modifier = Modifier
-                                        .padding(horizontal = spacing.spaceExtraSmall)
-                                        .onGloballyPositioned {
-                                            offsets[i] = it.boundsInParent().center.y
-                                        },
-                                    color = White
+
+                        Column(
+                            verticalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(
+                                    vertical = spacing.spaceLarge,
+                                    horizontal = spacing.spaceExtraSmall
                                 )
+                                .pointerInput(Unit) {
+                                    detectTapGestures {
+                                        updateSelectedIndexIfNeeded(it.y)
+                                    }
+                                }
+                                .pointerInput(Unit) {
+                                    detectVerticalDragGestures { change, _ ->
+                                        updateSelectedIndexIfNeeded(change.position.y)
+                                    }
+                                }
+                        ) {
+                            headers.forEachIndexed { i, header ->
+                                if (header != null) {
+                                    Text(
+                                        header,
+                                        modifier = Modifier
+                                            .padding(horizontal = spacing.spaceExtraSmall)
+                                            .onGloballyPositioned {
+                                                offsets[i] = it.boundsInParent().center.y
+                                            },
+                                        color = White
+                                    )
+                                }
                             }
                         }
                     }
                 }
-
             }
         }
-        val p = remember {
-            mutableStateOf(Offset(0f, 0f))
-        }
-        val s = remember {
-            mutableStateOf(IntSize(0, 0))
-        }
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize(),
-            onDraw = {
-                drawRect(
-                    color = White,
-                    size = size,
-                    alpha = 0.5f
-                )
-                drawRect(
-                    color = Yellow,
-                    size = s.value.toSize(),
-                    topLeft = p.value,
-                    blendMode = BlendMode.Clear
-                )
-            }
-        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .layoutId("home_screen"),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            AndroidView(
-                factory = { context ->
-                    val tc = TextClock(context)
-                    tc.textSize = 46f
-                    tc.setTextColor(Color.WHITE)
-                    tc.format12Hour.let { tc.format12Hour = "hh:mm:ss a" }
-                    tc
-                },
-                modifier = Modifier
-                    .padding(top = spacing.spaceLarge)
-                    .align(Alignment.CenterHorizontally)
-            )
+
+            Box(
+                Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                AndroidView(
+                    modifier = Modifier
+                        .padding(top = spacing.spaceLarge)
+                        .align(Alignment.BottomCenter)
+                        .clickable {
+                            viewModel.launchDefaultAlarmApp()
+                        },
+                    factory = { context ->
+                        val tc = TextClock(context)
+                        tc.textSize = 46f
+                        tc.setTextColor(Color.WHITE)
+                        tc.format12Hour.let { tc.format12Hour = "hh:mm:ss a" }
+                        tc
+                    }
+                )
+            }
 
             Row(
                 modifier = Modifier
@@ -250,31 +245,22 @@ fun LauncherScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = {
-                        val dialerIntent = Intent(Intent.ACTION_DIAL)
-                        dialerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(dialerIntent)
-                    }) {
+                    onClick = viewModel::launchDefaultDialerApp
+                ) {
                     Icon(
                         modifier = Modifier
-                            .size(46.dp)
-                            .onGloballyPositioned { c ->
-                                p.value = c.positionInRoot()
-                                s.value = c.size
-                            },
+                            .size(46.dp),
                         imageVector = Icons.Filled.Phone,
                         contentDescription = stringResource(R.string.dialer),
                         tint = White
                     )
                 }
                 IconButton(
-                    onClick = {
-                        val dialerIntent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-                        dialerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(dialerIntent)
-                    }) {
+                    onClick = viewModel::launchDefaultCameraApp
+                ) {
                     Icon(
-                        modifier = Modifier.size(46.dp),
+                        modifier = Modifier
+                            .size(46.dp),
                         imageVector = Icons.Filled.Camera,
                         contentDescription = stringResource(R.string.camera),
                         tint = White

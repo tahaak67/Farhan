@@ -37,6 +37,7 @@ fun SearchTextFieldLauncher(
     text: String,
     onValueChange: (String) -> Unit,
     onClearSearch: () -> Unit,
+    onSearchPressed: () -> Unit,
     modifier: Modifier = Modifier,
     hint: String = stringResource(id = R.string.search),
     shouldShowHint: Boolean = false,
@@ -63,7 +64,7 @@ fun SearchTextFieldLauncher(
             singleLine = true,
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    onClearSearch()
+                    onSearchPressed()
                     defaultKeyboardAction(ImeAction.Search)
                 }
             ),
