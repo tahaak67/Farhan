@@ -28,13 +28,7 @@ Check your usage for every app & for different categories with a simple easy to 
 
 ## Screenshots
 
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss1.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss2.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss3.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss4.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss5.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss6.jpg" width="150" />
-<img src="metadata/en-US/images/phoneScreenshots/farhan-ss7.jpg" width="150" />
+<img src="metadata/en-US/images/phoneScreenshots/farhan-ss1.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss2.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss3.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss4.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss5.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss6.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss7.jpg" width="190" />
 
 ## Contributing
 
