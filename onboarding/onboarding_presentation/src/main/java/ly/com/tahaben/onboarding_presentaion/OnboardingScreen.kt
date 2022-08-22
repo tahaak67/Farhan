@@ -117,7 +117,7 @@ fun OnBoardingPager(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HorizontalPager(state = pagerState, count = item.size + 1) { page ->
+                HorizontalPager(state = pagerState, count = item.size) { page ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()

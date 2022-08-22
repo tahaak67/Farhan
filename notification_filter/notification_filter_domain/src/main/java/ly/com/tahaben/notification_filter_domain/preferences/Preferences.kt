@@ -4,6 +4,8 @@ interface Preferences {
 
     fun loadShouldShowOnBoarding(): Boolean
     fun saveShouldShowOnBoarding(shouldShow: Boolean)
+    fun loadShouldShowcase(): Boolean
+    fun saveShouldShowcase(shouldShow: Boolean)
     fun isServiceEnabled(): Boolean
     fun setServiceState(isEnabled: Boolean)
     fun savePackageToNotificationExceptions(packageName: String)
@@ -24,5 +26,7 @@ interface Preferences {
         const val KEY_NOTIFY_ME_MINUTE = "notify_me_minute"
         const val KEY_NOTIFICATION_FILTER_SHOULD_SHOW_ON_BOARDING =
             "notification_filter_should_show_on_boarding"
+        const val KEY_NOTIFICATION_FILTER_SHOULD_SHOWCASE =
+            "notification_filter_should_showcase"
     }
 }

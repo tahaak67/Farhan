@@ -54,6 +54,7 @@
         <activity
             android:name="ly.com.tahaben.launcher_presentation.LauncherActivity"
             android:exported="true"
+            android:enabled="false"
             android:theme="@style/Theme.FarhanLauncher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

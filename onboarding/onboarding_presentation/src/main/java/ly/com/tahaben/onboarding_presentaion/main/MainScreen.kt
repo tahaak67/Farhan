@@ -141,7 +141,7 @@ fun MainScreen(
                     onClick = { navController.navigate(Routes.INFINITE_SCROLLING) })
             }
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            Row(
+            /*Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -152,7 +152,7 @@ fun MainScreen(
                     ),
                     iconId = null,
                     onClick = { navController.navigate(Routes.LAUNCHER_SETTINGS) })
-            }
+            }*/
         }
     }
 }

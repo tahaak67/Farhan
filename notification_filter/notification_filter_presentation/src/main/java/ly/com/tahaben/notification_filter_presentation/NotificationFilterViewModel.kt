@@ -13,13 +13,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
+import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationFilterViewModel @Inject constructor(
-    private val notificationFilterUseCases: NotificationFilterUseCases
+    private val notificationFilterUseCases: NotificationFilterUseCases,
+    private val sharedPref: Preferences
 ) : ViewModel() {
 
 
@@ -31,6 +33,7 @@ class NotificationFilterViewModel @Inject constructor(
     init {
         checkServiceStats()
         getNotifications()
+        isFirstTimeOpened()
     }
 
     fun checkServiceStats() {
@@ -112,6 +115,20 @@ class NotificationFilterViewModel @Inject constructor(
         notificationFilterUseCases.setServiceState(true)
         state = state.copy(
             isServiceEnabled = true
+        )
+    }
+
+    fun isFirstTimeOpened() {
+        state = state.copy(
+            isFirstTimeOpened = sharedPref.loadShouldShowcase()
+        )
+        Timber.d("sholdShowcase ${state.isFirstTimeOpened}")
+    }
+
+    fun setShowcased() {
+        sharedPref.saveShouldShowcase(false)
+        state = state.copy(
+            isFirstTimeOpened = false
         )
     }
 }

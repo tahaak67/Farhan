@@ -26,6 +26,19 @@ class DefaultPreferences(
         )
     }
 
+    override fun loadShouldShowcase(): Boolean {
+        return sharedPref.getBoolean(
+            Preferences.KEY_NOTIFICATION_FILTER_SHOULD_SHOWCASE,
+            true
+        )
+    }
+
+    override fun saveShouldShowcase(shouldShow: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.KEY_NOTIFICATION_FILTER_SHOULD_SHOWCASE, shouldShow)
+            .apply()
+    }
+
     override fun isServiceEnabled(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_NOTIFICATION_SERVICE_STATS, false)
     }

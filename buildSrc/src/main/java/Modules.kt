@@ -33,4 +33,6 @@ object Modules {
     const val launcherDomain = ":launcher:launcher_domain"
     const val launcherData = ":launcher:launcher_data"
     const val launcherPresentation = ":launcher:launcher_presentation"
+
+    const val showcaseLayout = ":showcase_layout_compose"
 }

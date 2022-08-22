@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     scaffoldState = scaffoldState
                 ) {
+                    it.calculateBottomPadding()
                     NavHost(
                         navController = navController,
                         startDestination = if (intent.getIntExtra(

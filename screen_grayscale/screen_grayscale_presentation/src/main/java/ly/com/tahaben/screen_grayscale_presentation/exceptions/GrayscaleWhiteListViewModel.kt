@@ -72,6 +72,7 @@ class GrayscaleWhiteListViewModel @Inject constructor(
         when (event) {
             is SearchEvent.OnQueryChange -> {
                 state = state.copy(query = event.query)
+                executeSearch()
             }
 
             is SearchEvent.OnSearch -> {
@@ -89,6 +90,7 @@ class GrayscaleWhiteListViewModel @Inject constructor(
                 filterSystemApps()
             }
             is SearchEvent.HideSearch -> {
+                state = state.copy(query = "")
                 filterSystemApps()
             }
         }
