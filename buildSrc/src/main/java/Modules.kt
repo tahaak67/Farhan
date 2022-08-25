@@ -28,4 +28,11 @@ object Modules {
     const val onboardingDomain = ":onboarding:onboarding_domain"
     const val onboardingData = ":onboarding:onboarding_data"
     const val onboardingPresentation = ":onboarding:onboarding_presentation"
+
+
+    const val launcherDomain = ":launcher:launcher_domain"
+    const val launcherData = ":launcher:launcher_data"
+    const val launcherPresentation = ":launcher:launcher_presentation"
+
+    const val showcaseLayout = ":showcase_layout_compose"
 }

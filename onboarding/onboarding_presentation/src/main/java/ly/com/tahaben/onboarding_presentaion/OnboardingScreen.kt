@@ -117,7 +117,7 @@ fun OnBoardingPager(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HorizontalPager(state = pagerState) { page ->
+                HorizontalPager(state = pagerState, count = item.size) { page ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -287,10 +287,6 @@ fun rememberPagerState(
     infiniteLoop: Boolean = false
 ): PagerState = rememberSaveable(saver = PagerState.Saver) {
     PagerState(
-        pageCount = pageCount,
         currentPage = initialPage,
-        currentPageOffset = initialPageOffset,
-        offscreenLimit = initialOffscreenLimit,
-        infiniteLoop = infiniteLoop
     )
 }

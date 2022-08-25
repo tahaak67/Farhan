@@ -63,7 +63,7 @@ fun UsageOverviewHeader(
                 Text(
                     text = stringResource(id = R.string.total_usage),
                     style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colors.primaryVariant,
                     textAlign = TextAlign.Start
                 )
                 Row {
@@ -73,7 +73,7 @@ fun UsageOverviewHeader(
                                 Text(
                                     text = "-",
                                     style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colors.primaryVariant,
                                     fontSize = 40.sp
                                 )
                             } else {
@@ -81,7 +81,7 @@ fun UsageOverviewHeader(
                                     Text(
                                         text = animatedHoursCount.value.toString(),
                                         style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.primary,
+                                        color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp
                                     )
                                 }
@@ -91,7 +91,7 @@ fun UsageOverviewHeader(
                             Text(
                                 text = stringResource(id = R.string.hours),
                                 style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primary,
+                                color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 40.sp
                             )
                         }
@@ -105,7 +105,7 @@ fun UsageOverviewHeader(
                                 Text(
                                     text = "-",
                                     style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.primary,
+                                    color = MaterialTheme.colors.primaryVariant,
                                     fontSize = 40.sp
                                 )
                             } else {
@@ -113,7 +113,7 @@ fun UsageOverviewHeader(
                                     Text(
                                         text = animatedMinutesCount.value.toString(),
                                         style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.primary,
+                                        color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp
                                     )
                                 }
@@ -124,7 +124,7 @@ fun UsageOverviewHeader(
                             Text(
                                 text = stringResource(id = R.string.minutes),
                                 style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primary,
+                                color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 40.sp
                             )
                         }

@@ -26,6 +26,7 @@ import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 import ly.com.tahaben.core_ui.mirror
 import timber.log.Timber
 
@@ -80,6 +81,14 @@ fun InfiniteScrollingBlockerScreen(
             )
 
         } else if (!state.isAccessibilityPermissionGranted) {
+            val messages = listOf(
+                stringResource(R.string.reason_know_if_app_in_exceptions),
+                stringResource(R.string.reason_know_how_much_you_scroll),
+                stringResource(R.string.reason_display_warning_if_infinite_scroll_detected)
+            )
+            val permissionReasons =
+                getAnnotatedStringBulletList(messages)
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -94,6 +103,7 @@ fun InfiniteScrollingBlockerScreen(
                     modifier = Modifier,
                     message = stringResource(R.string.accessibility_permission_not_granted),
                     subMessage = stringResource(R.string.accessibility_permission_needed_message),
+                    permissionReasons = permissionReasons,
                     onGrantClick = viewModel::askForAccessibilityPermission,
                     onHowClick = { openHowAccessibilityDialog.value = true }
                 )

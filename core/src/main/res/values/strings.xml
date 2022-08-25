@@ -74,7 +74,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="confirm">Confirm</string>
     <string name="accessibility_permission_not_granted">Accessibility Service is not running :(</string>
-    <string name="accessibility_permission_needed_message">Farhan needs accessibility service to help you break infinite scrolling</string>
+    <string name="accessibility_permission_needed_message">Farhan needs accessibility service to be able to:</string>
     <string name="one_more_thing">One more thing!</string>
     <string name="infinite_scroll_onboarding_message">Infinite scrolling is a technique used by apps to keep giving you new content no matter how much you scroll thus reducing your control over your time, Farhan can try to detect when you are stuck in an infinite scroll and remind you to get out of that app!</string>
     <string name="notification_filter_onboarding_message">Notifications are like an alarm except that they can distract you at any time without you even knowing when, Farhan can eliminate this distraction by filtering notification so you won\’t be distracted, you can exclude important apps that you want to get notifications from and the rest will get filtered and you can come to the app and see them at any time!</string>
@@ -103,8 +103,20 @@
     <string name="secure_settings_permission_msg">Secure settings permission is not granted :(</string>
     <string name="secure_settings_permission_sub_msg">Farhan needs Secure settings permission to grayscale the screen for you</string>
     <string name="device_root_detected_msg">Looks like your device is rooted!, use the button below if you want to grant the permission with root</string>
-    <string name="accessibility_permission_needed_grayscale_message">Farhan needs accessibility service to grayscale apps for you</string>
+    <string name="accessibility_permission_needed_grayscale_message">Farhan needs accessibility service to be able to:</string>
     <string name="no_device_root_detected_msg">To Grant this permission you will need a PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
+    <string name="launcher_settings">Launcher Settings</string>
+    <string name="launcher">Launcher</string>
+    <string name="clear_text">Clear text</string>
+    <string name="set_default_launcher_title">Set Farhan as your launcher</string>
+    <string name="set_default_launcher_text">Please select Farhan to set it as your default launcher</string>
+    <string name="set_other_default_launcher_text">Please select the other launcher you want to use</string>
+    <string name="dialer">Dialer</string>
+    <string name="camera">Camera</string>
+    <string name="reason_know_if_app_in_exceptions">Know if current app is in exceptions list or not</string>
+    <string name="reason_know_how_much_you_scroll">Know How much you scroll and how much items are on screen.</string>
+    <string name="reason_display_warning_if_infinite_scroll_detected">Display a message if we detect infinite scrolling.</string>
+    <string name="reason_know_if_app_in_whitelist">Know if current app is in whitelist or not</string>
 
     <string-array name="tips">
         <item>To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</item>
@@ -114,4 +126,7 @@
         <item>Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</item>
         <item>This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</item>
     </string-array>
+    <string name="notification_settings_shocase_tip">You can add exceptions or set a reminder from notification filter settings</string>
+    <string name="version">App Version</string>
+    <string name="notification_filter_showcase_greeting">Welcome to notifications filter, your filtered notifications will apear here!.</string>
 </resources>

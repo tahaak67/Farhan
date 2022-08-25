@@ -19,7 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 
 @Composable
 fun GrayscaleScreen(
@@ -32,6 +34,7 @@ fun GrayscaleScreen(
     val state = viewModel.state
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
     isServiceChecked.value = state.isServiceEnabled
+    val openHowAccessibilityDialog = remember { mutableStateOf(false) }
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -72,20 +75,20 @@ fun GrayscaleScreen(
                 } else {
                     Text(
                         text = stringResource(R.string.secure_settings_permission_msg),
-                        style = MaterialTheme.typography.h1,
+                        style = MaterialTheme.typography.h3,
                         color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     Text(
                         text = stringResource(R.string.secure_settings_permission_sub_msg),
-                        style = MaterialTheme.typography.h3,
+                        style = MaterialTheme.typography.h4,
                         color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     if (state.isDeviceRooted) {
                         Text(
                             text = stringResource(R.string.device_root_detected_msg),
-                            style = MaterialTheme.typography.h3,
+                            style = MaterialTheme.typography.h4,
                             color = Black
                         )
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -100,7 +103,7 @@ fun GrayscaleScreen(
                     } else {
                         Text(
                             text = stringResource(R.string.no_device_root_detected_msg),
-                            style = MaterialTheme.typography.h3,
+                            style = MaterialTheme.typography.h4,
                             color = Black
                         )
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -123,14 +126,20 @@ fun GrayscaleScreen(
                 }
             }
         } else if (!state.isAccessibilityPermissionGranted) {
+            val messages = listOf(
+                stringResource(R.string.reason_know_if_app_in_whitelist),
+            )
+            val permissionReasons =
+                getAnnotatedStringBulletList(messages)
+
             PermissionNotGrantedContent(
                 modifier = Modifier.fillMaxSize(),
                 message = stringResource(id = R.string.accessibility_permission_not_granted),
                 subMessage = stringResource(id = R.string.accessibility_permission_needed_grayscale_message),
+                permissionReasons = permissionReasons,
+                onHowClick = { openHowAccessibilityDialog.value = true },
                 onGrantClick = viewModel::askForAccessibilityPermission
-            ) {
-
-            }
+            )
         } else {
             Column(
                 Modifier.fillMaxSize()
@@ -170,6 +179,13 @@ fun GrayscaleScreen(
                 }
             }
         }
+    }
+    if (openHowAccessibilityDialog.value) {
+        HowDialog(
+            gifId = R.drawable.accessibility_permission_howto,
+            gifDescription = stringResource(R.string.how_to_enable_permission),
+            onDismiss = { openHowAccessibilityDialog.value = false }
+        )
     }
 }
 

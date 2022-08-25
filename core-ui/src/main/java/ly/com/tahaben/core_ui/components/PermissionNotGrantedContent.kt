@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.Black
@@ -19,6 +20,7 @@ fun PermissionNotGrantedContent(
     modifier: Modifier,
     message: String,
     subMessage: String,
+    permissionReasons: AnnotatedString? = null,
     onGrantClick: () -> Unit,
     onHowClick: () -> Unit
 ) {
@@ -31,18 +33,27 @@ fun PermissionNotGrantedContent(
     ) {
         Text(
             text = message,
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.h3,
             color = Black,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
         Text(
             text = subMessage,
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.h4,
             color = Black,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        if (permissionReasons != null) {
+            Text(
+                text = permissionReasons,
+                style = MaterialTheme.typography.h4,
+                color = Black,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        }
         Button(onClick = onGrantClick) {
             Text(
                 text = stringResource(R.string.grant_access),

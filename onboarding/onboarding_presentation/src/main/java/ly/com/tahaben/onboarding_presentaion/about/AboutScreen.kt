@@ -85,6 +85,17 @@ fun AboutScreen(
                 style = MaterialTheme.typography.h4,
                 color = Color.Blue
             )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Text(
+                text = stringResource(R.string.version),
+                style = MaterialTheme.typography.h4,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Text(
+                text = "0.1.1 (2)",
+                style = MaterialTheme.typography.h4
+            )
         }
     }
 
