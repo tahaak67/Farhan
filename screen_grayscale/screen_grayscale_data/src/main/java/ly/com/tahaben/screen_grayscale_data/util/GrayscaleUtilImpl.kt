@@ -24,8 +24,8 @@ class GrayscaleUtilImpl(
         return rootBeer.isRootedWithBusyBoxCheck
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun getSecureSettingsPermissionWithRoot(): Boolean {
+
+    override fun getSecureSettingsPermissionWithRoot(): Boolean {
         val cmds =
             arrayOf("pm grant ly.com.tahaben.farhan android.permission.WRITE_SECURE_SETTINGS")
         try {

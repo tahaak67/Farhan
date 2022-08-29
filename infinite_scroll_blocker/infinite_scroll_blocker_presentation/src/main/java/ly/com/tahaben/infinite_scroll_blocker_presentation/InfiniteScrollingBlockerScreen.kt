@@ -24,6 +24,7 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
@@ -99,12 +100,13 @@ fun InfiniteScrollingBlockerScreen(
                     style = MaterialTheme.typography.h3,
                     textAlign = TextAlign.Center
                 )
-                PermissionNotGrantedContent(
+                AccessibilityNotRunningContent(
                     modifier = Modifier,
                     message = stringResource(R.string.accessibility_permission_not_granted),
                     subMessage = stringResource(R.string.accessibility_permission_needed_message),
                     permissionReasons = permissionReasons,
                     onGrantClick = viewModel::askForAccessibilityPermission,
+                    onBack = onNavigateUp,
                     onHowClick = { openHowAccessibilityDialog.value = true }
                 )
             }

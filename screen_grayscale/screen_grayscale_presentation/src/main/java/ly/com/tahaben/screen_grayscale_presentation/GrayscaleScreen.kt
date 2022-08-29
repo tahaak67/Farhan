@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
-import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 
 @Composable
@@ -132,13 +132,14 @@ fun GrayscaleScreen(
             val permissionReasons =
                 getAnnotatedStringBulletList(messages)
 
-            PermissionNotGrantedContent(
+            AccessibilityNotRunningContent(
                 modifier = Modifier.fillMaxSize(),
                 message = stringResource(id = R.string.accessibility_permission_not_granted),
                 subMessage = stringResource(id = R.string.accessibility_permission_needed_grayscale_message),
                 permissionReasons = permissionReasons,
                 onHowClick = { openHowAccessibilityDialog.value = true },
-                onGrantClick = viewModel::askForAccessibilityPermission
+                onGrantClick = viewModel::askForAccessibilityPermission,
+                onBack = onNavigateUp
             )
         } else {
             Column(

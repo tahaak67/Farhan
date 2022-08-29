@@ -6,9 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -66,16 +64,13 @@ class GrayscaleViewModel @Inject constructor(
 
     fun askForSecureSettingsPermissionWithRoot() {
         viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
-            withContext(Dispatchers.IO) {
-                grayscaleUseCases.askForSecureSettingsPermission()
+            state = state.copy(isLoading = true)
+
+            if (grayscaleUseCases.askForSecureSettingsPermission()) {
+                state = state.copy(isLoading = false)
+                checkSecureSettingsPermissionStats()
             }
-            state = state.copy(
-                isLoading = false
-            )
-            checkSecureSettingsPermissionStats()
+
         }
     }
 

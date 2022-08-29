@@ -129,4 +129,9 @@
     <string name="notification_settings_shocase_tip">You can add exceptions or set a reminder from notification filter settings</string>
     <string name="version">App Version</string>
     <string name="notification_filter_showcase_greeting">Welcome to notifications filter, your filtered notifications will apear here!.</string>
+    <string name="agree">Agree</string>
+    <string name="cancel">Cancel</string>
+    <string name="if_you_choose_agree_msg">When you choose Agree you will be navigated to accessibility settings in your device.</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="cant_open_link_error_link_copied">Can\'t find a browser, link copied to clipboard</string>
 </resources>

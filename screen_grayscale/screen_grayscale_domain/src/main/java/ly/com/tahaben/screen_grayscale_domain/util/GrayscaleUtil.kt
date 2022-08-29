@@ -4,5 +4,5 @@ interface GrayscaleUtil {
 
     fun isSecureSettingsPermissionGranted(): Boolean
     fun isDeviceRooted(): Boolean
-    suspend fun getSecureSettingsPermissionWithRoot(): Boolean
+    fun getSecureSettingsPermissionWithRoot(): Boolean
 }

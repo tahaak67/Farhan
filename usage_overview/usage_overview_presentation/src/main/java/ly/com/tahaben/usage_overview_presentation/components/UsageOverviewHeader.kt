@@ -18,10 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.FatColor
+import ly.com.tahaben.core_ui.CategoryBarColor
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.Page
-import ly.com.tahaben.core_ui.ProteinColor
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewState
 
 
@@ -144,21 +143,21 @@ fun UsageOverviewHeader(
                     value = state.totalSocialUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_social),
-                    color = ProteinColor,
+                    color = CategoryBarColor,
                     modifier = Modifier.size(90.dp)
                 )
                 UsageBarInfo(
                     value = state.totalProductivityUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_productivity),
-                    color = ProteinColor,
+                    color = CategoryBarColor,
                     modifier = Modifier.size(90.dp)
                 )
                 UsageBarInfo(
                     value = state.totalGameUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_game),
-                    color = FatColor,
+                    color = CategoryBarColor,
                     modifier = Modifier.size(90.dp)
                 )
             }

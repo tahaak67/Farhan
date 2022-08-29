@@ -1,5 +1,15 @@
 # Farhan
 
+[![GitHub issues](https://img.shields.io/github/issues/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/issues) [![GitHub stars](https://img.shields.io/github/stars/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/stargazers) [![GitHub license](https://img.shields.io/github/license/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/blob/main/LICENSE)
+
+## Downloads
+
+Download the latest apk from Github by
+clicking [here](https://github.com/tahaak67/Farhan/releases/latest) \
+or download from google play by clicking the badge below
+
+<a href='https://play.google.com/store/apps/details?id=ly.com.tahaben.farhan&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
+
 Farhan is an open-source application that offers many ways to eliminate manipulative strategies used
 by other apps on your phone, so you can eliminate distractions and use your phone!
 Included features:

@@ -118,5 +118,10 @@
     <string name="notification_settings_shocase_tip">يمكن اضافة استثناءات او تعيين وقت للتذكير من اعدادات فلترة الإشعارات</string>
     <string name="version">إصدار التطبيق</string>
     <string name="notification_filter_showcase_greeting">اهلا بك في فلتر الإشعارات، ستظهر اشعاراتك المفلترة هنا!.</string>
+    <string name="agree">موافق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="if_you_choose_agree_msg">عند الضغط على موافق، سيتم توجيهك إلى إعدادات إمكانية الوصول في جهازك.</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="cant_open_link_error_link_copied">لا يمكن ايجاد متصفح، تم نسخ الرابط إلى الحافظة.</string>
 </resources>
 
