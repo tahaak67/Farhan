@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +29,9 @@ import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
+import ly.com.tahaben.showcase_layout_compose.model.Arrow
+import ly.com.tahaben.showcase_layout_compose.model.Gravity
+import ly.com.tahaben.showcase_layout_compose.model.ShowcaseMsg
 import ly.com.tahaben.showcase_layout_compose.ui.ShowcaseLayout
 import timber.log.Timber
 
@@ -56,8 +60,12 @@ fun NotificationFilterScreen(
     ShowcaseLayout(
         isShowcasing = isShowcasing,
         initKey = 0,
-        greeting = stringResource(R.string.notification_filter_showcase_greeting),
-        onTap = {
+        greeting = ShowcaseMsg(
+            stringResource(R.string.notification_filter_showcase_greeting),
+            msgBackground = Color.White,
+            roundedCorner = 15.dp
+        ),
+        onFinish = {
             viewModel.setShowcased()
             isShowcasing = false
         }
@@ -84,9 +92,15 @@ fun NotificationFilterScreen(
                     if (state.isPermissionGranted) {
                         IconButton(onClick = navigateToNotificationSettings) {
                             Showcase(
-                                modifier = Modifier,
                                 k = 1,
-                                message = stringResource(R.string.notification_settings_shocase_tip)
+                                message = ShowcaseMsg(
+                                    text = stringResource(R.string.notification_settings_shocase_tip),
+                                    textStyle = TextStyle(Color.Black),
+                                    gravity = Gravity.Auto,
+                                    arrow = Arrow(animateFromMsg = true),
+                                    msgBackground = Color.White,
+                                    roundedCorner = 15.dp
+                                )
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Settings,

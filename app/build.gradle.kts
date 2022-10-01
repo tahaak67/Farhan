@@ -84,7 +84,6 @@ dependencies {
     implementation(project(Modules.launcherData))
     implementation(project(Modules.launcherDomain))
     implementation(project(Modules.launcherPresentation))
-    implementation(project(Modules.showcaseLayout))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
