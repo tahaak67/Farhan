@@ -23,7 +23,9 @@ import ly.com.tahaben.core_ui.mirror
 
 @Composable
 fun AboutScreen(
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    versionName: String,
+    versionCode: Int
 ) {
 
     val spacing = LocalSpacing.current
@@ -106,7 +108,7 @@ fun AboutScreen(
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
-                text = "0.1.1 (3)",
+                text = "$versionName ($versionCode)",
                 style = MaterialTheme.typography.h4
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
