@@ -39,12 +39,9 @@ fun InfiniteScrollingBlockerScreen(
 ) {
     val spacing = LocalSpacing.current
     val state = viewModel.state
-    val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
-    val timeOutDuration = remember { mutableStateOf(state.timeoutDuration) }
     val openDialog = remember { mutableStateOf(false) }
     val openHowDialog = remember { mutableStateOf(false) }
     val openHowAccessibilityDialog = remember { mutableStateOf(false) }
-    isServiceChecked.value = state.isServiceEnabled
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -124,10 +121,9 @@ fun InfiniteScrollingBlockerScreen(
                     ) {
                     Text(text = stringResource(R.string.infinite_scroll_blocker))
                     Switch(
-                        checked = isServiceChecked.value,
+                        checked = state.isServiceEnabled,
                         onCheckedChange = { checked ->
                             viewModel.setServiceStats(checked)
-                            isServiceChecked.value = checked
                         }
                     )
                 }
@@ -190,9 +186,9 @@ fun InfiniteScrollingBlockerScreen(
                 Row {
                     AndroidView(factory = { context ->
                         val np = NumberPicker(context)
-                        np.value = timeOutDuration.value
                         np.maxValue = 60
                         np.minValue = 1
+                        np.value = state.timeoutDuration
                         np.setOnValueChangedListener { _, i, i2 ->
                             Timber.d("np: oldv: $i newv: $i2")
                             npVal.value = i2

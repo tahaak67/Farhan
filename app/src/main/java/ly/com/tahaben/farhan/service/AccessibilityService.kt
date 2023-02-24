@@ -12,9 +12,6 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
@@ -22,8 +19,8 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 const val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
 const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
@@ -89,90 +86,51 @@ class AccessibilityService : AccessibilityService() {
         } else {
             -1
         }
-        if (event.source == null || event.className == null) return
-        val isViewPagerView = event.className == ViewPager::class.java.name ||
-                event.className == ViewPager2::class.java.name ||
-                event.className == RecyclerView::class.java.name
-        if (maxY == -1 && event.scrollX == 0 && event.itemCount == -1 && isViewPagerView
-        ) {
-            Timber.d("vertical video?")
-            //For vertical video scrolling like Tiktok, (its not necessarily a viewPager some apps use
-            // a recyclerview with a viewPager like behaviour)
-            val viewPagerId = (
-                    event.className.hashCode() +
-                            event.packageName.hashCode() +
-                            (event.source.viewIdResourceName?.hashCode() ?: 1) +
-                            event.source.getBoundsInScreen(Rect()).hashCode()
-                    )
+        if (event.source == null || event.className == null || maxY == -1) return
 
-            if (!recentScrollViews.containsKey(viewPagerId)) {
-                recentScrollViews[viewPagerId] = ScrollViewInfo(maxY)
-            } else {
-                val scrollViewInfo = recentScrollViews[viewPagerId]!!
-                val timeSinceLastUpdate =
-                    TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - scrollViewInfo.updatedAt)
-                if (timeSinceLastUpdate > 3) {
-                    recentScrollViews.clear()
-                    return
-                }
-                Timber.d("maxYview = ${scrollViewInfo.maxY}")
-                Timber.d("maxY = $maxY")
+        val scrollViewId = (
+                event.className.hashCode() +
+                        event.packageName.hashCode() +
+                        (event.source!!.viewIdResourceName?.hashCode() ?: 1) +
+                        event.source!!.getBoundsInScreen(Rect()).hashCode()
+                )
+        Timber.d("event scrollviewid = $scrollViewId")
+        if (!recentScrollViews.containsKey(scrollViewId)) {
+            recentScrollViews[scrollViewId] = ScrollViewInfo(maxY)
+        } else {
+            val scrollViewInfo = recentScrollViews[scrollViewId]!!
+            val timeSinceLastUpdate =
+                (System.currentTimeMillis() - scrollViewInfo.updatedAt).milliseconds.inWholeMinutes
+            Timber.d("updated timeSincelastupdate: $timeSinceLastUpdate")
+            if (timeSinceLastUpdate > 3) {
+                Timber.d("returning")
+                recentScrollViews.clear()
+                return
+            }
+            var isInfinite = false
+            Timber.d("maxYview = ${scrollViewInfo.maxY}")
+            Timber.d("maxY = $maxY")
+            if (maxY > scrollViewInfo.maxY) {
+                scrollViewInfo.timesGrown++
+                Timber.d("updated times grown: ${scrollViewInfo.timesGrown}")
+                scrollViewInfo.maxY = maxY
                 scrollViewInfo.updatedAt = System.currentTimeMillis()
-                val scrollingTime =
-                    TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - scrollViewInfo.addedAt)
-
-                Timber.d("scrolling time = $scrollingTime")
-                if (scrollingTime >= infiniteScrollUseCases.getTimeOutDuration()) {
-                    showDialog(event.packageName.toString())
-                    recentScrollViews.clear()
+                Timber.d("updated at = ${scrollViewInfo.updatedAt}")
+                if (scrollViewInfo.timesGrown >= 3) {
+                    isInfinite = true
                 }
             }
-        } else {
-            val scrollViewId = (
-                    event.className.hashCode() +
-                            event.packageName.hashCode() +
-                            (event.source.viewIdResourceName?.hashCode() ?: 1) +
-                            event.source.getBoundsInScreen(Rect()).hashCode()
-                    )
-            Timber.d("event scrollviewid = $scrollViewId")
-            if (!recentScrollViews.containsKey(scrollViewId)) {
-                recentScrollViews[scrollViewId] = ScrollViewInfo(maxY)
-            } else {
-                val scrollViewInfo = recentScrollViews[scrollViewId]!!
-                val timeSinceLastUpdate =
-                    TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - scrollViewInfo.updatedAt)
-                Timber.d("updated timeSincelastupdate: $timeSinceLastUpdate")
-                if (timeSinceLastUpdate > 3) {
-                    Timber.d("returning")
-                    recentScrollViews.clear()
-                    return
-                }
-                var isInfinite = false
-                Timber.d("maxYview = ${scrollViewInfo.maxY}")
-                Timber.d("maxY = $maxY")
-                if (maxY > scrollViewInfo.maxY) {
-                    scrollViewInfo.timesGrown++
-                    Timber.d("updated times grown: ${scrollViewInfo.timesGrown}")
-                    scrollViewInfo.maxY = maxY
-                    scrollViewInfo.updatedAt = System.currentTimeMillis()
-                    Timber.d("updated at = ${scrollViewInfo.updatedAt}")
-                    if (scrollViewInfo.timesGrown >= 3) {
-                        isInfinite = true
-                    }
-                }
 
-                val scrollingTime =
-                    TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - scrollViewInfo.addedAt)
+            val scrollingTime =
+                (System.currentTimeMillis() - scrollViewInfo.addedAt).milliseconds.inWholeMinutes
 
-                Timber.d("scrolling time = $scrollingTime")
-                Timber.d("isinfinite = $isInfinite")
-                if (isInfinite && scrollingTime >= infiniteScrollUseCases.getTimeOutDuration()) {
-                    showDialog(event.packageName.toString())
-                    recentScrollViews.clear()
-                }
+            Timber.d("scrolling time = $scrollingTime")
+            Timber.d("isinfinite = $isInfinite")
+            if (isInfinite && scrollingTime >= infiniteScrollUseCases.getTimeOutDuration()) {
+                showDialog(event.packageName.toString())
+                recentScrollViews.clear()
             }
         }
-
     }
 
     private fun showDialog(packageName: String) {
