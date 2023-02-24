@@ -101,8 +101,8 @@ class AccessibilityService : AccessibilityService() {
             val viewPagerId = (
                     event.className.hashCode() +
                             event.packageName.hashCode() +
-                            (event.source.viewIdResourceName?.hashCode() ?: 1) +
-                            event.source.getBoundsInScreen(Rect()).hashCode()
+                            (event.source!!.viewIdResourceName?.hashCode() ?: 1) +
+                            event.source!!.getBoundsInScreen(Rect()).hashCode()
                     )
 
             if (!recentScrollViews.containsKey(viewPagerId)) {
@@ -131,8 +131,8 @@ class AccessibilityService : AccessibilityService() {
             val scrollViewId = (
                     event.className.hashCode() +
                             event.packageName.hashCode() +
-                            (event.source.viewIdResourceName?.hashCode() ?: 1) +
-                            event.source.getBoundsInScreen(Rect()).hashCode()
+                            (event.source!!.viewIdResourceName?.hashCode() ?: 1) +
+                            event.source!!.getBoundsInScreen(Rect()).hashCode()
                     )
             Timber.d("event scrollviewid = $scrollViewId")
             if (!recentScrollViews.containsKey(scrollViewId)) {
