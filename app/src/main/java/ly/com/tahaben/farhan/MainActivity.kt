@@ -190,7 +190,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.ABOUT_APP) {
                             AboutScreen(
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                versionName = BuildConfig.VERSION_NAME,
+                                versionCode = BuildConfig.VERSION_CODE
                             )
                         }
                         composable(Routes.LAUNCHER_SETTINGS) {
