@@ -1,0 +1,1 @@
+Fixed Infinite scrolling detection, no more annoying false messages about infinite scrolling.
