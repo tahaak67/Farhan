@@ -1,6 +1,7 @@
 package ly.com.tahaben.farhan
 
 import android.content.Context
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -73,7 +74,7 @@ class UsageOverviewE2E {
                 appCategory = UsageDataItem.Category.PRODUCTIVITY
             )
         )
-        composeRule.setContent {
+        composeRule.activity.setContent {
             val scaffoldState = rememberScaffoldState()
             navController = rememberNavController()
             cnt = LocalContext.current
@@ -104,6 +105,7 @@ class UsageOverviewE2E {
                                 isInfiniteScrollBlockerEnabled = false,
                                 isNotificationFilterEnabled = false,
                                 navController = navController,
+                                isLauncherEnabled = false
                             )
                         }
                         composable(Routes.USAGE) {
