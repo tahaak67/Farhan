@@ -93,6 +93,12 @@ class GrayscaleWhiteListViewModel @Inject constructor(
                 state = state.copy(query = "")
                 filterSystemApps()
             }
+            is SearchEvent.OnExceptionsOnlyChange -> {
+                state = state.copy(
+                    showWhitelistOnly = event.showExceptionsOnly
+                )
+                filterWhitelistOnly()
+            }
         }
     }
 
@@ -119,6 +125,9 @@ class GrayscaleWhiteListViewModel @Inject constructor(
                 }
             }
         )
+        if (state.showWhitelistOnly) {
+            filterWhitelistOnly()
+        }
     }
 
     fun removeAppFromWhiteList(packageName: String) {
@@ -127,5 +136,17 @@ class GrayscaleWhiteListViewModel @Inject constructor(
 
     fun addAppToWhiteList(packageName: String) {
         grayscaleUseCases.addPackageToGrayscaleWhiteList(packageName)
+    }
+
+    private fun filterWhitelistOnly() {
+        if (state.showWhitelistOnly) {
+            state = state.copy(
+                searchResults = state.searchResults.filter {
+                    it.isException
+                }
+            )
+        } else {
+            filterSystemApps()
+        }
     }
 }

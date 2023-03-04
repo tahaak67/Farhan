@@ -137,4 +137,6 @@
     <string name="grant_secure_permission_manually_msg">Or Grant the permission manually using ADB on your PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
     <string name="secure_permission_wroot_error">Permission not granted :(, try the manual method.</string>
     <string name="secure_permission_wroot_success">Permission Granted!</string>
+    <string name="show_exceptions_only">Show exceptions only</string>
+    <string name="show_whitelist_only">Show whitelist only</string>
 </resources>

@@ -126,5 +126,7 @@
     <string name="grant_secure_permission_manually_msg">"أو قم بمنح الإذن من حاسوبك يدوياً، لا تقلق لن تحتاج إلى القيام بهذا إلا مرة واحدة ولن يستغرق الأمر إلا بضع دقائق "</string>
     <string name="secure_permission_wroot_error">لم يتم منح الإذن :(، جرب الطريقة اليدوية.</string>
     <string name="secure_permission_wroot_success">تم منح الإذن!</string>
+    <string name="show_exceptions_only">إظهار الإستثناءات فقط</string>
+    <string name="show_whitelist_only">إظهار القائمة البيضاء فقط</string>
 </resources>
 

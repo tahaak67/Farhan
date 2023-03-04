@@ -6,4 +6,5 @@ sealed class SearchEvent {
     object HideSearch : SearchEvent()
     data class OnSearchFocusChange(val isFocused: Boolean) : SearchEvent()
     data class OnSystemAppsVisibilityChange(val showSystemApps: Boolean) : SearchEvent()
+    data class OnExceptionsOnlyChange(val showExceptionsOnly: Boolean) : SearchEvent()
 }
