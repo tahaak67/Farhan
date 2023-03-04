@@ -141,7 +141,9 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 GrayscaleScreen(
                                     onNavigateUp = { navController.navigateUp() },
-                                    onNavigateToExceptions = { navController.navigate(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) })
+                                    onNavigateToExceptions = { navController.navigate(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) },
+                                    scaffoldState = scaffoldState
+                                )
                             }
                         }
                         composable(Routes.NOTIFICATION_FILTER) {
