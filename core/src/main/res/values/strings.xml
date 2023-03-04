@@ -134,4 +134,7 @@
     <string name="if_you_choose_agree_msg">When you choose Agree you will be navigated to accessibility settings in your device.</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="cant_open_link_error_link_copied">Can\'t find a browser, link copied to clipboard</string>
+    <string name="grant_secure_permission_manually_msg">Or Grant the permission manually using ADB on your PC, don\'t worry you only have to do it once and it only takes a few minutes</string>
+    <string name="secure_permission_wroot_error">Permission not granted :(, try the manual method.</string>
+    <string name="secure_permission_wroot_success">Permission Granted!</string>
 </resources>

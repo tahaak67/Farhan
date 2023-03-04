@@ -123,5 +123,8 @@
     <string name="if_you_choose_agree_msg">عند الضغط على موافق، سيتم توجيهك إلى إعدادات إمكانية الوصول في جهازك.</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="cant_open_link_error_link_copied">لا يمكن ايجاد متصفح، تم نسخ الرابط إلى الحافظة.</string>
+    <string name="grant_secure_permission_manually_msg">"أو قم بمنح الإذن من حاسوبك يدوياً، لا تقلق لن تحتاج إلى القيام بهذا إلا مرة واحدة ولن يستغرق الأمر إلا بضع دقائق "</string>
+    <string name="secure_permission_wroot_error">لم يتم منح الإذن :(، جرب الطريقة اليدوية.</string>
+    <string name="secure_permission_wroot_success">تم منح الإذن!</string>
 </resources>
 

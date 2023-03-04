@@ -21,7 +21,7 @@ class GrayscaleUtilImpl(
     }
 
     override fun isDeviceRooted(): Boolean {
-        return rootBeer.isRootedWithBusyBoxCheck
+        return rootBeer.isRooted
     }
 
 

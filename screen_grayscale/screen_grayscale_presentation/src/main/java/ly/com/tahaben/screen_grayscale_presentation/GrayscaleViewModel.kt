@@ -6,7 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ly.com.tahaben.core.R
+import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,6 +23,8 @@ class GrayscaleViewModel @Inject constructor(
 
     var state by mutableStateOf(GrayscaleState())
         private set
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         checkServiceStats()
@@ -67,9 +74,14 @@ class GrayscaleViewModel @Inject constructor(
             state = state.copy(isLoading = true)
 
             if (grayscaleUseCases.askForSecureSettingsPermission()) {
-                state = state.copy(isLoading = false)
-                checkSecureSettingsPermissionStats()
+                _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.secure_permission_wroot_success)))
+            } else {
+                _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.secure_permission_wroot_error)))
+
             }
+            state = state.copy(isLoading = false)
+            checkSecureSettingsPermissionStats()
+
 
         }
     }

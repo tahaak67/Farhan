@@ -4,10 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.*
 import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
@@ -27,7 +31,8 @@ import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 fun GrayscaleScreen(
     onNavigateUp: () -> Unit,
     onNavigateToExceptions: () -> Unit,
-    viewModel: GrayscaleViewModel = hiltViewModel()
+    viewModel: GrayscaleViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -35,6 +40,17 @@ fun GrayscaleScreen(
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
     isServiceChecked.value = state.isServiceEnabled
     val openHowAccessibilityDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+                else -> Unit
+            }
+        }
+    }
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -66,7 +82,8 @@ fun GrayscaleScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = spacing.spaceMedium),
+                    .padding(horizontal = spacing.spaceMedium)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -100,29 +117,35 @@ fun GrayscaleScreen(
                             )
                         }
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                        Text(
+                            text = stringResource(R.string.grant_secure_permission_manually_msg),
+                            style = MaterialTheme.typography.h4,
+                            color = Black
+                        )
                     } else {
                         Text(
                             text = stringResource(R.string.no_device_root_detected_msg),
                             style = MaterialTheme.typography.h4,
                             color = Black
                         )
-                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                        Button(onClick = {
-                            val url = Intent(Intent.ACTION_VIEW).apply {
-                                data =
-                                    Uri.parse("https://tahaben.com.ly/grant-secure-settings-permission-to-farhan/")
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                            context.startActivity(url)
-                        }) {
-                            Text(
-                                text = stringResource(id = R.string.how),
-                                style = MaterialTheme.typography.button,
-                                color = Black
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     }
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    Button(onClick = {
+                        val url = Intent(Intent.ACTION_VIEW).apply {
+                            data =
+                                Uri.parse("https://tahaben.com.ly/grant-secure-settings-permission-to-farhan/")
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                        context.startActivity(url)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.how),
+                            style = MaterialTheme.typography.button,
+                            color = Black
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
                 }
             }
         } else if (!state.isAccessibilityPermissionGranted) {
