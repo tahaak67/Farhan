@@ -92,6 +92,12 @@ class NotificationExceptionsViewModel @Inject constructor(
                 state = state.copy(query = "")
                 filterSystemApps()
             }
+            is SearchEvent.OnExceptionsOnlyChange -> {
+                state = state.copy(
+                    showExceptionsOnly = event.showExceptionsOnly
+                )
+                filterExceptionsOnly()
+            }
         }
     }
 
@@ -118,6 +124,9 @@ class NotificationExceptionsViewModel @Inject constructor(
                 }
             }
         )
+        if (state.showExceptionsOnly) {
+            filterExceptionsOnly()
+        }
     }
 
     fun removeAppFromExceptions(packageName: String) {
@@ -126,5 +135,17 @@ class NotificationExceptionsViewModel @Inject constructor(
 
     fun addAppToExceptions(packageName: String) {
         notificationFilterUseCases.addPackageToNotificationException(packageName)
+    }
+
+    private fun filterExceptionsOnly() {
+        if (state.showExceptionsOnly) {
+            state = state.copy(
+                searchResults = state.searchResults.filter {
+                    it.isException
+                }
+            )
+        } else {
+            filterSystemApps()
+        }
     }
 }

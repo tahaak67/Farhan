@@ -10,4 +10,5 @@ data class NotificationFilterExceptionsState(
     val query: String = "",
     val isHintVisible: Boolean = false,
     val isSearchFieldVisible: Boolean = false,
+    val showExceptionsOnly: Boolean = false
 )

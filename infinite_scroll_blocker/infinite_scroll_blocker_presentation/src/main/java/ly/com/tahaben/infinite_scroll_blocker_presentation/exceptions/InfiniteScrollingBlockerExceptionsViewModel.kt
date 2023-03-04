@@ -93,6 +93,12 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
                 state = state.copy(query = "")
                 filterSystemApps()
             }
+            is SearchEvent.OnExceptionsOnlyChange -> {
+                state = state.copy(
+                    showExceptionsOnly = event.showExceptionsOnly
+                )
+                filterExceptionsOnly()
+            }
         }
     }
 
@@ -119,6 +125,9 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
                 }
             }
         )
+        if (state.showExceptionsOnly) {
+            filterExceptionsOnly()
+        }
     }
 
     fun removeAppFromExceptions(packageName: String) {
@@ -127,5 +136,17 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
 
     fun addAppToExceptions(packageName: String) {
         infiniteScrollUseCases.addPackageToInfiniteScrollExceptions(packageName)
+    }
+
+    private fun filterExceptionsOnly() {
+        if (state.showExceptionsOnly) {
+            state = state.copy(
+                searchResults = state.searchResults.filter {
+                    it.isException
+                }
+            )
+        } else {
+            filterSystemApps()
+        }
     }
 }

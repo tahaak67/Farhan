@@ -116,7 +116,7 @@ fun NotificationFilterExceptionsScreen(
                 }
 
                 IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
-                    Icon(Icons.Default.MoreVert, "")
+                    Icon(Icons.Default.MoreVert, stringResource(id = R.string.drop_down_menu))
                 }
 
                 DropdownMenu(
@@ -125,7 +125,11 @@ fun NotificationFilterExceptionsScreen(
                 ) {
 
                     DropdownMenuItem(onClick = {
-
+                        viewModel.onEvent(
+                            SearchEvent.OnSystemAppsVisibilityChange(
+                                !state.showSystemApps
+                            )
+                        )
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -147,8 +151,33 @@ fun NotificationFilterExceptionsScreen(
                                 textAlign = TextAlign.Center
                             )
                         }
-
-
+                    }
+                    DropdownMenuItem(onClick = {
+                        viewModel.onEvent(
+                            SearchEvent.OnExceptionsOnlyChange(
+                                !state.showExceptionsOnly
+                            )
+                        )
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = state.showExceptionsOnly,
+                                onCheckedChange = { checked ->
+                                    viewModel.onEvent(
+                                        SearchEvent.OnExceptionsOnlyChange(
+                                            checked
+                                        )
+                                    )
+                                },
+                                colors = CheckboxDefaults.colors(DarkYellow)
+                            )
+                            Text(
+                                text = stringResource(R.string.show_exceptions_only),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }

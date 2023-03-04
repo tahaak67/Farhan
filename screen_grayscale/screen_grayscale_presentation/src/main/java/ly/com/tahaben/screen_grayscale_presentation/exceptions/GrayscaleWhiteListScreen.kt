@@ -50,8 +50,6 @@ fun GrayscaleWhiteListScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var mDisplayMenu by remember { mutableStateOf(false) }
     var displaySearchField by remember { mutableStateOf(false) }
-    val isShowSystemApps = remember { mutableStateOf(state.showSystemApps) }
-
 
 
     LaunchedEffect(key1 = keyboardController) {
@@ -123,7 +121,7 @@ fun GrayscaleWhiteListScreen(
 
                 // Creating Icon button for dropdown menu
                 IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
-                    Icon(Icons.Default.MoreVert, "")
+                    Icon(Icons.Default.MoreVert, stringResource(id = R.string.drop_down_menu))
                 }
 
                 // Creating a dropdown menu
@@ -132,14 +130,18 @@ fun GrayscaleWhiteListScreen(
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
                     DropdownMenuItem(onClick = {
+                        viewModel.onEvent(
+                            SearchEvent.OnSystemAppsVisibilityChange(
+                                !state.showSystemApps
+                            )
+                        )
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Checkbox(
-                                checked = isShowSystemApps.value,
+                                checked = state.showSystemApps,
                                 onCheckedChange = { checked ->
-                                    isShowSystemApps.value = checked
                                     viewModel.onEvent(
                                         SearchEvent.OnSystemAppsVisibilityChange(
                                             checked
@@ -150,6 +152,33 @@ fun GrayscaleWhiteListScreen(
                             )
                             Text(
                                 text = stringResource(R.string.show_system_apps),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                    DropdownMenuItem(onClick = {
+                        viewModel.onEvent(
+                            SearchEvent.OnExceptionsOnlyChange(
+                                !state.showWhitelistOnly
+                            )
+                        )
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = state.showWhitelistOnly,
+                                onCheckedChange = { checked ->
+                                    viewModel.onEvent(
+                                        SearchEvent.OnExceptionsOnlyChange(
+                                            checked
+                                        )
+                                    )
+                                },
+                                colors = CheckboxDefaults.colors(DarkYellow)
+                            )
+                            Text(
+                                text = stringResource(R.string.show_whitelist_only),
                                 textAlign = TextAlign.Center
                             )
                         }
