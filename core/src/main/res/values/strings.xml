@@ -139,4 +139,10 @@
     <string name="secure_permission_wroot_success">Permission Granted!</string>
     <string name="show_exceptions_only">Show exceptions only</string>
     <string name="show_whitelist_only">Show whitelist only</string>
+    <string name="range_null_error">Please select a valid start and end date.</string>
+    <string name="delete_cache_for_day">Delete cache for this day</string>
+    <string name="delete_cache_dialog_text">Are you sure you want to delete %s\'s data from the database and reload it again? This action cannot be undone.</string>
+    <string name="delete_cache_dialog_title">Delete %s\'s data?</string>
+    <string name="usage_date_range_picker_title">Select Date Range</string>
+    <string name="usage_date_range_picker_description">Select the start and end dates to view an overview of usage within that time period.</string>
 </resources>

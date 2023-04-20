@@ -1,5 +1,11 @@
 package ly.com.tahaben.usage_overview_presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
@@ -24,30 +30,68 @@ fun DaySelector(
     isLoading: Boolean,
     onPreviousDayClick: () -> Unit,
     onNextDayClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onDayClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isRangeMode: Boolean,
+    disableRangeMode: () -> Unit,
+    dateRangeStart: LocalDate?,
+    dateRangeEnd: LocalDate?
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = if (isRangeMode) Arrangement.Center else Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = onPreviousDayClick, enabled = !isLoading) {
-            Icon(
-                modifier = Modifier.mirror(),
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = stringResource(id = R.string.previous_day),
-            )
+        AnimatedVisibility(
+            visible = !isRangeMode,
+            enter = slideInHorizontally(
+                initialOffsetX = { it },
+                animationSpec = tween()
+            ) + fadeIn(animationSpec = tween()),
+            exit = fadeOut(animationSpec = tween(0))
+        ) {
+            IconButton(onClick = onPreviousDayClick, enabled = !isLoading) {
+                Icon(
+                    modifier = Modifier.mirror(),
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = stringResource(id = R.string.previous_day),
+                )
+            }
         }
+
         Text(
-            text = parseDateText(date = date),
+            modifier = Modifier
+                .clickable(
+                    onClick = {
+                        if (!isLoading) {
+                            if (isRangeMode) disableRangeMode() else onDayClick()
+                        }
+                    }
+
+                ),
+            text = if (isRangeMode && dateRangeStart != null && dateRangeEnd != null) "${
+                parseDateText(
+                    date = dateRangeStart
+                )
+            } - ${parseDateText(date = dateRangeEnd)}" else parseDateText(date = date),
             style = MaterialTheme.typography.h2
         )
-        IconButton(onClick = onNextDayClick, enabled = (!isToday && !isLoading)) {
-            Icon(
-                modifier = Modifier.mirror(),
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = stringResource(id = R.string.next_day)
-            )
+
+        AnimatedVisibility(
+            visible = !isRangeMode,
+            enter = slideInHorizontally(
+                initialOffsetX = { -it },
+                animationSpec = tween()
+            ) + fadeIn(animationSpec = tween()),
+            exit = fadeOut(animationSpec = tween(0))
+        ) {
+            IconButton(onClick = onNextDayClick, enabled = (!isToday && !isLoading)) {
+                Icon(
+                    modifier = Modifier.mirror(),
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = stringResource(id = R.string.next_day)
+                )
+            }
         }
     }
 }

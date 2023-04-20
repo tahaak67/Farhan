@@ -23,7 +23,12 @@ object UsageOverviewDomainModule {
             getUsageDataForDate = GetUsageDataForDate(repository),
             isDateToDay = IsDateToday(),
             isUsagePermissionGranted = IsUsagePermissionGranted(repository),
-            filterDuration = FilterDuration()
+            filterDuration = FilterDuration(),
+            returnUsageEvents = ReturnUsageEvents(repository),
+            isDayDataFullyUpdated = IsDayDataFullyUpdated(repository),
+            mergeDaysUsageDuration = MergeDaysUsageDuration(),
+            getFullyUpdatedDays = GetFullyUpdatedDays(repository),
+            deleteCacheForDay = DeleteCacheForDay(repository)
         )
     }
 }

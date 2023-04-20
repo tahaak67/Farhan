@@ -110,7 +110,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.USAGE) {
                             UsageOverviewScreen(
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                scaffoldState = scaffoldState
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {

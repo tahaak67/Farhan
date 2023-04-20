@@ -2,6 +2,7 @@ package ly.com.tahaben.usage_overview_data.mapper
 
 import android.app.usage.UsageEvents
 import android.content.pm.ApplicationInfo
+import ly.com.tahaben.usage_overview_data.local.entity.UsageDataItemEntity
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 
 fun UsageEvents.Event.toUsageDataItem(
@@ -48,7 +49,27 @@ fun UsageEvents.Event.toUsageDataItem(
     return UsageDataItem(
         appName = appName,
         packageName = packageName,
-        usageTimestamp = usageTimestamp,
+        usageTimestamp = if (usageType == UsageDataItem.EventType.Start) (usageTimestamp * -1) else usageTimestamp,
         usageType = usageType
+    )
+}
+
+fun UsageDataItemEntity.toUsageDataItem(): UsageDataItem {
+    return UsageDataItem(
+        appName = appName,
+        packageName = packageName,
+        usageTimestamp = usageTimestamp,
+        usageType = usageType,
+        appCategory = appCategory
+    )
+}
+
+fun UsageDataItem.toUsageDataItemEntity(): UsageDataItemEntity {
+    return UsageDataItemEntity(
+        appName = appName,
+        packageName = packageName,
+        usageTimestamp = usageTimestamp,//if (usageType == UsageDataItem.EventType.Start) (usageTimestamp * -1) else usageTimestamp,
+        usageType = usageType,
+        appCategory = appCategory
     )
 }

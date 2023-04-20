@@ -9,7 +9,7 @@ class FilterDuration {
         val durationInMilli = milliseconds.milliseconds
         //this sometimes returns an unrealistic large number for hours until this is fixed i will have to manually set it to 0 if its larger than 24 (since we only get usage for 1 day at a time)
         return durationInMilli.toComponents { hours, minutes, _, _ ->
-            val hrs = if (abs(hours) > 24L) 0L else hours
+            val hrs = if (abs(hours) > 24L) 0L else abs(hours)
             val min = abs(minutes)
             val t = (((hrs * 60) + min) * 60 * 1000).milliseconds.inWholeMilliseconds
             Timber.d("durationinmilli= $t")

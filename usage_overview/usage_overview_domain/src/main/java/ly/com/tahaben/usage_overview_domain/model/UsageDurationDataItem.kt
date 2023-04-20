@@ -8,6 +8,6 @@ data class UsageDurationDataItem(
     val usageDurationInMilliseconds: Long,
     val usageDuration: UiText,
     val appCategoryName: UiText,
-    val appCategory: UsageDataItem.Category
+    val appCategory: UsageDataItem.Category?
     //val usageType: UsageDataItem.EventType
 )

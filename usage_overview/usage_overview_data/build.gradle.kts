@@ -6,5 +6,8 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.usageOverviewDomain))
     "implementation"(Coroutines.coroutines)
-    "implementation"("androidx.appcompat:appcompat:1.4.2")
+    "implementation"(AndroidX.appCompat)
+    "kapt"(Room.roomCompiler)
+    "implementation"(Room.roomKtx)
+    "implementation"(Room.roomRuntime)
 }

@@ -7,5 +7,10 @@ data class UsageOverviewUseCases(
     val getUsageDataForDate: GetUsageDataForDate,
     val isDateToDay: IsDateToday,
     val isUsagePermissionGranted: IsUsagePermissionGranted,
-    val filterDuration: FilterDuration
+    val filterDuration: FilterDuration,
+    val returnUsageEvents: ReturnUsageEvents,
+    val isDayDataFullyUpdated: IsDayDataFullyUpdated,
+    val mergeDaysUsageDuration: MergeDaysUsageDuration,
+    val getFullyUpdatedDays: GetFullyUpdatedDays,
+    val deleteCacheForDay: DeleteCacheForDay
 )

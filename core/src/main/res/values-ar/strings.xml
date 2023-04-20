@@ -128,5 +128,11 @@
     <string name="secure_permission_wroot_success">تم منح الإذن!</string>
     <string name="show_exceptions_only">إظهار الإستثناءات فقط</string>
     <string name="show_whitelist_only">إظهار القائمة البيضاء فقط</string>
+    <string name="range_null_error">يرجى تحديد قيم صالحة للنطاق المطلوب</string>
+    <string name="delete_cache_for_day">مسح التخزين المؤقت لهذا اليوم</string>
+    <string name="delete_cache_dialog_text">هل انت متأكد من رغبتك في حذف بيانات %s من قاعدة البيانات وإعادة تحميلها مرة اخرى؟ لا يمكن التراجع عن هذه العملية.</string>
+    <string name="delete_cache_dialog_title">حذف بيانات %s؟</string>
+    <string name="usage_date_range_picker_title">حدد نطاق التاريخ المراد الاطلاع على معلوماته</string>
+    <string name="usage_date_range_picker_description">يمكنك اختيار نطاق التاريخ الذي تريد الاطلاع على معلوماته من خلال تحديد تاريخ البداية والنهاية في النموذج أدناه.</string>
 </resources>
 

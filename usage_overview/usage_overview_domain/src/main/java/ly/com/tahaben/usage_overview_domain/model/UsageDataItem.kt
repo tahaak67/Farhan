@@ -5,7 +5,7 @@ data class UsageDataItem(
     val packageName: String,
     val usageTimestamp: Long,
     val usageType: EventType,
-    val appCategory: Category = Category.OTHER
+    val appCategory: Category? = null
 ) {
     enum class EventType {
         Start, Stop, Other
