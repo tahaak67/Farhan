@@ -1,61 +1,120 @@
 package ly.com.tahaben.farhan
 
-import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
+import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.farhan.repository.UsageRepositoryFake
+import ly.com.tahaben.farhan.repository.WorkerRepositoryFake
 import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
-import ly.com.tahaben.usage_overview_domain.use_case.*
+import ly.com.tahaben.usage_overview_domain.preferences.Preferences
+import ly.com.tahaben.usage_overview_domain.use_case.CacheUsageDataForDate
+import ly.com.tahaben.usage_overview_domain.use_case.CalculateUsageDuration
+import ly.com.tahaben.usage_overview_domain.use_case.DeleteCacheForDay
+import ly.com.tahaben.usage_overview_domain.use_case.FilterDuration
+import ly.com.tahaben.usage_overview_domain.use_case.FilterUsageEvents
+import ly.com.tahaben.usage_overview_domain.use_case.GetDurationFromMilliseconds
+import ly.com.tahaben.usage_overview_domain.use_case.GetEnabledUsageReports
+import ly.com.tahaben.usage_overview_domain.use_case.GetFullyUpdatedDays
+import ly.com.tahaben.usage_overview_domain.use_case.GetUsageDataForDate
+import ly.com.tahaben.usage_overview_domain.use_case.GetUsageEventsFromDb
+import ly.com.tahaben.usage_overview_domain.use_case.IsAutoCachingEnabled
+import ly.com.tahaben.usage_overview_domain.use_case.IsBackgroundWorkRestricted
+import ly.com.tahaben.usage_overview_domain.use_case.IsCachingEnabled
+import ly.com.tahaben.usage_overview_domain.use_case.IsDateToday
+import ly.com.tahaben.usage_overview_domain.use_case.IsDayDataFullyUpdated
+import ly.com.tahaben.usage_overview_domain.use_case.IsUsagePermissionGranted
+import ly.com.tahaben.usage_overview_domain.use_case.MergeDaysUsageDuration
+import ly.com.tahaben.usage_overview_domain.use_case.OpenAppSettings
+import ly.com.tahaben.usage_overview_domain.use_case.OpenBatteryOptimizationSettings
+import ly.com.tahaben.usage_overview_domain.use_case.SetAutoCachingEnabled
+import ly.com.tahaben.usage_overview_domain.use_case.SetCachingEnabled
+import ly.com.tahaben.usage_overview_domain.use_case.SetUsageReportsEnabled
+import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
+import ly.com.tahaben.usage_overview_domain.use_case.UsageSettingsUseCases
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.text.DecimalFormat
+import javax.inject.Inject
 
 @HiltAndroidTest
 class UsageOverviewE2E {
 
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
 
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private lateinit var repositoryFake: UsageRepositoryFake
+    private lateinit var workerRepositoryFake: WorkerRepositoryFake
     private lateinit var usageOverviewUseCases: UsageOverviewUseCases
+    private lateinit var usageSettingsUseCases: UsageSettingsUseCases
     private lateinit var usageOverviewViewModel: UsageOverviewViewModel
-    private var cnt: Context? = null
+
+    @Inject
+    lateinit var usagePreferences: Preferences
 
     private lateinit var navController: NavHostController
 
     @Before
     fun setUp() {
-
+        hiltRule.inject()
         repositoryFake = UsageRepositoryFake()
+        workerRepositoryFake = WorkerRepositoryFake()
         usageOverviewUseCases = UsageOverviewUseCases(
             calculateUsageDuration = CalculateUsageDuration(),
             filterUsageEvents = FilterUsageEvents(),
-            getUsageDataForDate = GetUsageDataForDate(repositoryFake),
+            cacheUsageDataForDate = CacheUsageDataForDate(repositoryFake),
             getDurationFromMilliseconds = GetDurationFromMilliseconds(),
             isDateToDay = IsDateToday(),
             isUsagePermissionGranted = IsUsagePermissionGranted(repositoryFake),
-            filterDuration = FilterDuration()
+            filterDuration = FilterDuration(),
+            getUsageDataForDate = GetUsageDataForDate(repositoryFake),
+            deleteCacheForDay = DeleteCacheForDay(repositoryFake),
+            getUsageEventsFromDb = GetUsageEventsFromDb(repositoryFake),
+            getFullyUpdatedDays = GetFullyUpdatedDays(repositoryFake),
+            isDayDataFullyUpdated = IsDayDataFullyUpdated(repositoryFake),
+            mergeDaysUsageDuration = MergeDaysUsageDuration()
         )
-        usageOverviewViewModel = UsageOverviewViewModel(usageOverviewUseCases)
+        usageSettingsUseCases = UsageSettingsUseCases(
+            openAppSettings = OpenAppSettings(workerRepositoryFake),
+            getEnabledUsageReports = GetEnabledUsageReports(usagePreferences),
+            isAutoCachingEnabled = IsAutoCachingEnabled(usagePreferences),
+            isBackgroundWorkRestricted = IsBackgroundWorkRestricted(workerRepositoryFake),
+            isCachingEnabled = IsCachingEnabled(usagePreferences),
+            setUsageReportsEnabled = SetUsageReportsEnabled(workerRepositoryFake),
+            setAutoCachingEnabled = SetAutoCachingEnabled(workerRepositoryFake),
+            setCachingEnabled = SetCachingEnabled(usagePreferences),
+            openBatteryOptimizationSettings = OpenBatteryOptimizationSettings(workerRepositoryFake)
+        )
+        usageOverviewViewModel =
+            UsageOverviewViewModel(usageOverviewUseCases, usageSettingsUseCases)
         repositoryFake.usageItems.add(
             UsageDataItem(
                 appName = "Farhan",
@@ -77,13 +136,13 @@ class UsageOverviewE2E {
         composeRule.activity.setContent {
             val scaffoldState = rememberScaffoldState()
             navController = rememberNavController()
-            cnt = LocalContext.current
             FarhanTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     scaffoldState = scaffoldState
                 ) {
                     NavHost(
+                        modifier = Modifier.padding(it),
                         navController = navController,
                         startDestination = Routes.MAIN,
                     ) {
@@ -111,7 +170,9 @@ class UsageOverviewE2E {
                         composable(Routes.USAGE) {
                             UsageOverviewScreen(
                                 onNavigateUp = { navController.navigateUp() },
-                                viewModel = usageOverviewViewModel
+                                viewModel = usageOverviewViewModel,
+                                scaffoldState = scaffoldState,
+                                onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) }
                             )
                         }
 
@@ -124,12 +185,20 @@ class UsageOverviewE2E {
     @Test
     fun usageOverview_properlyCalculates_displaysData() {
         repositoryFake.permissionGranted = true
+        val context = composeRule.activity.applicationContext
+
+        // format the numbers to the device locale to avoid flaky tests ex: on some locales 100.0 is ١٠٠٫٠ and this will make the test fail
+        val decimalFormatPercentage = DecimalFormat("#,###.0")
+        val decimalFormat = DecimalFormat.getInstance()
+        val productivityPercentageString = decimalFormatPercentage.format(100.0)
+        val appItemUsageString = UiText.MixedString(46, R.string.minutes).asString(context)
+        val totalUsageMinutesString = decimalFormat.format(46)
 
         composeRule
-            .onNodeWithText("Usage")
+            .onNodeWithText(context.getString(R.string.usage))
             .assertExists()
         composeRule
-            .onNodeWithText("Usage")
+            .onNodeWithText(context.getString(R.string.usage))
             .performClick()
         assertThat(
             navController
@@ -140,24 +209,23 @@ class UsageOverviewE2E {
 
 
         composeRule
-            .onNodeWithText("100.0")
+            .onNodeWithText(productivityPercentageString)
             .assertIsDisplayed()
         composeRule.onNodeWithText("Farhan")
             .assertIsDisplayed()
-        composeRule.onAllNodesWithText("Productivity")
+        composeRule.onAllNodesWithText(context.getString(R.string.category_productivity))
             .assertCountEquals(2)
-        composeRule.onAllNodesWithText("Productivity")[0]
+        composeRule.onAllNodesWithText(context.getString(R.string.category_productivity))[0]
             .assertIsDisplayed()
-        composeRule.onAllNodesWithText("Productivity")[1]
+        composeRule.onAllNodesWithText(context.getString(R.string.category_productivity))[1]
             .assertIsDisplayed()
-        composeRule.onNodeWithText("46m")
+        composeRule.onNodeWithText(appItemUsageString)
             .assertIsDisplayed()
-        composeRule.onNodeWithText("46")
+        composeRule.onNodeWithText(totalUsageMinutesString)
             .assertIsDisplayed()
-
 
         composeRule
-            .onNodeWithContentDescription("Back")
+            .onNodeWithContentDescription(context.getString(R.string.back))
             .performClick()
         assertThat(
             navController

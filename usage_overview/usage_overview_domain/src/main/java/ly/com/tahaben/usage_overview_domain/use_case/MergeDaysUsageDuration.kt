@@ -10,8 +10,7 @@ class MergeDaysUsageDuration {
 
     operator fun invoke(
         usageDataItem: List<UsageDurationDataItem>,
-        getDurationFromMilliseconds: GetDurationFromMilliseconds,
-        //filterDuration: FilterDuration
+        getDurationFromMilliseconds: GetDurationFromMilliseconds
     ): List<UsageDurationDataItem> {
         val usageDurationList = arrayListOf<UsageDurationDataItem>()
         usageDataItem
@@ -42,8 +41,6 @@ class MergeDaysUsageDuration {
                         )
                     )
                 }
-
-
             }
         return usageDurationList
     }

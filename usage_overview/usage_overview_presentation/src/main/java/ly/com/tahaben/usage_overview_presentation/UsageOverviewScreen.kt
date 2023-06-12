@@ -37,8 +37,11 @@ import timber.log.Timber
 @Composable
 fun UsageOverviewScreen(
     onNavigateUp: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     viewModel: UsageOverviewViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    startDate: String? = null,
+    endDate: String? = null
 ) {
     val spacing = LocalSpacing.current
     val state = viewModel.state
@@ -50,6 +53,8 @@ fun UsageOverviewScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkUsagePermissionState()
+                viewModel.checkIfCachingEnabled()
+                viewModel.setRange(startDate, endDate)
             }
             else -> Unit
         }
@@ -88,14 +93,21 @@ fun UsageOverviewScreen(
                     expanded = state.isDropDownMenuVisible,
                     onDismissRequest = { viewModel.onEvent(UsageOverviewEvent.OnDismissDropDown) }
                 ) {
+                    if (state.isCachingEnabled) {
+                        DropdownMenuItem(onClick = {
+                            viewModel.onEvent(UsageOverviewEvent.OnDismissDropDown)
+                            viewModel.onEvent(UsageOverviewEvent.OnShowConfirmDeleteDialog)
+                            Timber.d("show dialog")
+                        }, enabled = !state.isModeRange && !state.isLoading) {
+                            Text(text = stringResource(R.string.delete_cache_for_day))
+                        }
+                    }
                     DropdownMenuItem(onClick = {
                         viewModel.onEvent(UsageOverviewEvent.OnDismissDropDown)
-                        viewModel.onEvent(UsageOverviewEvent.OnShowConfirmDeleteDialog)
-                        Timber.d("show dialog")
-                    }, enabled = !state.isModeRange && !state.isLoading) {
-                        Text(text = stringResource(R.string.delete_cache_for_day))
+                        onNavigateToSettings()
+                    }) {
+                        Text(text = stringResource(R.string.usage_settings))
                     }
-
                 }
             }
         )

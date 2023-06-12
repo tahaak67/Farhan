@@ -15,6 +15,7 @@ import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
 import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
+import ly.com.tahaben.usage_overview_domain.use_case.UsageSettingsUseCases
 import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDate
@@ -24,7 +25,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class UsageOverviewViewModel @Inject constructor(
-    private val usageOverviewUseCases: UsageOverviewUseCases
+    private val usageOverviewUseCases: UsageOverviewUseCases,
+    private val usageSettingsUseCases: UsageSettingsUseCases
 ) : ViewModel() {
 
 
@@ -57,8 +59,26 @@ class UsageOverviewViewModel @Inject constructor(
         }
     }
 
+    fun setRange(startDate: String?, endDate: String?) {
+        Timber.d("viewmodel start end date: $startDate : $endDate")
+        if (startDate != null && endDate != null) {
+            state = state.copy(
+                rangeStartDate = LocalDate.parse(startDate),
+                rangeEndDate = LocalDate.parse(endDate),
+                isModeRange = true
+            )
+            refreshUsageDataForRange()
+        }
+    }
+
     fun askForUsagePermission() {
         refreshUsageData()
+    }
+
+    fun checkIfCachingEnabled() {
+        state = state.copy(
+            isCachingEnabled = usageSettingsUseCases.isCachingEnabled()
+        )
     }
 
     private fun refreshUsageData() {
@@ -74,13 +94,22 @@ class UsageOverviewViewModel @Inject constructor(
                 trackedApps = emptyList(),
                 isDateToday = usageOverviewUseCases.isDateToDay(state.date)
             )
-            if (!state.fullyUpdatedDays.contains(state.date)) {
-                usageOverviewUseCases.getUsageDataForDate(state.date)
+            if (state.isCachingEnabled) {
+                if (!usageOverviewUseCases.isDayDataFullyUpdated(state.date)) {
+                    usageOverviewUseCases.cacheUsageDataForDate(state.date)
+                }
             }
-            val usageDataList = usageOverviewUseCases.returnUsageEvents(state.date)
+            val usageDataList =
+                if (state.isCachingEnabled) {
+                    usageOverviewUseCases.getUsageEventsFromDb(state.date)
+                } else {
+                    usageOverviewUseCases.getUsageDataForDate(state.date)
+                }
+            Timber.d("is caching enabled: ${state.isCachingEnabled}")
+            Timber.d("usageDataList: $usageDataList")
             val filteredList = usageOverviewUseCases.filterUsageEvents(usageDataList)
             val filteredListWithDuration = usageOverviewUseCases.calculateUsageDuration(
-                if (state.isDateToday) filteredList.dropLast(1) else filteredList,
+                filteredList,
                 usageOverviewUseCases.getDurationFromMilliseconds,
                 usageOverviewUseCases.filterDuration
             ).sortedByDescending { it.usageDurationInMilliseconds }
@@ -195,8 +224,8 @@ class UsageOverviewViewModel @Inject constructor(
             val endDate = state.rangeEndDate
             if (startDate != null && endDate != null) {
                 while (startDate!! <= endDate) {
-                    if (!state.fullyUpdatedDays.contains(startDate)) {
-                        usageOverviewUseCases.getUsageDataForDate(startDate)
+                    if (!usageOverviewUseCases.isDayDataFullyUpdated(startDate)) {
+                        usageOverviewUseCases.cacheUsageDataForDate(startDate)
                     }
                     startDate = startDate.plusDays(1)
                 }
@@ -206,7 +235,7 @@ class UsageOverviewViewModel @Inject constructor(
             if (date != null) {
                 val filteredListForRange = mutableListOf<UsageDurationDataItem>()
                 while (date!! <= state.rangeEndDate) {
-                    val usageDataList = usageOverviewUseCases.returnUsageEvents(date)
+                    val usageDataList = usageOverviewUseCases.getUsageEventsFromDb(date)
 
                     val filteredList =
                         usageOverviewUseCases.filterUsageEvents(usageDataList)

@@ -1,9 +1,15 @@
 package ly.com.tahaben.core.navigation
 
+import ly.com.tahaben.core.navigation.Args.END_DATE
+import ly.com.tahaben.core.navigation.Args.START_DATE
+
 object Routes {
+
     const val WELCOME = "welcome"
     const val MAIN = "main"
     const val USAGE = "usage"
+    const val USAGE_FOR_PERIOD = "$USAGE/{$START_DATE}/{$END_DATE}"
+    const val USAGE_SETTINGS = "usage_settings"
     const val NOTIFICATION_FILTER = "notification_filter"
     const val NOTIFICATION_FILTER_SETTINGS = "notification_filter_settings"
     const val NOTIFICATION_FILTER_EXCEPTIONS = "notification_filter_exceptions"

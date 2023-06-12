@@ -21,6 +21,7 @@ data class UsageOverviewState(
     val rangeEndDate: LocalDate? = null,
     val isDropDownMenuVisible: Boolean = false,
     val fullyUpdatedDays: List<LocalDate> = emptyList(),
+    val isCachingEnabled: Boolean = false,
     val isDeleteDialogVisible: Boolean = false,
     val currentYear: Int = Year.now().value
 )

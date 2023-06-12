@@ -5,7 +5,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,6 +30,7 @@ import ly.com.tahaben.core_ui.CategoryBarColor
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewState
+import java.text.DecimalFormat
 
 
 @Composable
@@ -31,6 +40,7 @@ fun UsageOverviewHeader(
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
+    val decimalFormat = DecimalFormat.getInstance()
     val animatedHoursCount = animateIntAsState(
         targetValue = state.totalUsageDuration,
     )
@@ -78,7 +88,7 @@ fun UsageOverviewHeader(
                             } else {
                                 AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
                                     Text(
-                                        text = animatedHoursCount.value.toString(),
+                                        text = decimalFormat.format(animatedHoursCount.value),
                                         style = MaterialTheme.typography.body1,
                                         color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp
@@ -110,7 +120,7 @@ fun UsageOverviewHeader(
                             } else {
                                 AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
                                     Text(
-                                        text = animatedMinutesCount.value.toString(),
+                                        text = decimalFormat.format(animatedMinutesCount.value),
                                         style = MaterialTheme.typography.body1,
                                         color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp

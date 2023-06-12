@@ -16,14 +16,14 @@ class GetDurationFromMilliseconds {
                 2L -> UiText.StringResource(R.string.two_hours)
                 else -> {
                     if (hours == 0L) {
-                        UiText.MixedString("$minutes", R.string.minutes)
+                        UiText.MixedString(minutes, R.string.minutes)
                     } else if (minutes == 0) {
-                        UiText.MixedString("$hours", R.string.hours)
+                        UiText.MixedString(hours.toInt(), R.string.hours)
                     } else {
                         UiText.TimeFormatString(
-                            "$hours ",
+                            hours.toInt(),
                             R.string.hours,
-                            " $minutes ",
+                            minutes,
                             R.string.minutes
                         )
                     }

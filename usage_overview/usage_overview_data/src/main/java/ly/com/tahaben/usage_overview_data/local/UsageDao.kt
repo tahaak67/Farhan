@@ -23,7 +23,7 @@ interface UsageDao {
     @Query("SELECT last_update_time FROM dayLastUpdatedEntity WHERE day = :day")
     suspend fun getLastDbUpdateTimeForDay(day: LocalDate): Long?
 
-    @Query("DELETE FROM usageDataItemEntity WHERE date(usage_timestamp / 1000, 'unixepoch') = :day")
+    @Query("DELETE FROM usageDataItemEntity WHERE date(ABS(usage_timestamp) / 1000, 'unixepoch') = :day")
     suspend fun deleteInfoForDay(day: LocalDate)
 
     @Query("DELETE FROM DayLastUpdatedEntity WHERE day = :day")

@@ -145,4 +145,25 @@
     <string name="delete_cache_dialog_title">Delete %s\'s data?</string>
     <string name="usage_date_range_picker_title">Select Date Range</string>
     <string name="usage_date_range_picker_description">Select the start and end dates to view an overview of usage within that time period.</string>
+    <string name="fetch_usage_info_description">When Farhan is fetching usage info in the background</string>
+    <string name="fetch_usage_info_id">FETCH_USAGE_INFO_CHANNEL</string>
+    <string name="fetch_usage_info">Fetch usage info channel</string>
+    <string name="cache_worker_notification_title">Caching usage data</string>
+    <string name="cache_worker_notification_text">Processing data for %s, for faster loading</string>
+    <string name="usage_settings">Usage Settings</string>
+    <string name="cache_usage_data">Cache usage data</string>
+    <string name="auto_cache_usage_data">Auto cache usage data</string>
+    <string name="cache_usage_data_description">Cache usage data to reduce waiting time the next time you view the same day</string>
+    <string name="auto_cache_usage_data_description">Automatically fetch usage data in the background after the end of each day</string>
+    <string name="grant_runtime_permission">Grant permission</string>
+    <string name="permission_required">Permission required</string>
+    <string name="post_notification_permission_permanently_declined_description">It seems you permanently declined notification permission, You can go to the app settings to grant it.</string>
+    <string name="post_notification_permission_description">Farhan needs notification permission to send you notifications.</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="usage_reports_off">Usage reports are off, click to enable</string>
+    <string name="periodic_usage_reports">Get periodic usage reports based on the cached data</string>
+    <string name="disable_battery_optimization_msg">Battery optimization can prevent farhan from doing work in the background! please disable it.</string>
+    <string name="disable_battery_optimization_toast"><![CDATA[Go to battery > Unrestricted]]></string>
 </resources>

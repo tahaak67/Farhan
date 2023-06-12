@@ -5,8 +5,9 @@ import java.time.LocalDate
 
 interface UsageRepository {
 
-    suspend fun getUsageEvents(date: LocalDate)
-    suspend fun returnUsageEvents(date: LocalDate): List<UsageDataItem>
+    suspend fun cacheUsageEvents(date: LocalDate)
+    suspend fun getUsageEvents(date: LocalDate): List<UsageDataItem>
+    suspend fun getUsageEventsFromDb(date: LocalDate): List<UsageDataItem>
     suspend fun isDayDataFullyUpdated(date: LocalDate): Boolean
     fun checkUsagePermission(): Boolean
     suspend fun getCachedDays(): List<LocalDate>

@@ -25,15 +25,16 @@ import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 
 class UsageRepositoryImpl(
     private val context: Context,
-    private val usageDao: UsageDao,
+    private val usageDao: UsageDao
 ) : UsageRepository {
 
-    override suspend fun getUsageEvents(date: LocalDate) {
+    override suspend fun cacheUsageEvents(date: LocalDate) {
         val usageDataItems = arrayListOf<UsageDataItem>()
         if (checkUsagePermission()) {
             val usageStatsManager =
@@ -101,6 +102,65 @@ class UsageRepositoryImpl(
         }
     }
 
+    override suspend fun getUsageEvents(date: LocalDate): List<UsageDataItem> {
+        val usageDataItems = mutableListOf<UsageDataItem>()
+        if (checkUsagePermission()) {
+            val usageStatsManager =
+                context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+
+            val d = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            val calendar = Calendar.getInstance()
+            calendar.time = d
+            val from = calendar.timeInMillis
+            val fromD = calendar.time
+            calendar.add(Calendar.DATE, 1)
+            val to = calendar.timeInMillis
+            val toD = calendar.time
+
+            Timber.d("from= $from to = $to")
+            Timber.d("from date= $fromD to date = $toD")
+            withContext(Dispatchers.IO) {
+                val usageEvents = usageStatsManager.queryEvents(from, to)
+                val usageEvent = UsageEvents.Event()
+                val pm: PackageManager = context.packageManager
+
+                while (usageEvents.hasNextEvent()) {
+                    usageEvents.getNextEvent(usageEvent)
+                    val ai: ApplicationInfo? = try {
+                        pm.getApplicationInfo(usageEvent.packageName, 0)
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        e.printStackTrace()
+                        null
+                    }
+                    val applicationName =
+                        (if (ai != null) pm.getApplicationLabel(ai) else usageEvent.packageName) as String
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val applicationCategory =
+                            (ai?.category ?: -1)
+                        usageDataItems.add(
+                            usageEvent.toUsageDataItem(
+                                applicationName,
+                                applicationCategory
+                            )
+                        )
+                    } else {
+                        usageDataItems.add(usageEvent.toUsageDataItem(applicationName))
+                    }
+                    if (usageEvent.eventType == 1 || usageEvent.eventType == 2)
+                        Timber.e("APP ${usageEvent.packageName} ${usageEvent.timeStamp}")
+                }
+            }
+        } else {
+            // Navigate the user to the permission settings
+            Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).apply {
+                this.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(this)
+            }
+        }
+        return usageDataItems
+    }
+
     override fun checkUsagePermission(): Boolean {
         val appOpsManager =
             context.getSystemService(AppCompatActivity.APP_OPS_SERVICE) as AppOpsManager
@@ -119,7 +179,7 @@ class UsageRepositoryImpl(
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
-    override suspend fun returnUsageEvents(date: LocalDate): List<UsageDataItem> {
+    override suspend fun getUsageEventsFromDb(date: LocalDate): List<UsageDataItem> {
         val d = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
         val calendar = Calendar.getInstance()
         calendar.time = d
