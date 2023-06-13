@@ -42,8 +42,14 @@ class UsageOverviewViewModel @Inject constructor(
 
     private fun getFullyUpdatedDays() {
         viewModelScope.launch {
+            val updatedDaysList = mutableListOf<LocalDate>()
+            usageOverviewUseCases.getUpdatedDays().forEach { date ->
+                if (usageOverviewUseCases.isDayDataFullyUpdated(date)) {
+                    updatedDaysList.add(date)
+                }
+            }
             state = state.copy(
-                fullyUpdatedDays = usageOverviewUseCases.getFullyUpdatedDays()
+                fullyUpdatedDays = updatedDaysList
             )
             Timber.d("fully updated days ${state.fullyUpdatedDays}")
         }
@@ -163,7 +169,8 @@ class UsageOverviewViewModel @Inject constructor(
                         state = state.copy(
                             rangeStartDate = timestampToLocalDate(event.startDateMillis),
                             rangeEndDate = timestampToLocalDate(event.endDateMillis),
-                            isModeRange = true
+                            isModeRange = true,
+                            isRangePickerDialogVisible = false
                         )
                         refreshUsageDataForRange()
                     }
@@ -186,13 +193,85 @@ class UsageOverviewViewModel @Inject constructor(
                     Timber.d("show dialog")
                     state = state.copy(isDeleteDialogVisible = true)
                 }
+
                 UsageOverviewEvent.OnDismissConfirmDeleteDialog -> {
                     state = state.copy(isDeleteDialogVisible = false)
                 }
+
                 UsageOverviewEvent.OnDeleteCacheForDay -> {
                     onEvent(UsageOverviewEvent.OnDismissConfirmDeleteDialog)
                     usageOverviewUseCases.deleteCacheForDay(state.date)
                     refreshUsageData()
+                }
+
+                UsageOverviewEvent.OnSelectDateClick -> {
+                    _uiEvent.send(UiEvent.DismissBottomSheet)
+                    state = state.copy(
+                        isDatePickerDialogVisible = true
+                    )
+                }
+
+                UsageOverviewEvent.OnSelectRangeClick -> {
+                    _uiEvent.send(UiEvent.DismissBottomSheet)
+                    state = state.copy(
+                        isRangePickerDialogVisible = true
+                    )
+                }
+
+                UsageOverviewEvent.OnShowDateBottomSheet -> {
+                    _uiEvent.send(UiEvent.ShowBottomSheet)
+                }
+
+                UsageOverviewEvent.OnDismissDateBottomSheet -> {
+                    _uiEvent.send(UiEvent.DismissBottomSheet)
+                }
+
+                UsageOverviewEvent.OnShowDatePickerDialog -> {
+                    state = state.copy(
+                        isDatePickerDialogVisible = true
+                    )
+                }
+
+                UsageOverviewEvent.OnDismissDatePickerDialog -> {
+                    state = state.copy(
+                        isDatePickerDialogVisible = false
+                    )
+                }
+
+                UsageOverviewEvent.OnShowRangePickerDialog -> {
+                    state = state.copy(
+                        isRangePickerDialogVisible = true
+                    )
+                }
+
+                UsageOverviewEvent.OnDismissRangePickerDialog -> {
+                    state = state.copy(
+                        isRangePickerDialogVisible = false
+                    )
+                }
+
+                is UsageOverviewEvent.OnDateSelected -> {
+                    val selectedDate = timestampToLocalDate(event.selectedDateMillis)
+                    state = state.copy(
+                        date = selectedDate,
+                        isDatePickerDialogVisible = false,
+                        isModeRange = false,
+                        rangeStartDate = null,
+                        rangeEndDate = null
+                    )
+                    refreshUsageData()
+                }
+
+                UsageOverviewEvent.OnShowHowDialog -> {
+                    state = state.copy(
+                        isHowDialogVisible = true
+                    )
+                }
+
+                UsageOverviewEvent.OnDismissHowDialog -> {
+                    state = state.copy(
+                        isHowDialogVisible = false
+                    )
                 }
             }
         }

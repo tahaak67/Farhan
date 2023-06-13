@@ -37,18 +37,16 @@ import ly.com.tahaben.usage_overview_domain.use_case.FilterDuration
 import ly.com.tahaben.usage_overview_domain.use_case.FilterUsageEvents
 import ly.com.tahaben.usage_overview_domain.use_case.GetDurationFromMilliseconds
 import ly.com.tahaben.usage_overview_domain.use_case.GetEnabledUsageReports
-import ly.com.tahaben.usage_overview_domain.use_case.GetFullyUpdatedDays
+import ly.com.tahaben.usage_overview_domain.use_case.GetUpdatedDays
 import ly.com.tahaben.usage_overview_domain.use_case.GetUsageDataForDate
 import ly.com.tahaben.usage_overview_domain.use_case.GetUsageEventsFromDb
 import ly.com.tahaben.usage_overview_domain.use_case.IsAutoCachingEnabled
-import ly.com.tahaben.usage_overview_domain.use_case.IsBackgroundWorkRestricted
 import ly.com.tahaben.usage_overview_domain.use_case.IsCachingEnabled
 import ly.com.tahaben.usage_overview_domain.use_case.IsDateToday
 import ly.com.tahaben.usage_overview_domain.use_case.IsDayDataFullyUpdated
 import ly.com.tahaben.usage_overview_domain.use_case.IsUsagePermissionGranted
 import ly.com.tahaben.usage_overview_domain.use_case.MergeDaysUsageDuration
 import ly.com.tahaben.usage_overview_domain.use_case.OpenAppSettings
-import ly.com.tahaben.usage_overview_domain.use_case.OpenBatteryOptimizationSettings
 import ly.com.tahaben.usage_overview_domain.use_case.SetAutoCachingEnabled
 import ly.com.tahaben.usage_overview_domain.use_case.SetCachingEnabled
 import ly.com.tahaben.usage_overview_domain.use_case.SetUsageReportsEnabled
@@ -98,7 +96,7 @@ class UsageOverviewE2E {
             getUsageDataForDate = GetUsageDataForDate(repositoryFake),
             deleteCacheForDay = DeleteCacheForDay(repositoryFake),
             getUsageEventsFromDb = GetUsageEventsFromDb(repositoryFake),
-            getFullyUpdatedDays = GetFullyUpdatedDays(repositoryFake),
+            getUpdatedDays = GetUpdatedDays(repositoryFake),
             isDayDataFullyUpdated = IsDayDataFullyUpdated(repositoryFake),
             mergeDaysUsageDuration = MergeDaysUsageDuration()
         )

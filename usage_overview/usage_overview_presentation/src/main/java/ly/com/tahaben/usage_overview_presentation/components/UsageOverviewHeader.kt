@@ -15,12 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,7 +39,6 @@ fun UsageOverviewHeader(
     modifier: Modifier = Modifier
 ) {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
     val decimalFormat = DecimalFormat.getInstance()
     val animatedHoursCount = animateIntAsState(
         targetValue = state.totalUsageDuration,
@@ -50,24 +49,17 @@ fun UsageOverviewHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 50.dp,
-                    bottomEnd = 50.dp
-                )
-            )
-            .background(Page)
-            .padding(
-                horizontal = spacing.spaceLarge,
-                vertical = spacing.spaceMedium
-            )
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Card(
+            modifier = Modifier
+                .padding(spacing.spaceMedium)
+                .clip(RoundedCornerShape(24.dp)),
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Page)
+                    .padding(24.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.total_usage),

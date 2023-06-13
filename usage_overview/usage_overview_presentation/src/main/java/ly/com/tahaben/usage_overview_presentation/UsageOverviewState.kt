@@ -23,5 +23,9 @@ data class UsageOverviewState(
     val fullyUpdatedDays: List<LocalDate> = emptyList(),
     val isCachingEnabled: Boolean = false,
     val isDeleteDialogVisible: Boolean = false,
-    val currentYear: Int = Year.now().value
+    val currentYear: Int = Year.now().value,
+    val isSelectDateBottomSheetVisible: Boolean = false,
+    val isDatePickerDialogVisible: Boolean = false,
+    val isRangePickerDialogVisible: Boolean = false,
+    val isHowDialogVisible: Boolean = false
 )

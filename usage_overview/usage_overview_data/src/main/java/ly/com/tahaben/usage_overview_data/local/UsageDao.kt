@@ -29,6 +29,6 @@ interface UsageDao {
     @Query("DELETE FROM DayLastUpdatedEntity WHERE day = :day")
     suspend fun deleteLastDbUpdateTimeForDay(day: LocalDate)
 
-    @Query("SELECT day FROM DayLastUpdatedEntity WHERE last_update_time > (strftime('%s', datetime(day || 'T23:59:59'))) * 1000")
-    suspend fun getFullyUpdatedDays(): List<LocalDate>
+    @Query("SELECT day FROM DayLastUpdatedEntity")
+    suspend fun getUpdatedDays(): List<LocalDate>
 }

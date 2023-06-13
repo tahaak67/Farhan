@@ -11,6 +11,4 @@ data class UsageSettingsUseCases(
     val isCachingEnabled: IsCachingEnabled,
     val setCachingEnabled: SetCachingEnabled,
     val openAppSettings: OpenAppSettings,
-    val isBackgroundWorkRestricted: IsBackgroundWorkRestricted,
-    val openBatteryOptimizationSettings: OpenBatteryOptimizationSettings
 )

@@ -147,5 +147,12 @@
     <string name="permission_required">الإذن مطلوب</string>
     <string name="post_notification_permission_permanently_declined_description">يبدو أنك رفضت اذن ارسال الإشعارات بشكل دائم، يمكنك منح الإذن من شاشة اعدادات التطبيق.</string>
     <string name="post_notification_permission_description">يحتاج فرحان إلى إذن ارسال الإشعارات لكي يُظهر لك الإشعارات.</string>
+    <string name="weekly">اسبوعية</string>
+    <string name="monthly">شهرية</string>
+    <string name="yearly">سنوية</string>
+    <string name="usage_reports_off">تقارير الاستخدام معطلة، اضغط لتفعيلها</string>
+    <string name="periodic_usage_reports">احصل على تقارير دورية بناءً على البيانات التي تم تخزينها</string>
+    <string name="select_a_day">تحديد يوم</string>
+    <string name="select_a_range">تحديد فترة</string>
 </resources>
 

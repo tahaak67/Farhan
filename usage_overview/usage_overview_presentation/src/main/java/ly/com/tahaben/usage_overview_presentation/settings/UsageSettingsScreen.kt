@@ -22,8 +22,6 @@ import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -41,12 +39,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.DarkerYellow
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.core_ui.components.PermissionDialog
 import ly.com.tahaben.core_ui.components.PostNotificationPermissionTextProvider
@@ -98,15 +94,11 @@ fun UsageSettingsScreen(
             when (uiEvent) {
                 is UiEvent.ShowSnackbar -> {
                     Timber.d("show snackbar event here")
-                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                        message = uiEvent.message.asString(context),
-                        actionLabel = context.getString(R.string.ok),
-                        duration = SnackbarDuration.Indefinite
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = uiEvent.message.asString(
+                            context
+                        )
                     )
-                    when (snackbarResult) {
-                        SnackbarResult.ActionPerformed -> viewModel.openBatteryOptimizationSettings()
-                        else -> Unit
-                    }
                 }
 
                 is UiEvent.HideSnackBar -> {
@@ -118,15 +110,7 @@ fun UsageSettingsScreen(
             }
         }
     }
-    OnLifecycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                viewModel.checkIfBackgroundWorkRestricted()
-            }
 
-            else -> Unit
-        }
-    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

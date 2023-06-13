@@ -8,18 +8,22 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.mirror
 import java.time.LocalDate
 
@@ -37,6 +41,7 @@ fun DaySelector(
     dateRangeStart: LocalDate?,
     dateRangeEnd: LocalDate?
 ) {
+    val spacing = LocalSpacing.current
     Row(
         modifier = modifier,
         horizontalArrangement = if (isRangeMode) Arrangement.Center else Arrangement.SpaceBetween,
@@ -59,23 +64,30 @@ fun DaySelector(
             }
         }
 
-        Text(
-            modifier = Modifier
-                .clickable(
-                    onClick = {
-                        if (!isLoading) {
-                            if (isRangeMode) disableRangeMode() else onDayClick()
-                        }
+        Row(modifier = Modifier
+            .clickable(
+                onClick = {
+                    if (!isLoading) {
+                        if (isRangeMode) disableRangeMode() else onDayClick()
                     }
-
-                ),
-            text = if (isRangeMode && dateRangeStart != null && dateRangeEnd != null) "${
-                parseDateText(
-                    date = dateRangeStart
-                )
-            } - ${parseDateText(date = dateRangeEnd)}" else parseDateText(date = date),
-            style = MaterialTheme.typography.h2
-        )
+                }
+            ),
+            verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                modifier = Modifier,
+                text = if (isRangeMode && dateRangeStart != null && dateRangeEnd != null) "${
+                    parseDateText(
+                        date = dateRangeStart
+                    )
+                } - ${parseDateText(date = dateRangeEnd)}" else parseDateText(date = date),
+                style = MaterialTheme.typography.h2
+            )
+            Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = "Change date / range"
+            )
+        }
 
         AnimatedVisibility(
             visible = !isRangeMode,

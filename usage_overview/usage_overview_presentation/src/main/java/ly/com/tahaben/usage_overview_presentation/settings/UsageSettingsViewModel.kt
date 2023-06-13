@@ -9,12 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.usage_overview_domain.use_case.UsageSettingsUseCases
 import ly.com.tahaben.usage_overview_domain.util.WorkerKeys
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -39,23 +36,6 @@ class UsageSettingsViewModel @Inject constructor(
         checkCachingEnabled()
         checkAutoCachingEnabled()
         getEnabledUsageReports()
-    }
-
-    fun checkIfBackgroundWorkRestricted() {
-        viewModelScope.launch {
-            if (usageSettingsUseCases.isBackgroundWorkRestricted()) {
-                Timber.d("sending ui event: show snackbar")
-                _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.disable_battery_optimization_msg)))
-            } else {
-                Timber.d("sending ui event: dismiss snackbar")
-                _uiEvent.send(UiEvent.HideSnackBar)
-            }
-
-        }
-    }
-
-    fun openBatteryOptimizationSettings() {
-        usageSettingsUseCases.openBatteryOptimizationSettings()
     }
 
     fun setCachingEnabled(isEnabled: Boolean) {

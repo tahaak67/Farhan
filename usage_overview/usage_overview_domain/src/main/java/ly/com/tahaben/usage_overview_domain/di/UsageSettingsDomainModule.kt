@@ -29,9 +29,7 @@ object UsageSettingsDomainModule {
             setCachingEnabled = SetCachingEnabled(preferences),
             openAppSettings = OpenAppSettings(workerRepository),
             setUsageReportsEnabled = SetUsageReportsEnabled(workerRepository),
-            getEnabledUsageReports = GetEnabledUsageReports(preferences),
-            isBackgroundWorkRestricted = IsBackgroundWorkRestricted(workerRepository),
-            openBatteryOptimizationSettings = OpenBatteryOptimizationSettings(workerRepository)
+            getEnabledUsageReports = GetEnabledUsageReports(preferences)
         )
     }
 }

@@ -30,7 +30,7 @@ object UsageOverviewDomainModule {
             getUsageEventsFromDb = GetUsageEventsFromDb(usageRepository),
             isDayDataFullyUpdated = IsDayDataFullyUpdated(usageRepository),
             mergeDaysUsageDuration = MergeDaysUsageDuration(),
-            getFullyUpdatedDays = GetFullyUpdatedDays(usageRepository),
+            getUpdatedDays = GetUpdatedDays(usageRepository),
             deleteCacheForDay = DeleteCacheForDay(usageRepository)
         )
     }

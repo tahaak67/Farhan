@@ -3,14 +3,11 @@ package ly.com.tahaben.usage_overview_data.repository
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.PowerManager
 import android.provider.Settings
-import android.widget.Toast
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import ly.com.tahaben.core.R
 import ly.com.tahaben.usage_overview_data.local.CacheWorker
 import ly.com.tahaben.usage_overview_data.local.ReportsWorker
 import ly.com.tahaben.usage_overview_domain.preferences.Preferences
@@ -30,28 +27,6 @@ class WorkerRepoImpl(
     private val preferences: Preferences,
     private val context: Context
 ) : WorkerRepository {
-
-    override fun checkIfBackgroundWorkRestricted(): Boolean {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val isRestricted = !powerManager.isIgnoringBatteryOptimizations(context.packageName)
-        Timber.d("background restricted?: $isRestricted")
-        return isRestricted
-    }
-
-    override fun requestToIgnoreBatteryOptimization() {
-        Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", context.packageName, null)
-        ).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(this)
-        }
-        Toast.makeText(
-            context,
-            context.getString(R.string.disable_battery_optimization_toast),
-            Toast.LENGTH_LONG
-        ).show()
-    }
 
     override fun scheduleWork() {
         val now = LocalTime.now()

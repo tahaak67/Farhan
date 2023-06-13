@@ -59,7 +59,21 @@ class UsageRepositoryImpl(
                 while (usageEvents.hasNextEvent()) {
                     usageEvents.getNextEvent(usageEvent)
                     val ai: ApplicationInfo? = try {
-                        pm.getApplicationInfo(usageEvent.packageName, 0)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            val ai: ApplicationInfo = context.getPackageManager()
+                                .getApplicationInfo(
+                                    usageEvent.packageName,
+                                    PackageManager.ApplicationInfoFlags.of(0)
+                                )
+                            ai
+                        } else {
+                            val ai: ApplicationInfo = context.getPackageManager()
+                                .getApplicationInfo(
+                                    usageEvent.packageName,
+                                    PackageManager.GET_META_DATA
+                                )
+                            ai
+                        }
                     } catch (e: PackageManager.NameNotFoundException) {
                         e.printStackTrace()
                         null
@@ -204,6 +218,7 @@ class UsageRepositoryImpl(
             val endOfDay =
                 date.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000
             val timeBetweenUpdateAndEndOfDay = lastUpdateTimeForDay - endOfDay
+            Timber.d("end of day for $date:  $endOfDay")
             Timber.d("data updated at $lastUpdateTimeForDay")
             Timber.d("time Between Update And EndOfDay $timeBetweenUpdateAndEndOfDay")
 
@@ -212,7 +227,7 @@ class UsageRepositoryImpl(
     }
 
     override suspend fun getCachedDays(): List<LocalDate> {
-        return usageDao.getFullyUpdatedDays()
+        return usageDao.getUpdatedDays()
     }
 
     override suspend fun deleteCacheForDay(date: LocalDate) {

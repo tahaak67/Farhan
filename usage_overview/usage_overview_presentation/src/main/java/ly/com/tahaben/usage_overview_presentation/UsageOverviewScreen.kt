@@ -2,6 +2,7 @@ package ly.com.tahaben.usage_overview_presentation
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,15 +11,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,7 +40,7 @@ import ly.com.tahaben.usage_overview_presentation.components.*
 import timber.log.Timber
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UsageOverviewScreen(
     onNavigateUp: () -> Unit,
@@ -46,8 +53,8 @@ fun UsageOverviewScreen(
     val spacing = LocalSpacing.current
     val state = viewModel.state
     val context = LocalContext.current
-    val openDialog = remember { mutableStateOf(false) }
-    var openDateRangePicker by remember { mutableStateOf(false) }
+    val selectDateBottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -56,6 +63,7 @@ fun UsageOverviewScreen(
                 viewModel.checkIfCachingEnabled()
                 viewModel.setRange(startDate, endDate)
             }
+
             else -> Unit
         }
     }
@@ -67,6 +75,15 @@ fun UsageOverviewScreen(
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
                 }
+
+                UiEvent.ShowBottomSheet -> {
+                    selectDateBottomSheetState.show()
+                }
+
+                UiEvent.DismissBottomSheet -> {
+                    selectDateBottomSheetState.hide()
+                }
+
                 else -> Unit
             }
         }
@@ -118,9 +135,7 @@ fun UsageOverviewScreen(
                     .padding(bottom = spacing.spaceMedium)
             ) {
                 item {
-                    UsageOverviewHeader(state = state)
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
-
                     DaySelector(
                         isRangeMode = state.isModeRange,
                         date = state.date,
@@ -133,16 +148,16 @@ fun UsageOverviewScreen(
                             viewModel.onEvent(UsageOverviewEvent.OnNextDayClick)
                         },
                         onDayClick = {
-                            openDateRangePicker = true
+                            viewModel.onEvent(UsageOverviewEvent.OnShowDateBottomSheet)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = spacing.spaceMedium),
-                        disableRangeMode = { viewModel.onEvent(UsageOverviewEvent.OnDisableRangeMode) },
+                        disableRangeMode = { viewModel.onEvent(UsageOverviewEvent.OnShowDateBottomSheet) },
                         dateRangeStart = state.rangeStartDate,
                         dateRangeEnd = state.rangeEndDate
                     )
-
+                    UsageOverviewHeader(state = state)
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 }
 
@@ -156,6 +171,7 @@ fun UsageOverviewScreen(
                                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                                 CircularProgressIndicator()
                             }
+
                             state.trackedApps.isEmpty() -> {
                                 Text(
                                     text = stringResource(id = R.string.no_results),
@@ -171,7 +187,7 @@ fun UsageOverviewScreen(
                     TrackedAppItem(
                         trackedApp = app,
                     )
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 }
             }
         } else {
@@ -180,115 +196,190 @@ fun UsageOverviewScreen(
                 message = stringResource(R.string.usage_permission_msg),
                 subMessage = stringResource(R.string.usage_permission_sub_msg),
                 onGrantClick = viewModel::askForUsagePermission,
-                onHowClick = { openDialog.value = true }
+                onHowClick = { viewModel.onEvent(UsageOverviewEvent.OnShowHowDialog) }
             )
         }
     }
-    if (openDialog.value) {
+    if (state.isHowDialogVisible) {
         HowDialog(
             gifId = R.drawable.usage_permission_howto,
             gifDescription = stringResource(R.string.how_to_enable_permission),
-            onDismiss = { openDialog.value = false }
+            onDismiss = { viewModel.onEvent(UsageOverviewEvent.OnDismissHowDialog) }
         )
     }
-    val dateRangeState = rememberDateRangePickerState(
-        yearRange = 2022..state.currentYear
-    )
 
+    if (state.isDatePickerDialogVisible) {
+        DatePickerDialog(viewModel::onEvent, viewModel::isDayInUpdatedDays)
+    }
 
-    AnimatedVisibility(
-        openDateRangePicker,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(Black.copy(alpha = 0.8f))
-        ) {
-            Card(
+    if (state.isRangePickerDialogVisible) {
+        DateRangePickerDialog(state.currentYear, viewModel::onEvent, viewModel::isDayInUpdatedDays)
+    }
+
+    ModalBottomSheetLayout(
+        modifier = Modifier,
+        sheetState = selectDateBottomSheetState,
+        sheetBackgroundColor = Color.Transparent,
+        sheetContent = {
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Center),
-                shape = RoundedCornerShape(25.dp)
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .background(MaterialTheme.colors.surface),
             ) {
-                Column(
+                Row(
                     modifier = Modifier
-                        .background(MaterialTheme.colors.secondary)
-                        .padding(vertical = spacing.spaceMedium)
+                        .fillMaxWidth()
+                        .height(spacing.spaceExtraLarge)
+                        .clickable {
+                            viewModel.onEvent(UsageOverviewEvent.OnSelectDateClick)
+                        }
+                        .padding(horizontal = spacing.spaceSmall),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DateRangePicker(
-                        modifier = Modifier
-                            .height(500.dp),
-                        state = dateRangeState,
-                        colors = DatePickerDefaults.colors(
-
-                            dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
-                            selectedDayContainerColor = MaterialTheme.colors.primaryVariant,
-                            selectedDayContentColor = MaterialTheme.colors.onPrimary,
-                            todayDateBorderColor = MaterialTheme.colors.primary,
-                        ),
-                        dateValidator = { date ->
-                            Timber.d("validator current date: $date")
-                            viewModel.isDayInUpdatedDays(date)
-                        },
-                        title = {
-                            Text(
-                                text = stringResource(R.string.usage_date_range_picker_title),
-                                style = MaterialTheme.typography.h3
-                            )
-                        },
-                        headline = {
-                            Text(
-                                text = stringResource(R.string.usage_date_range_picker_description),
-                                style = MaterialTheme.typography.h5
-                            )
-                        },
-                        showModeToggle = false
+                    Icon(
+                        painter = painterResource(id = R.drawable.date_calendar),
+                        contentDescription = stringResource(R.string.select_a_day)
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = spacing.spaceSmall),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            modifier = Modifier.padding(spacing.spaceSmall),
-                            onClick = {
-                                openDateRangePicker = false
-                                viewModel.onEvent(
-                                    UsageOverviewEvent.OnRangeSelected(
-                                        dateRangeState.selectedStartDateMillis,
-                                        dateRangeState.selectedEndDateMillis
-                                    )
-                                )
-                            }) {
-                            Text(
-                                text = stringResource(id = R.string.confirm),
-                                style = MaterialTheme.typography.h5,
-                                color = MaterialTheme.colors.primaryVariant
-                            )
+                    Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                    Text(text = stringResource(R.string.select_a_day))
+                }
+                Divider(modifier = Modifier.padding(horizontal = spacing.spaceSmall))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(spacing.spaceExtraLarge)
+                        .clickable {
+                            viewModel.onEvent(UsageOverviewEvent.OnSelectRangeClick)
                         }
-                        Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                        TextButton(
-                            modifier = Modifier.padding(spacing.spaceSmall),
-                            onClick = { openDateRangePicker = false }) {
-                            Text(
-                                text = stringResource(id = R.string.cancel),
-                                style = MaterialTheme.typography.h5,
-                                color = MaterialTheme.colors.primaryVariant
-                            )
-                        }
-                    }
+                        .padding(horizontal = spacing.spaceSmall),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.range_calendar),
+                        contentDescription = stringResource(R.string.select_a_range)
+                    )
+                    Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                    Text(text = stringResource(R.string.select_a_range))
                 }
             }
-        }
-    }
+        },
+        content = {}
+    )
     if (state.isDeleteDialogVisible) {
         Timber.d("show dialog")
         ConfirmDeleteDialog(
             onDismiss = { viewModel.onEvent(UsageOverviewEvent.OnDismissConfirmDeleteDialog) },
             date = parseDateText(date = state.date),
             onConfirm = { viewModel.onEvent(UsageOverviewEvent.OnDeleteCacheForDay) }
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DatePickerDialog(
+    onEvent: (UsageOverviewEvent) -> Unit,
+    isDateValid: (Long) -> Boolean
+) {
+    val datePickerState = rememberDatePickerState()
+    val confirmEnabled = remember {
+        derivedStateOf { datePickerState.selectedDateMillis != null }
+    }
+
+    DatePickerDialog(
+        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colors.secondary),
+        onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissDatePickerDialog) },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val selectedDateMillis = datePickerState.selectedDateMillis ?: return@TextButton
+                    onEvent(UsageOverviewEvent.OnDateSelected(selectedDateMillis))
+                },
+                enabled = confirmEnabled.value
+            ) {
+                Text(text = stringResource(id = R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onEvent(UsageOverviewEvent.OnDismissDatePickerDialog) }) {
+                Text(text = stringResource(id = R.string.cancel))
+            }
+        }
+    ) {
+        DatePicker(
+            colors = DatePickerDefaults.colors(
+                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
+                selectedDayContainerColor = MaterialTheme.colors.primaryVariant,
+                selectedDayContentColor = MaterialTheme.colors.onPrimary,
+                todayDateBorderColor = MaterialTheme.colors.primary,
+            ),
+            state = datePickerState,
+            dateValidator = { dateInMilli ->
+                isDateValid(dateInMilli)
+            }
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DateRangePickerDialog(
+    currentYear: Int,
+    onEvent: (UsageOverviewEvent) -> Unit,
+    isDateValid: (Long) -> Boolean
+) {
+    val spacing = LocalSpacing.current
+    val dateRangeState = rememberDateRangePickerState(
+        yearRange = 2022..currentYear
+    )
+    val confirmEnabled = remember {
+        derivedStateOf { dateRangeState.selectedStartDateMillis != null && dateRangeState.selectedEndDateMillis != null }
+    }
+    DatePickerDialog(
+        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colors.secondary),
+        onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissRangePickerDialog) },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val startDateMillis = dateRangeState.selectedStartDateMillis
+                    val endDateMillis = dateRangeState.selectedEndDateMillis
+                    onEvent(
+                        UsageOverviewEvent.OnRangeSelected(
+                            startDateMillis,
+                            endDateMillis
+                        )
+                    )
+                },
+                enabled = confirmEnabled.value
+            ) {
+                Text(
+                    text = stringResource(id = R.string.confirm)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onEvent(UsageOverviewEvent.OnDismissRangePickerDialog) }) {
+                Text(
+                    text = stringResource(id = R.string.cancel)
+                )
+            }
+        }
+    ) {
+        DateRangePicker(
+            modifier = Modifier
+                .heightIn(min = 250.dp, max = 500.dp)
+                .padding(spacing.spaceMedium),
+            state = dateRangeState,
+            colors = DatePickerDefaults.colors(
+                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
+                selectedDayContainerColor = MaterialTheme.colors.primaryVariant,
+                selectedDayContentColor = MaterialTheme.colors.onPrimary,
+                todayDateBorderColor = MaterialTheme.colors.primary,
+            ),
+            showModeToggle = true,
+            dateValidator = { dateInMillis ->
+                isDateValid(dateInMillis)
+            }
         )
     }
 }

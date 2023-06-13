@@ -11,6 +11,4 @@ interface WorkerRepository {
     fun scheduleWeeklyReport()
     fun scheduleMonthlyReport()
     fun scheduleYearlyReport()
-    fun checkIfBackgroundWorkRestricted(): Boolean
-    fun requestToIgnoreBatteryOptimization()
 }
