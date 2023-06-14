@@ -18,6 +18,9 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 /**
  * Created by Taha Ben Ashur (https://github.com/tahaak67) on 01,May,2023
@@ -108,11 +111,18 @@ class WorkerRepoImpl(
     }
 
     override fun scheduleWeeklyReport() {
+        val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+        val now = LocalTime.now()
+        val today = LocalDate.now()
+        val currentDateTime = LocalDateTime.of(LocalDate.now(), now)
+        val firstDayOfWeekDateTime =
+            today.with(TemporalAdjusters.next(firstDayOfWeek)).atStartOfDay()
+        val timeLeft = Duration.between(currentDateTime, firstDayOfWeekDateTime).toMinutes() + 1
         val inputData = Data.Builder()
             .putString(WorkerKeys.REPORT_TYPE, WorkerKeys.WEEKLY_USAGE_REPORTS)
             .build()
-        val cacheRequest = PeriodicWorkRequestBuilder<ReportsWorker>(Duration.ofHours(12))
-            .setInitialDelay(Duration.ofSeconds(1))
+        val cacheRequest = PeriodicWorkRequestBuilder<ReportsWorker>(Duration.ofDays(7))
+            .setInitialDelay(Duration.ofMinutes(timeLeft))
             .setInputData(inputData)
             .build()
         workManager.enqueueUniquePeriodicWork(
@@ -120,15 +130,21 @@ class WorkerRepoImpl(
             ExistingPeriodicWorkPolicy.KEEP,
             cacheRequest
         )
-        Timber.d("enqueued work time left: 1")
+        Timber.d("enqueued work weekly report time left: $timeLeft")
     }
 
     override fun scheduleMonthlyReport() {
+        val now = LocalTime.now()
+        val today = LocalDate.now()
+        val currentDateTime = LocalDateTime.of(LocalDate.now(), now)
+        val firstDayOfMonthDateTime =
+            today.with(TemporalAdjusters.firstDayOfNextMonth()).atStartOfDay()
+        val timeLeft = Duration.between(currentDateTime, firstDayOfMonthDateTime).toMinutes() + 1
         val inputData = Data.Builder()
             .putString(WorkerKeys.REPORT_TYPE, WorkerKeys.MONTHLY_USAGE_REPORTS)
             .build()
-        val cacheRequest = PeriodicWorkRequestBuilder<ReportsWorker>(Duration.ofHours(12))
-            .setInitialDelay(Duration.ofSeconds(1))
+        val cacheRequest = PeriodicWorkRequestBuilder<ReportsWorker>(Duration.ofDays(30))
+            .setInitialDelay(Duration.ofMinutes(timeLeft))
             .setInputData(inputData)
             .build()
         workManager.enqueueUniquePeriodicWork(
@@ -136,7 +152,7 @@ class WorkerRepoImpl(
             ExistingPeriodicWorkPolicy.KEEP,
             cacheRequest
         )
-        Timber.d("enqueued work time left: 1")
+        Timber.d("enqueued work monthly report time left: $timeLeft")
     }
 
     override fun scheduleYearlyReport() {

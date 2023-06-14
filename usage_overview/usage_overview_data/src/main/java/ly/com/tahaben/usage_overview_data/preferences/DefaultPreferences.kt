@@ -10,7 +10,7 @@ import ly.com.tahaben.usage_overview_domain.util.WorkerKeys
 class DefaultPreferences(private val sharedPref: SharedPreferences) : Preferences {
 
     override fun isAutoCacheEnabled(): Boolean {
-        return sharedPref.getBoolean(Preferences.AUTO_CACHE_KEY, true)
+        return sharedPref.getBoolean(Preferences.AUTO_CACHE_KEY, false)
     }
 
     override fun setAutoCacheEnabled(isEnabled: Boolean) {

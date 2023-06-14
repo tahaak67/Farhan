@@ -215,12 +215,6 @@ fun UsageSettingsScreen(
                     }
                     )
                 }
-                /*Checkbox(
-                    checked = ,
-                    onCheckedChange = { checked ->
-                        viewModel.setUsageReportsEnabled(checked)
-                    }
-                )*/
             }
         }
     }
@@ -256,10 +250,7 @@ fun UsageSettingsScreen(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(
-                                horizontal = spacing.spaceMedium,
-                                vertical = spacing.spaceMedium
-                            )
+                            .padding(spacing.spaceMedium)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
@@ -274,10 +265,7 @@ fun UsageSettingsScreen(
                     }
                     Row(
                         modifier = Modifier
-                            .padding(
-                                horizontal = spacing.spaceMedium,
-                                vertical = spacing.spaceMedium
-                            )
+                            .padding(spacing.spaceMedium)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
@@ -290,36 +278,39 @@ fun UsageSettingsScreen(
                                 viewModel.setMonthlyReportsEnabled(isChecked)
                             })
                     }
-                    Row(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = spacing.spaceMedium,
-                                vertical = spacing.spaceMedium
-                            )
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(text = stringResource(id = R.string.yearly))
-                        Checkbox(
-                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
-                            checked = state.isYearlyReportsEnabled,
-                            onCheckedChange = { isChecked ->
-                                viewModel.setYearlyReportsEnabled(isChecked)
-                            })
+                    // hide yearly option for now
+                    if (false) {
+                        Row(
+                            modifier = Modifier
+                                .padding(spacing.spaceMedium)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(text = stringResource(id = R.string.yearly))
+                            Checkbox(
+                                colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
+                                checked = state.isYearlyReportsEnabled,
+                                onCheckedChange = { isChecked ->
+                                    viewModel.setYearlyReportsEnabled(isChecked)
+                                })
+                        }
                     }
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = {
+                            viewModel.onEvent(UsageSettingsEvent.DismissSelectReportsDialog)
+                        }) {
+                            Text(text = stringResource(id = R.string.cancel))
+                        }
+                        Spacer(modifier = Modifier.width(spacing.spaceSmall))
                         TextButton(onClick = {
                             viewModel.saveUsageReportsEnabled()
                             viewModel.onEvent(UsageSettingsEvent.DismissSelectReportsDialog)
                         }) {
                             Text(text = stringResource(id = R.string.ok))
-                        }
-                        Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                        TextButton(onClick = {
-                            viewModel.onEvent(UsageSettingsEvent.DismissSelectReportsDialog)
-                        }) {
-                            Text(text = stringResource(id = R.string.cancel))
                         }
                     }
                 }

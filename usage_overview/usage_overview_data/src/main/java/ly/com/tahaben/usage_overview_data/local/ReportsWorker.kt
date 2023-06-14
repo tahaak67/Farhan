@@ -20,7 +20,6 @@ import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
 import ly.com.tahaben.usage_overview_domain.util.WorkerKeys
 import timber.log.Timber
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -92,25 +91,40 @@ class ReportsWorker(
             when {
                 difference > 0 -> {
                     if (hours == 0L) {
-                        "Last week, you used your phone for ${minutes}m more."
+                        context.getString(R.string.weekly_usage_report_msg_more_min, minutes)
                     } else if (minutes == 0) {
-                        "Last week, you used your phone for ${hours}h more."
+                        context.getString(R.string.weekly_usage_report_msg_more_hrs, hours)
                     } else {
-                        "Last week, you used your phone for ${hours}h and ${minutes}m more."
+                        context.getString(
+                            R.string.weekly_usage_report_msg_more_hrs_min,
+                            hours,
+                            minutes
+                        )
                     }
                 }
 
                 difference < 0 -> {
-                    "Last week, you used your phone for ${-hours}h ${-minutes}m less."
+                    if (hours == 0L) {
+                        context.getString(R.string.weekly_usage_report_msg_less_min, minutes)
+                    } else if (minutes == 0) {
+                        context.getString(R.string.weekly_usage_report_msg_less_hrs, hours)
+                    } else {
+                        context.getString(
+                            R.string.weekly_usage_report_msg_less_hrs_min,
+                            hours,
+                            minutes
+                        )
+                    }
                 }
 
                 else -> {
-                    "Last week, you used your phone for the same amount of time."
+                    context.getString(R.string.weekly_usage_report_same_time)
                 }
             }
         }
 
         showNotification(
+            title = context.getString(R.string.weekly_report_notification_title),
             message = message,
             startDate = startOfLastWeek.toString(),
             endDate = endOfLastWeek.toString()
@@ -145,25 +159,46 @@ class ReportsWorker(
             when {
                 difference > 0 -> {
                     if (hours == 0L) {
-                        "Last month, you used your phone for ${minutes}m more."
+                        context.getString(R.string.monthly_usage_report_msg_more_min, minutes)
                     } else if (minutes == 0) {
-                        "Last month, you used your phone for ${hours}h more."
+                        context.getString(R.string.monthly_usage_report_msg_more_hrs, hours)
                     } else {
-                        "Last month, you used your phone for ${hours}h and ${minutes}m more."
+                        context.getString(
+                            R.string.monthly_usage_report_msg_more_hrs_min,
+                            hours,
+                            minutes
+                        )
                     }
                 }
 
                 difference < 0 -> {
-                    "Last month, you used your phone for ${-hours}h ${-minutes}m less."
+                    if (hours == 0L) {
+                        context.getString(R.string.monthly_usage_report_msg_less_min, minutes)
+                    } else if (minutes == 0) {
+                        context.getString(R.string.monthly_usage_report_msg_less_hrs, hours)
+                    } else {
+                        context.getString(
+                            R.string.monthly_usage_report_msg_less_hrs_min,
+                            hours,
+                            minutes
+                        )
+                    }
+                    context.getString(
+                        R.string.monthly_usage_report_msg_less_hrs_min,
+                        hours,
+                        minutes
+                    )
+
                 }
 
                 else -> {
-                    "Last month, you used your phone for the same amount of time."
+                    context.getString(R.string.monthly_usage_report_same_time)
                 }
             }
         }
 
         showNotification(
+            title = context.getString(R.string.monthly_report_notification_title),
             message = message,
             startDate = startOfLastMonth.toString(),
             endDate = endOfLastMonth.toString()
@@ -172,7 +207,12 @@ class ReportsWorker(
     }
 
 
-    private fun showNotification(message: String, startDate: String, endDate: String) {
+    private fun showNotification(
+        title: String,
+        message: String,
+        startDate: String,
+        endDate: String
+    ) {
         Timber.d("start end date: $startDate : $endDate")
         val deepLinkUri =
             Uri.parse("app://${context.packageName}/${Routes.USAGE}/$startDate/$endDate")
@@ -193,7 +233,8 @@ class ReportsWorker(
                 .setStyle(NotificationCompat.BigTextStyle())
                 .setSmallIcon(R.drawable.ic_farhan_transparent)
                 .setSilent(false)
-                .setContentTitle("Weekly report!")
+                .setAutoCancel(true)
+                .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .build()
@@ -210,16 +251,6 @@ class ReportsWorker(
     private suspend fun refreshUsageDataForRange(from: LocalDate, to: LocalDate): Long {
         var totalTimeInMilliSeconds = 0L
 
-        // checking cache
-        var startDate = from
-        val endDate = to
-        /*while (startDate <= endDate) {
-            if (!usageRepository.isDayDataFullyUpdated(startDate)) {
-                usageRepository.cacheUsageEvents(startDate)
-            }
-            startDate = startDate.plusDays(1)
-        }*/
-        // calculation
         var date = from
         val filteredListForRange = mutableListOf<UsageDurationDataItem>()
         while (date <= to) {
@@ -247,21 +278,9 @@ class ReportsWorker(
             val totalGameUsageMilli = filteredListWithDuration
                 .filter { it.appCategory == UsageDataItem.Category.GAME }
                 .sumOf { it.usageDurationInMilliseconds }
-
-
-            Timber.d("posted data size is ${filteredListWithDuration.size}")
-            /*val mergedDaysTrackedAppsList =
-                usageOverviewUseCases.mergeDaysUsageDuration(
-                    filteredListForRange,
-                    usageOverviewUseCases.getDurationFromMilliseconds
-                ).sortedByDescending { it.usageDurationInMilliseconds }*/
-
             date = date.plusDays(1)
         }
         return totalTimeInMilliSeconds
     }
 
-    private fun parseDate(date: LocalDate): String {
-        return DateTimeFormatter.ofPattern("dd LLLL").format(date)
-    }
 }

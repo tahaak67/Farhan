@@ -153,7 +153,6 @@ fun UsageOverviewScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = spacing.spaceMedium),
-                        disableRangeMode = { viewModel.onEvent(UsageOverviewEvent.OnShowDateBottomSheet) },
                         dateRangeStart = state.rangeStartDate,
                         dateRangeEnd = state.rangeEndDate
                     )

@@ -151,8 +151,24 @@
     <string name="monthly">شهرية</string>
     <string name="yearly">سنوية</string>
     <string name="usage_reports_off">تقارير الاستخدام معطلة، اضغط لتفعيلها</string>
-    <string name="periodic_usage_reports">احصل على تقارير دورية بناءً على البيانات التي تم تخزينها</string>
+    <string name="periodic_usage_reports">احصل على تقارير دورية بناءً على البيانات التي تم تخزينها (تجريبي)</string>
     <string name="select_a_day">تحديد يوم</string>
     <string name="select_a_range">تحديد فترة</string>
+    <string name="weekly_usage_report_msg_more_min">لقد استخدمت هاتفك أكثر من الأسبوع الماضي بمقدار %dد.</string>
+    <string name="weekly_usage_report_msg_more_hrs">لقد استخدمت هاتفك أكثر من الأسبوع الماضي بمقدار %dس.</string>
+    <string name="weekly_usage_report_msg_more_hrs_min">لقد استخدمت هاتفك أكثر من الأسبوع الماضي بمقدار %dس و%dد.</string>
+    <string name="weekly_usage_report_msg_less_min">لقد استخدمت هاتفك أقل من الأسبوع الماضي بمقدار %dد.</string>
+    <string name="weekly_usage_report_msg_less_hrs">لقد استخدمت هاتفك أقل من الأسبوع الماضي بمقدار %dس.</string>
+    <string name="weekly_usage_report_msg_less_hrs_min">لقد استخدمت هاتفك أقل من الأسبوع الماضي بمقدار %dس و%dد.</string>
+    <string name="weekly_usage_report_same_time">لقد استخدمت هاتفك لنفس المدة الأسبوع الماضي.</string>
+    <string name="monthly_usage_report_msg_more_min">لقد استخدمت هاتفك أكثر من الشهر الماضي بمقدار %dد.</string>
+    <string name="monthly_usage_report_msg_more_hrs">لقد استخدمت هاتفك أكثر من الشهر الماضي بمقدار %dس.</string>
+    <string name="monthly_usage_report_msg_more_hrs_min">لقد استخدمت هاتفك أكثر من الشهر الماضي بمقدار %dس و%dد.</string>
+    <string name="monthly_usage_report_msg_less_min">لقد استخدمت هاتفك أقل من الشهر الماضي بمقدار %dد.</string>
+    <string name="monthly_usage_report_msg_less_hrs">لقد استخدمت هاتفك أقل من الشهر الماضي بمقدار %dد.</string>
+    <string name="monthly_usage_report_msg_less_hrs_min">لقد استخدمت هاتفك أقل من الشهر الماضي بمقدار %dس و%dد.</string>
+    <string name="monthly_usage_report_same_time">لقد استخدمت هاتفك لنفس المدة الشهر الماضي.</string>
+    <string name="weekly_report_notification_title">التقرير الأسبوعي</string>
+    <string name="monthly_report_notification_title">التقرير الشهري</string>
 </resources>
 

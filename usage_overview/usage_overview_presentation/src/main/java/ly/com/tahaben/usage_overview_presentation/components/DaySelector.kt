@@ -37,7 +37,6 @@ fun DaySelector(
     onDayClick: () -> Unit,
     modifier: Modifier = Modifier,
     isRangeMode: Boolean,
-    disableRangeMode: () -> Unit,
     dateRangeStart: LocalDate?,
     dateRangeEnd: LocalDate?
 ) {
@@ -55,7 +54,7 @@ fun DaySelector(
             ) + fadeIn(animationSpec = tween()),
             exit = fadeOut(animationSpec = tween(0))
         ) {
-            IconButton(onClick = onPreviousDayClick, enabled = !isLoading) {
+            IconButton(onClick = onPreviousDayClick, enabled = !isLoading || isToday) {
                 Icon(
                     modifier = Modifier.mirror(),
                     imageVector = Icons.Default.ArrowBack,
@@ -67,8 +66,8 @@ fun DaySelector(
         Row(modifier = Modifier
             .clickable(
                 onClick = {
-                    if (!isLoading) {
-                        if (isRangeMode) disableRangeMode() else onDayClick()
+                    if (!isLoading || isToday) {
+                        onDayClick()
                     }
                 }
             ),

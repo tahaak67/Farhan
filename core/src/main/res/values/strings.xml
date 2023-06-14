@@ -163,7 +163,23 @@
     <string name="monthly">Monthly</string>
     <string name="yearly">Yearly</string>
     <string name="usage_reports_off">Usage reports are off, click to enable</string>
-    <string name="periodic_usage_reports">Get periodic usage reports based on the cached data</string>
+    <string name="periodic_usage_reports">Get periodic usage reports based on the cached data (Experimental)</string>
     <string name="select_a_day">Select a day</string>
     <string name="select_a_range">Select a range</string>
+    <string name="weekly_usage_report_msg_more_min">Last week, you used your phone for %dm more.</string>
+    <string name="weekly_usage_report_msg_more_hrs">Last week, you used your phone for %dh more.</string>
+    <string name="weekly_usage_report_msg_more_hrs_min">Last week, you used your phone for %dh and %dm more.</string>
+    <string name="weekly_usage_report_msg_less_min">Last week, you used your phone for %dm less.</string>
+    <string name="weekly_usage_report_msg_less_hrs">Last week, you used your phone for %dh less.</string>
+    <string name="weekly_usage_report_msg_less_hrs_min">Last week, you used your phone for %dh and %dm less.</string>
+    <string name="weekly_usage_report_same_time">Last week, you used your phone for the same amount of time.</string>
+    <string name="monthly_usage_report_msg_more_min">Last month, you used your phone for %dm more.</string>
+    <string name="monthly_usage_report_msg_more_hrs">Last month, you used your phone for %dh more.</string>
+    <string name="monthly_usage_report_msg_more_hrs_min">Last month, you used your phone for %dh and %dm more.</string>
+    <string name="monthly_usage_report_msg_less_min">Last month, you used your phone for %dm less.</string>
+    <string name="monthly_usage_report_msg_less_hrs">Last month, you used your phone for %dh less.</string>
+    <string name="monthly_usage_report_msg_less_hrs_min">Last month, you used your phone for %dh and %dm less.</string>
+    <string name="monthly_usage_report_same_time">Last month, you used your phone for the same amount of time.</string>
+    <string name="weekly_report_notification_title">Weekly report!</string>
+    <string name="monthly_report_notification_title">Monthly report!</string>
 </resources>

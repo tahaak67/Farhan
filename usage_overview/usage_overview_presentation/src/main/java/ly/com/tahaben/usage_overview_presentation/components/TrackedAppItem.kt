@@ -37,7 +37,7 @@ fun TrackedAppItem(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
-            .padding(spacing.spaceMedium)
+            .padding(horizontal = spacing.spaceMedium)
             .border(width = 0.5.dp, color = Page, shape = RoundedCornerShape(5.dp))
             .fillMaxWidth(),
     ) {
