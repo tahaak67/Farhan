@@ -97,7 +97,7 @@ fun NotificationFilterScreen(
                                     text = stringResource(R.string.notification_settings_shocase_tip),
                                     textStyle = TextStyle(Color.Black),
                                     gravity = Gravity.Auto,
-                                    arrow = Arrow(animateFromMsg = true),
+                                    arrow = Arrow(curved = true),
                                     msgBackground = Color.White,
                                     roundedCorner = 15.dp
                                 )

@@ -104,12 +104,10 @@ class UsageOverviewE2E {
             openAppSettings = OpenAppSettings(workerRepositoryFake),
             getEnabledUsageReports = GetEnabledUsageReports(usagePreferences),
             isAutoCachingEnabled = IsAutoCachingEnabled(usagePreferences),
-            isBackgroundWorkRestricted = IsBackgroundWorkRestricted(workerRepositoryFake),
             isCachingEnabled = IsCachingEnabled(usagePreferences),
             setUsageReportsEnabled = SetUsageReportsEnabled(workerRepositoryFake),
             setAutoCachingEnabled = SetAutoCachingEnabled(workerRepositoryFake),
             setCachingEnabled = SetCachingEnabled(usagePreferences),
-            openBatteryOptimizationSettings = OpenBatteryOptimizationSettings(workerRepositoryFake)
         )
         usageOverviewViewModel =
             UsageOverviewViewModel(usageOverviewUseCases, usageSettingsUseCases)

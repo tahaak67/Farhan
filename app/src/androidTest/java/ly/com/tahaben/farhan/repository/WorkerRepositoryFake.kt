@@ -34,11 +34,4 @@ class WorkerRepositoryFake : WorkerRepository {
         TODO("Not yet implemented")
     }
 
-    override fun checkIfBackgroundWorkRestricted(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun requestToIgnoreBatteryOptimization() {
-        TODO("Not yet implemented")
-    }
 }
