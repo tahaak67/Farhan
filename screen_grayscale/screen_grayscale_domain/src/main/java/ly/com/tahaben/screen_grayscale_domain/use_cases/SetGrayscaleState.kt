@@ -1,12 +1,12 @@
-package ly.com.tahaben.infinite_scroll_blocker_domain.use_cases
+package ly.com.tahaben.screen_grayscale_domain.use_cases
 
-import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
+import ly.com.tahaben.screen_grayscale_domain.util.GrayscaleUtil
 
 class SetGrayscaleState(
-    private val sharedPref: Preferences
+    private val grayscaleUtil: GrayscaleUtil
 ) {
 
     operator fun invoke(isEnabled: Boolean) {
-        sharedPref.setServiceState(isEnabled)
+        grayscaleUtil.setGrayscaleState(isEnabled)
     }
 }

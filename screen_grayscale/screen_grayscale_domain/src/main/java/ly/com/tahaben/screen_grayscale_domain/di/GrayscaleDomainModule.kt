@@ -35,7 +35,7 @@ object GrayscaleDomainModule {
             IsGrayscaleEnabled(accessibilityUtils),
             IsSecureSettingsPermissionGranted(grayscaleUtil),
             RemovePackageFromGrayscaleWhiteList(preferences),
-            SetGrayscaleState(preferences),
+            SetGrayscaleState(grayscaleUtil),
             GetInstalledAppsList(installedAppsRepo),
             AskForAccessibilityPermission(accessibilityUtils),
             IsAccessibilityPermissionGranted(accessibilityUtils),

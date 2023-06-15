@@ -3,6 +3,7 @@ package ly.com.tahaben.screen_grayscale_data.util
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.provider.Settings
 import com.scottyab.rootbeer.RootBeer
 import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
 import ly.com.tahaben.screen_grayscale_domain.util.GrayscaleUtil
@@ -47,6 +48,30 @@ class GrayscaleUtilImpl(
         } catch (e: IOException) {
             e.printStackTrace()
             return false
+        }
+    }
+
+    override fun setGrayscaleState(isEnabled: Boolean) {
+        val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
+        val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
+        sharedPref.setServiceState(isEnabled)
+        if (!isEnabled) {
+            try {
+                val contentResolver = context.contentResolver
+                Settings.Secure.putInt(
+                    contentResolver,
+                    DISPLAY_DALTONIZER_ENABLED,
+                    0
+                )
+                Settings.Secure.putInt(
+                    contentResolver,
+                    DISPLAY_DALTONIZER,
+                    -1
+                )
+            } catch (ex: Exception) {
+                Timber.e(ex, "disable grayscale error")
+            }
+
         }
     }
 }
