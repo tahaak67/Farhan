@@ -2,6 +2,7 @@ package ly.com.tahaben.usage_overview_presentation
 
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
 import java.time.LocalDate
+import java.time.Year
 
 data class UsageOverviewState(
     val totalSocialUsageMilli: Long = 0,
@@ -14,5 +15,17 @@ data class UsageOverviewState(
     val trackedApps: List<UsageDurationDataItem> = emptyList(),
     val isLoading: Boolean = false,
     val isDateToday: Boolean = true,
-    val isUsagePermissionGranted: Boolean = true
+    val isUsagePermissionGranted: Boolean = true,
+    val isModeRange: Boolean = false,
+    val rangeStartDate: LocalDate? = null,
+    val rangeEndDate: LocalDate? = null,
+    val isDropDownMenuVisible: Boolean = false,
+    val fullyUpdatedDays: List<LocalDate> = emptyList(),
+    val isCachingEnabled: Boolean = false,
+    val isDeleteDialogVisible: Boolean = false,
+    val currentYear: Int = Year.now().value,
+    val isSelectDateBottomSheetVisible: Boolean = false,
+    val isDatePickerDialogVisible: Boolean = false,
+    val isRangePickerDialogVisible: Boolean = false,
+    val isHowDialogVisible: Boolean = false
 )

@@ -6,5 +6,8 @@ sealed class UiEvent {
     object NavigateUp : UiEvent()
     object Loading : UiEvent()
     data class ShowSnackbar(val message: UiText) : UiEvent()
+    object HideSnackBar : UiEvent()
+    object ShowBottomSheet : UiEvent()
+    object DismissBottomSheet : UiEvent()
 
 }

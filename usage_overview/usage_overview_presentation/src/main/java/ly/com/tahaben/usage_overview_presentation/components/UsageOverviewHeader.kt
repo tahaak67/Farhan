@@ -5,14 +5,22 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,6 +30,7 @@ import ly.com.tahaben.core_ui.CategoryBarColor
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewState
+import java.text.DecimalFormat
 
 
 @Composable
@@ -30,7 +39,7 @@ fun UsageOverviewHeader(
     modifier: Modifier = Modifier
 ) {
     val spacing = LocalSpacing.current
-    val context = LocalContext.current
+    val decimalFormat = DecimalFormat.getInstance()
     val animatedHoursCount = animateIntAsState(
         targetValue = state.totalUsageDuration,
     )
@@ -40,24 +49,17 @@ fun UsageOverviewHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 50.dp,
-                    bottomEnd = 50.dp
-                )
-            )
-            .background(Page)
-            .padding(
-                horizontal = spacing.spaceLarge,
-                vertical = spacing.spaceMedium
-            )
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Card(
+            modifier = Modifier
+                .padding(spacing.spaceMedium)
+                .clip(RoundedCornerShape(24.dp)),
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Page)
+                    .padding(24.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.total_usage),
@@ -78,7 +80,7 @@ fun UsageOverviewHeader(
                             } else {
                                 AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
                                     Text(
-                                        text = animatedHoursCount.value.toString(),
+                                        text = decimalFormat.format(animatedHoursCount.value),
                                         style = MaterialTheme.typography.body1,
                                         color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp
@@ -110,7 +112,7 @@ fun UsageOverviewHeader(
                             } else {
                                 AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
                                     Text(
-                                        text = animatedMinutesCount.value.toString(),
+                                        text = decimalFormat.format(animatedMinutesCount.value),
                                         style = MaterialTheme.typography.body1,
                                         color = MaterialTheme.colors.primaryVariant,
                                         fontSize = 40.sp

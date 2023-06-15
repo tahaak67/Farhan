@@ -1,5 +1,6 @@
 package ly.com.tahaben.farhan
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,11 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core_ui.theme.FarhanTheme
@@ -35,6 +40,7 @@ import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
 import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteListScreen
 import ly.com.tahaben.screen_grayscale_presentation.onboarding.GrayscaleOnBoardingScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
+import ly.com.tahaben.usage_overview_presentation.settings.UsageSettingsScreen
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -108,9 +114,40 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                             )
                         }
-                        composable(Routes.USAGE) {
+                        composable(
+                            Routes.USAGE,
+                            deepLinks = listOf(navDeepLink {
+                                uriPattern =
+                                    "app://$packageName/${Routes.USAGE}/{${Args.START_DATE}}/{${Args.END_DATE}}"
+                                action = Intent.ACTION_VIEW
+
+                            }),
+                            arguments = listOf(
+                                navArgument(Args.START_DATE) {
+                                    type = NavType.StringType
+                                    nullable = true
+                                },
+                                navArgument(Args.END_DATE) {
+                                    type = NavType.StringType
+                                    nullable = true
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val startDate = backStackEntry.arguments?.getString(Args.START_DATE)
+                            val endDate = backStackEntry.arguments?.getString(Args.END_DATE)
                             UsageOverviewScreen(
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = navController::navigateUp,
+                                onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) },
+                                scaffoldState = scaffoldState,
+                                startDate = startDate,
+                                endDate = endDate
+                            )
+                        }
+                        composable(Routes.USAGE_SETTINGS) {
+                            UsageSettingsScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                shouldShowRational = ::shouldShowRational,
+                                scaffoldState = scaffoldState
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {
@@ -211,5 +248,11 @@ class MainActivity : ComponentActivity() {
     private fun getTip(): String {
         val array: Array<String> = this.resources.getStringArray(R.array.tips)
         return array[Random.nextInt(array.size)]
+    }
+
+    private fun shouldShowRational(permission: String): Boolean {
+        return shouldShowRequestPermissionRationale(
+            permission
+        )
     }
 }

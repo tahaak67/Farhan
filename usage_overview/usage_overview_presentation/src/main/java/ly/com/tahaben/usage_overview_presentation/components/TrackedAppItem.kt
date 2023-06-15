@@ -1,7 +1,13 @@
 package ly.com.tahaben.usage_overview_presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -9,11 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.Page
+import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
 
 
@@ -27,39 +37,54 @@ fun TrackedAppItem(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
-            .padding(spacing.spaceExtraSmall)
-            .shadow(
-                elevation = 1.dp,
-                shape = RoundedCornerShape(5.dp)
-            )
-            .background(MaterialTheme.colors.surface)
-            .padding(end = spacing.spaceMedium)
-            .height(100.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = spacing.spaceMedium)
+            .border(width = 0.5.dp, color = Page, shape = RoundedCornerShape(5.dp))
+            .fillMaxWidth(),
     ) {
 
-        Spacer(modifier = Modifier.width(spacing.spaceMedium))
-        Column(
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 70.dp, max = 100.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.width(spacing.spaceMedium))
             Text(
+                modifier = Modifier.weight(1f),
                 text = trackedApp.appName,
                 style = MaterialTheme.typography.body1,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 2
+                maxLines = 2,
+                textAlign = TextAlign.Start
             )
-            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
             Text(
+                modifier = Modifier.weight(1f),
                 text = trackedApp.appCategoryName.asString(context),
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
             Text(
+                modifier = Modifier.weight(1f),
                 text = trackedApp.usageDuration.asString(context),
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.End
             )
+            Spacer(modifier = Modifier.width(spacing.spaceMedium))
         }
-        Spacer(modifier = Modifier.width(spacing.spaceMedium))
     }
+}
+
+@Preview
+@Composable
+private fun TrackedAppItemPreview() {
+    val trackedApp = UsageDurationDataItem(
+        appName = "Farhan",
+        packageName = "ly.farhan",
+        usageDuration = UiText.DynamicString("23m 1h"),
+        appCategory = UsageDataItem.Category.PRODUCTIVITY,
+        appCategoryName = UiText.DynamicString("Productivity"),
+        usageDurationInMilliseconds = 10000L
+    )
+    TrackedAppItem(trackedApp = trackedApp)
 }

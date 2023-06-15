@@ -15,7 +15,7 @@ android {
         versionCode = ProjectConfig.versionCode
         versionName = ProjectConfig.versionName
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "ly.com.tahaben.farhan.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -89,6 +89,7 @@ dependencies {
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
+    implementation(AndroidX.workManger)
 
     implementation(Coil.coilCompose)
 

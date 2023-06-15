@@ -3,7 +3,12 @@ package ly.com.tahaben.usage_overview_presentation.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +38,7 @@ fun UsageBarInfo(
     strokeWidth: Dp = 8.dp,
 ) {
     val spacing = LocalSpacing.current
-    val background = MaterialTheme.colors.background
+    val background = MaterialTheme.colors.secondary
     val goalExceededColor = MaterialTheme.colors.error
     val angleRatio = remember {
         Animatable(0f)
@@ -61,7 +66,7 @@ fun UsageBarInfo(
                     .aspectRatio(1f),
             ) {
                 drawArc(
-                    color = if (value <= total) background else goalExceededColor,
+                    color = background,
                     startAngle = 0f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -71,19 +76,17 @@ fun UsageBarInfo(
                         cap = StrokeCap.Round
                     )
                 )
-                if (value <= total) {
-                    drawArc(
-                        color = color,
-                        startAngle = 90f,
-                        sweepAngle = 360f * angleRatio.value,
-                        useCenter = false,
-                        size = size,
-                        style = Stroke(
-                            width = strokeWidth.toPx(),
-                            cap = StrokeCap.Round
-                        )
+                drawArc(
+                    color = color,
+                    startAngle = 90f,
+                    sweepAngle = 360f * angleRatio.value,
+                    useCenter = false,
+                    size = size,
+                    style = Stroke(
+                        width = strokeWidth.toPx(),
+                        cap = StrokeCap.Round
                     )
-                }
+                )
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -105,9 +108,7 @@ fun UsageBarInfo(
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Text(
             text = name,
-            color = if (value <= total) {
-                MaterialTheme.colors.onBackground
-            } else goalExceededColor,
+            color = MaterialTheme.colors.onBackground,
             style = MaterialTheme.typography.body2,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center

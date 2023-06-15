@@ -36,6 +36,7 @@ class CalculateUsageDuration {
                                 UsageDataItem.Category.VIDEO -> UiText.StringResource(R.string.category_video)
                                 UsageDataItem.Category.NEWS -> UiText.StringResource(R.string.category_news)
                                 UsageDataItem.Category.OTHER -> UiText.StringResource(R.string.category_other)
+                                else -> UiText.DynamicString("")
                             },
                             appCategory = list.first().appCategory
                         )
