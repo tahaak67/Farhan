@@ -1,0 +1,6 @@
+Improvements to the Usage Overview section of our app, including:
+- Auto-caching of usage data: This will make the Usage Overview load faster, especially for users with large amounts of data. You can enable auto-caching in the Settings menu.
+- Weekly and monthly usage report notifications.
+- Date range selection: You can now select a range of dates to view your usage data for. see your usage for a week or the last 20 days its up to you!
+Bug fixes:
+- Fixed bugs in grayscale and usage screen.
