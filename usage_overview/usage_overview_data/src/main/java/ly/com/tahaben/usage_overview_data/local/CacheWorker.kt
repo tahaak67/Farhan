@@ -54,7 +54,7 @@ class CacheWorker(
             NotificationCompat.Builder(context, context.getString(R.string.fetch_usage_info_id))
                 .setStyle(NotificationCompat.BigTextStyle())
                 .setSmallIcon(R.drawable.ic_farhan_transparent)
-                .setSilent(false)
+                .setSilent(true)
                 .setContentTitle(context.getString(R.string.cache_worker_notification_title))
                 .setContentText(
                     context.getString(
