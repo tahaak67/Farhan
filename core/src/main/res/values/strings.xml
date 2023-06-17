@@ -119,13 +119,17 @@
     <string name="reason_know_if_app_in_whitelist">Know if current app is in whitelist or not</string>
 
     <string-array name="tips">
-        <item>To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</item>
-        <item>Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</item>
-        <item>When Grayscale is on, only whitelisted apps will be grayscaled</item>
-        <item>Infinite scroll blocker is experimental if you are facing a problem with an app you can add it to exceptions to avoid false detections</item>
-        <item>Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</item>
-        <item>This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</item>
+        <item>@string/productivity_tip1</item>
+        <item>@string/notification_filter_exception_tip</item>
+        <item>@string/grayscale_whitelist_tip</item>
+        <item>@string/notification_filter_notifyme_tip</item>
+        <item>@string/beta_version_tip</item>
     </string-array>
+    <string name="productivity_tip1">To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</string>
+    <string name="notification_filter_exception_tip">Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</string>
+    <string name="notification_filter_notifyme_tip">Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</string>
+    <string name="grayscale_whitelist_tip">When Grayscale is on, only whitelisted apps will be grayscaled</string>
+    <string name="beta_version_tip">This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</string>
     <string name="notification_settings_shocase_tip">You can add exceptions or set a reminder from notification filter settings</string>
     <string name="version">App Version</string>
     <string name="notification_filter_showcase_greeting">Welcome to notifications filter, your filtered notifications will apear here!.</string>
