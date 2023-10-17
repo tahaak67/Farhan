@@ -2,28 +2,32 @@ package ly.com.tahaben.infinite_scroll_blocker_presentation
 
 import android.widget.NumberPicker
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
-import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
@@ -31,6 +35,7 @@ import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 import ly.com.tahaben.core_ui.mirror
 import timber.log.Timber
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfiniteScrollingBlockerScreen(
     onNavigateUp: () -> Unit,
@@ -49,6 +54,7 @@ fun InfiniteScrollingBlockerScreen(
                 viewModel.checkServiceStats()
                 viewModel.checkIfAppearOnTopPermissionGranted()
             }
+
             else -> Unit
         }
     }
@@ -58,7 +64,6 @@ fun InfiniteScrollingBlockerScreen(
             title = {
                 Text(text = stringResource(id = R.string.infinite_scroll_blocker_settings))
             },
-            backgroundColor = White,
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -94,7 +99,7 @@ fun InfiniteScrollingBlockerScreen(
             ) {
                 Text(
                     text = stringResource(R.string.one_more_thing),
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.displaySmall,
                     textAlign = TextAlign.Center
                 )
                 AccessibilityNotRunningContent(
@@ -109,12 +114,14 @@ fun InfiniteScrollingBlockerScreen(
             }
         } else {
             Column(
-                Modifier.fillMaxSize()
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = spacing.spaceMedium)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
+                        .padding(vertical = spacing.spaceMedium),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -127,10 +134,11 @@ fun InfiniteScrollingBlockerScreen(
                         }
                     )
                 }
+                Divider()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
+                        .padding(vertical = spacing.spaceMedium)
                         .clickable {
                             onNavigateToExceptions()
                         },
@@ -142,12 +150,12 @@ fun InfiniteScrollingBlockerScreen(
                         textAlign = TextAlign.Start
                     )
                 }
+                Divider()
                 AnimatedVisibility(visible = true) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                horizontal = spacing.spaceMedium,
                                 vertical = spacing.spaceSmall
                             )
                             .clickable {
@@ -157,6 +165,7 @@ fun InfiniteScrollingBlockerScreen(
 
                         Text(text = state.timeoutDuration.toString() + stringResource(id = R.string.minutes))
                         Text(text = stringResource(R.string.tap_to_set_new_time))
+                        Divider()
                     }
                 }
             }
@@ -168,70 +177,81 @@ fun InfiniteScrollingBlockerScreen(
             onDismissRequest = { openDialog.value = false },
             properties = DialogProperties(),
         ) {
-            Column(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(White),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .wrapContentHeight(),
+                shape = RoundedCornerShape(28.dp),
+                tonalElevation = AlertDialogDefaults.TonalElevation,
+                color = Page
             ) {
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                Text(
-                    text = stringResource(R.string.remind_me_to_stop_scrolling_after),
-                    style = MaterialTheme.typography.h4
-                )
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                val npVal = remember {
-                    mutableStateOf(state.timeoutDuration)
-                }
-                Row {
-                    AndroidView(factory = { context ->
-                        val np = NumberPicker(context)
-                        np.maxValue = 60
-                        np.minValue = 1
-                        np.value = state.timeoutDuration
-                        np.setOnValueChangedListener { _, i, i2 ->
-                            Timber.d("np: oldv: $i newv: $i2")
-                            npVal.value = i2
-                        }
-                        np
-                    })
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = spacing.spaceExtraSmall)
-                            .align(Alignment.CenterVertically),
-                        text = stringResource(id = R.string.minutes),
-                        style = MaterialTheme.typography.h4
-                    )
-                }
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                        }
-                    ) {
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    Text(
+                        text = stringResource(R.string.remind_me_to_stop_scrolling_after),
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Black
+                    )
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    val npVal = remember {
+                        mutableIntStateOf(state.timeoutDuration)
+                    }
+                    Row {
+                        val textColor = MaterialTheme.colorScheme.onBackground.toArgb()
+                        AndroidView(
+                            factory = { context ->
+                                val np = NumberPicker(context)
+                                np.maxValue = 60
+                                np.minValue = 1
+                                np.value = state.timeoutDuration
+                                np.setOnValueChangedListener { _, i, i2 ->
+                                    Timber.d("np: oldv: $i newv: $i2")
+                                    npVal.value = i2
+                                }
+
+                                np
+                            })
                         Text(
-                            stringResource(R.string.dismiss),
-                            style = MaterialTheme.typography.h5
+                            modifier = Modifier
+                                .padding(horizontal = spacing.spaceExtraSmall)
+                                .align(Alignment.CenterVertically),
+                            text = stringResource(id = R.string.minutes),
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Black
                         )
                     }
-                    TextButton(
-                        onClick = {
-                            openDialog.value = false
-                            Timber.d("setting as new timeout ${npVal.value}")
-                            viewModel.setTimeoutDuration(npVal.value)
-                        }
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        Text(
-                            stringResource(id = R.string.confirm),
-                            style = MaterialTheme.typography.h5
-                        )
+                        TextButton(
+                            onClick = {
+                                openDialog.value = false
+                            }
+                        ) {
+                            Text(
+                                stringResource(R.string.dismiss),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
+                        TextButton(
+                            onClick = {
+                                openDialog.value = false
+                                Timber.d("setting as new timeout ${npVal.value}")
+                                viewModel.setTimeoutDuration(npVal.value)
+                            }
+                        ) {
+                            Text(
+                                stringResource(id = R.string.confirm),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 }
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
             }
         }
     }

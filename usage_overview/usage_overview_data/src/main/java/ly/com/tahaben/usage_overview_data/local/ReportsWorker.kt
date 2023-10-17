@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class ReportsWorker(
     private val context: Context,
-    private val workerParams: WorkerParameters,
+    workerParams: WorkerParameters,
     private val usageRepository: UsageRepository,
     private val usageOverviewUseCases: UsageOverviewUseCases
 ) : CoroutineWorker(appContext = context, params = workerParams) {

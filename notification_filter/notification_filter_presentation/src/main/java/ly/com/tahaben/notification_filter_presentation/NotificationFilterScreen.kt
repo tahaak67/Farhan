@@ -1,17 +1,17 @@
 package ly.com.tahaben.notification_filter_presentation
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +35,13 @@ import ly.com.tahaben.showcase_layout_compose.model.ShowcaseMsg
 import ly.com.tahaben.showcase_layout_compose.ui.ShowcaseLayout
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationFilterScreen(
     viewModel: NotificationFilterViewModel = hiltViewModel(),
     navigateToNotificationSettings: () -> Unit,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    isUiModeDark: Boolean
 ) {
     val spacing = LocalSpacing.current
     val state = viewModel.state
@@ -62,20 +63,21 @@ fun NotificationFilterScreen(
         initKey = 0,
         greeting = ShowcaseMsg(
             stringResource(R.string.notification_filter_showcase_greeting),
-            msgBackground = Color.White,
+            msgBackground = MaterialTheme.colorScheme.onSurface,
             roundedCorner = 15.dp
         ),
         onFinish = {
             viewModel.setShowcased()
             isShowcasing = false
-        }
+        },
+        isDarkLayout = isSystemInDarkTheme()
     ) {
         Column {
             TopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.notifications))
                 },
-                backgroundColor = White,
+                //backgroundColor = MaterialTheme.colors.surface,
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
 
@@ -95,10 +97,10 @@ fun NotificationFilterScreen(
                                 k = 1,
                                 message = ShowcaseMsg(
                                     text = stringResource(R.string.notification_settings_shocase_tip),
-                                    textStyle = TextStyle(Color.Black),
+                                    textStyle = TextStyle(MaterialTheme.colorScheme.onSurface),
                                     gravity = Gravity.Auto,
                                     arrow = Arrow(curved = true),
-                                    msgBackground = Color.White,
+                                    msgBackground = MaterialTheme.colorScheme.surface,
                                     roundedCorner = 15.dp
                                 )
                             ) {
@@ -142,107 +144,115 @@ fun NotificationFilterScreen(
                             ) {
                                 Text(
                                     text = stringResource(R.string.no_notifications),
-                                    style = MaterialTheme.typography.body2,
-                                    color = Black,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center
                                 )
                             }
                         }
 
                     } else {
-                        LazyColumn(
-                            modifier = Modifier.weight(1f),
-                            contentPadding = PaddingValues(vertical = spacing.spaceSmall)
-                        ) {
-                            items(
-                                state.filteredNotifications,
-                                NotificationItem::id
-                            ) { notificationItem ->
-                                val dismissState = rememberDismissState(
-                                    initialValue = DismissValue.Default,
-                                    confirmStateChange = {
-                                        if (it == DismissValue.DismissedToStart) {
-                                            viewModel.onEvent(
-                                                NotificationFilterEvent.OnDismissNotification(
-                                                    notificationItem
-                                                )
-                                            )
-                                        }
-                                        true
-                                    }
+                        Box(modifier = Modifier) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
+                                contentPadding = PaddingValues(
+                                    top = spacing.spaceSmall,
+                                    bottom = spacing.spaceHuge + spacing.spaceSmall
                                 )
-                                SwipeToDismiss(
-                                    state = dismissState,
-                                    directions = setOf(
-                                        DismissDirection.EndToStart
-                                    ),
-                                    background = {
-                                        val color by animateColorAsState(
-                                            when (dismissState.targetValue) {
-                                                DismissValue.Default -> White
-                                                else -> Color.Red
-                                            }
-                                        )
-                                        val alignment = Alignment.CenterEnd
-                                        val icon = Icons.Default.Delete
-
-                                        val scale by animateFloatAsState(
-                                            targetValue =
-                                            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-                                        )
-                                        Box(
-                                            modifier =
-                                            Modifier
-                                                .fillMaxSize()
-                                                .background(color)
-                                                .padding(horizontal = 20.dp),
-                                            contentAlignment = alignment
-                                        ) {
-                                            Icon(
-                                                imageVector = icon,
-                                                contentDescription = stringResource(R.string.delete_icon),
-                                                modifier = Modifier.scale(scale)
-                                            )
-                                        }
-                                    },
-                                    dismissContent = {
-                                        Card(
-                                            elevation = animateDpAsState(
-                                                targetValue =
-                                                if (dismissState.dismissDirection != null) 4.dp else 0.dp
-                                            ).value,
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .align(alignment = Alignment.CenterVertically)
-                                        ) {
-                                            NotificationListItem(
-                                                notification = notificationItem,
-                                                onClick = {
-                                                    Timber.d("notification click composable")
-                                                    viewModel.onEvent(
-                                                        NotificationFilterEvent.OnOpenNotification(
-                                                            notificationItem = notificationItem
-                                                        )
+                            ) {
+                                items(
+                                    state.filteredNotifications,
+                                    NotificationItem::id
+                                ) { notificationItem ->
+                                    val dismissState = rememberDismissState(
+                                        initialValue = DismissValue.Default,
+                                        confirmValueChange = {
+                                            if (it == DismissValue.DismissedToStart) {
+                                                viewModel.onEvent(
+                                                    NotificationFilterEvent.OnDismissNotification(
+                                                        notificationItem
                                                     )
+                                                )
+                                            }
+                                            true
+                                        }
+                                    )
+                                    SwipeToDismiss(
+                                        state = dismissState,
+                                        directions = setOf(
+                                            DismissDirection.EndToStart
+                                        ),
+                                        background = {
+                                            val color by animateColorAsState(
+                                                when (dismissState.targetValue) {
+                                                    DismissValue.Default -> MaterialTheme.colorScheme.surface
+                                                    else -> Color.Red
                                                 }
                                             )
+                                            val alignment = Alignment.CenterEnd
+                                            val icon = Icons.Default.Delete
+
+                                            val scale by animateFloatAsState(
+                                                targetValue =
+                                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                                            )
+                                            Box(
+                                                modifier =
+                                                Modifier
+                                                    .fillMaxSize()
+                                                    .background(color)
+                                                    .padding(horizontal = 20.dp),
+                                                contentAlignment = alignment
+                                            ) {
+                                                Icon(
+                                                    imageVector = icon,
+                                                    contentDescription = stringResource(R.string.delete_icon),
+                                                    modifier = Modifier.scale(scale)
+                                                )
+                                            }
+                                        },
+                                        dismissContent = {
+                                            Card(
+                                                elevation = CardDefaults.cardElevation(
+                                                    defaultElevation = 0.dp,
+                                                    draggedElevation = 4.dp
+                                                ),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .align(alignment = Alignment.CenterVertically)
+                                            ) {
+                                                NotificationListItem(
+                                                    notification = notificationItem,
+                                                    onClick = {
+                                                        Timber.d("notification click composable")
+                                                        viewModel.onEvent(
+                                                            NotificationFilterEvent.OnOpenNotification(
+                                                                notificationItem = notificationItem
+                                                            )
+                                                        )
+                                                    }
+                                                )
+                                            }
                                         }
-                                    }
 
-                                )
+                                    )
 
+                                }
                             }
-                        }
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 0.dp, vertical = spacing.spaceSmall),
-                            onClick = { viewModel.onEvent(NotificationFilterEvent.OnDeleteAllNotifications) }) {
-                            Text(
-                                text = stringResource(id = R.string.clear_all),
-                                style = MaterialTheme.typography.button,
-                                textAlign = TextAlign.Center
-                            )
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(spacing.spaceHuge)
+                                    .padding(vertical = spacing.spaceSmall)
+                                    .align(Alignment.BottomCenter),
+                                onClick = { viewModel.onEvent(NotificationFilterEvent.OnDeleteAllNotifications) }) {
+                                Text(
+                                    text = stringResource(id = R.string.clear_all),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }

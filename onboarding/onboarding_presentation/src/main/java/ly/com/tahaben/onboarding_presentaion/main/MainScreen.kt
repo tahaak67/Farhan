@@ -4,14 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,12 +20,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
-import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.onboarding_presentaion.components.MainScreenCard
+import ly.com.tahaben.onboarding_presentaion.components.UiModeDialog
 
-@androidx.compose.runtime.Composable
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
     tip: String,
@@ -33,7 +33,9 @@ fun MainScreen(
     isInfiniteScrollBlockerEnabled: Boolean,
     isNotificationFilterEnabled: Boolean,
     isLauncherEnabled: Boolean,
-    navController: NavHostController
+    navController: NavHostController,
+    onEvent: (MainScreenEvent) -> Unit,
+    state: MainScreenState
 ) {
     val spacing = LocalSpacing.current
     var mDisplayMenu by remember { mutableStateOf(false) }
@@ -44,9 +46,12 @@ fun MainScreen(
     ) {
         TopAppBar(
             title = {
-                Text(text = stringResource(id = R.string.app_name), color = Black)
+                Text(
+                    text = stringResource(id = R.string.app_name),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             },
-            backgroundColor = White,
+            //backgroundColor = MaterialTheme.colors.surface,
             actions = {
 
                 // Creating Icon button for dropdown menu
@@ -59,35 +64,45 @@ fun MainScreen(
                     expanded = mDisplayMenu,
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
-                    DropdownMenuItem(onClick = {
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TextButton(onClick = { navController.navigate(Routes.ABOUT_APP) }) {
-                                Text(
-                                    text = stringResource(R.string.about_app),
-                                    style = MaterialTheme.typography.h4,
-                                    fontWeight = FontWeight.Normal,
-                                    textAlign = TextAlign.Center,
-                                    color = Black
-                                )
-                            }
-                        }
-                    }
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(R.string.about_app),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(Routes.ABOUT_APP)
+                        })
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(R.string.appearance),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }, onClick = {
+                            onEvent(MainScreenEvent.ShowUiAppearanceDialog)
+                            mDisplayMenu = false
+                        })
                 }
             }
         )
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = spacing.spaceLarge)
+                .padding(horizontal = spacing.spaceExtraLarge)
         ) {
-            Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
             Text(
                 text = stringResource(id = R.string.hello),
-                style = MaterialTheme.typography.h1,
-                color = Black
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -95,17 +110,17 @@ fun MainScreen(
                     painter = painterResource(id = R.drawable.ic_tip),
                     contentDescription = stringResource(R.string.tip_icon_description)
                 )
-                Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+                Spacer(modifier = Modifier.width(spacing.spaceSmall))
                 Text(
                     text = tip,
-                    style = MaterialTheme.typography.h5,
-                    color = Black
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            Spacer(modifier = Modifier.height(spacing.spaceLarge))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Column(
+                modifier = Modifier
+                    .padding(vertical = spacing.spaceMedium),
+                verticalArrangement = Arrangement.spacedBy(spacing.spaceSmall),
             ) {
                 MainScreenCard(
                     text = stringResource(R.string.usage),
@@ -119,12 +134,6 @@ fun MainScreen(
                     ),
                     iconId = R.drawable.ic_notification,
                     onClick = { navController.navigate(Routes.NOTIFICATION_FILTER) })
-            }
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
                 MainScreenCard(
                     text = stringResource(R.string.grayscale),
                     status = if (isGrayscaleEnabled) stringResource(id = R.string.enabled) else stringResource(
@@ -154,5 +163,9 @@ fun MainScreen(
                     onClick = { navController.navigate(Routes.LAUNCHER_SETTINGS) })
             }*/
         }
+    }
+
+    if (state.isUiModeDialogVisible) {
+        UiModeDialog(onEvent, state)
     }
 }

@@ -1,50 +1,56 @@
 package ly.com.tahaben.core_ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import ly.com.tahaben.core.R
+
+val CairoFont = FontFamily(
+    Font(resId = R.font.cairo_variable)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    body1 = TextStyle(
-        fontFamily = FontFamily.Default,
+    bodyLarge = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
+    labelLarge = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.W500,
         fontSize = 20.sp,
     ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
+    bodySmall = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     ),
-    h1 = TextStyle(
-        fontFamily = FontFamily.Default,
+    displayLarge = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp
     ),
-    h2 = TextStyle(
-        fontFamily = FontFamily.Default,
+    displayMedium = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 26.sp
     ),
-    h3 = TextStyle(
-        fontFamily = FontFamily.Default,
+    displaySmall = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp
     ),
-    h4 = TextStyle(
-        fontFamily = FontFamily.Default,
+    headlineMedium = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp
     ),
-    h5 = TextStyle(
-        fontFamily = FontFamily.Default,
+    headlineSmall = TextStyle(
+        fontFamily = CairoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     ),

@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 
 class CacheWorker(
     private val context: Context,
-    private val workerParams: WorkerParameters,
+    workerParams: WorkerParameters,
     private val usageRepository: UsageRepository
 ) : CoroutineWorker(appContext = context, params = workerParams) {
 

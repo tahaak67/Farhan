@@ -2,11 +2,14 @@ package ly.com.tahaben.core_ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +24,7 @@ import ly.com.tahaben.core_ui.LocalSpacing
  * Created by Taha Ben Ashur (https://github.com/tahaak67) on 13,May,2023
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionDialog(
     permissionTextProvider: PermissionTextProvider,
@@ -34,44 +38,42 @@ fun PermissionDialog(
     val spacing = LocalSpacing.current
     AlertDialog(
         onDismissRequest = onDismiss,
-        buttons = {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Divider()
-                Text(
-                    text = if (isPermanentlyDeclined) {
-                        stringResource(id = R.string.grant_runtime_permission)
-                    } else {
-                        stringResource(id = R.string.ok)
-                    },
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            if (isPermanentlyDeclined) {
-                                onGoToAppSettingsClick()
-                            } else {
-                                onOkClick()
-                            }
-                        }
-                        .padding(spacing.spaceMedium)
-                )
-            }
-        },
-        title = {
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(text = stringResource(id = R.string.permission_required))
-        },
-        text = {
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
             Text(
                 text = permissionTextProvider.getDescription(
                     isPermanentlyDeclined = isPermanentlyDeclined
                 ).asString(context = context)
             )
-        },
-        modifier = modifier
-    )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Divider()
+            Text(
+                text = if (isPermanentlyDeclined) {
+                    stringResource(id = R.string.grant_runtime_permission)
+                } else {
+                    stringResource(id = R.string.ok)
+                },
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        if (isPermanentlyDeclined) {
+                            onGoToAppSettingsClick()
+                        } else {
+                            onOkClick()
+                        }
+                    }
+                    .padding(spacing.spaceMedium)
+            )
+        }
+    }
 }
 
 interface PermissionTextProvider {

@@ -24,7 +24,9 @@ class LauncherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         homeWatcher = HomeWatcher(this)
         setContent {
-            FarhanTheme {
+            FarhanTheme(
+                darkTheme = false
+            ) {
                 LauncherScreen(
                     homeWatcher
                 )
