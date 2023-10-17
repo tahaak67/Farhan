@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ly.com.tahaben.core.data.repository.InstalledAppsRepository
-import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.*
 import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
 import ly.com.tahaben.screen_grayscale_domain.use_cases.*
 import ly.com.tahaben.screen_grayscale_domain.util.AccessibilityServiceUtils

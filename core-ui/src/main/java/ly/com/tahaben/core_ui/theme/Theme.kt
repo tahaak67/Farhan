@@ -1,23 +1,34 @@
 package ly.com.tahaben.core_ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.Black
+import ly.com.tahaben.core_ui.DarkYellow
+import ly.com.tahaben.core_ui.DarkYellowDark
+import ly.com.tahaben.core_ui.DarkerYellow
+import ly.com.tahaben.core_ui.DarkerYellowDark
+import ly.com.tahaben.core_ui.Page
+import ly.com.tahaben.core_ui.PageDark
 
-private val DarkColorPalette = darkColors(
-    primary = White,
-    primaryVariant = DarkYellow,
-    secondary = Page
+private val DarkColorPalette = darkColorScheme(
+    primary = DarkYellowDark,
+    secondary = DarkerYellowDark,
+    tertiary = PageDark,
+    background = Black,
+    onBackground = Color.White,//
+    surface = Black,
+    onSurface = Color.White,//
+    onPrimary = Black,
+    onSecondary = Black,
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorPalette = lightColorScheme(
     primary = DarkYellow,
-    primaryVariant = DarkerYellow,
-    secondary = Page,
+    secondary = DarkerYellow,
+    tertiary = Page,
     background = Color.White,
     onBackground = Black,
     surface = Color.White,
@@ -27,15 +38,15 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun FarhanTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun FarhanTheme(darkTheme: Boolean, content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
-        LightColorPalette
+        DarkColorPalette
     } else {
         LightColorPalette
     }
 
     MaterialTheme(
-        colors = colors,
+        colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
         content = content

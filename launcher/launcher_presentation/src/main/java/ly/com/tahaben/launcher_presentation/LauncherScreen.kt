@@ -7,22 +7,47 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -36,15 +61,16 @@ import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.HomeWatcher
 import ly.com.tahaben.core.util.SearchEvent
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LightGray
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.launcher_presentation.component.AppListItem
 import ly.com.tahaben.launcher_presentation.component.SearchTextFieldLauncher
-import timber.log.Timber
 import kotlin.math.abs
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class,
-    ExperimentalMotionApi::class
+    ExperimentalComposeUiApi::class,
+    ExperimentalMotionApi::class, ExperimentalMaterialApi::class
 )
 @Composable
 fun LauncherScreen(
@@ -165,7 +191,7 @@ fun LauncherScreen(
                     Box(
                         modifier = Modifier
                             .padding(
-                                vertical = spacing.spaceLarge,
+                                vertical = spacing.spaceExtraLarge,
                             )
                             .clip(
                                 RoundedCornerShape(20.dp, 0.dp, 0.dp, 20.dp)
@@ -178,7 +204,7 @@ fun LauncherScreen(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .padding(
-                                    vertical = spacing.spaceLarge,
+                                    vertical = spacing.spaceExtraLarge,
                                     horizontal = spacing.spaceExtraSmall
                                 )
                                 .pointerInput(Unit) {
@@ -223,7 +249,7 @@ fun LauncherScreen(
             ) {
                 AndroidView(
                     modifier = Modifier
-                        .padding(top = spacing.spaceLarge)
+                        .padding(top = spacing.spaceExtraLarge)
                         .align(Alignment.BottomCenter)
                         .clickable {
                             viewModel.launchDefaultAlarmApp()

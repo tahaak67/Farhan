@@ -11,23 +11,24 @@ class GetDurationFromMilliseconds {
 
         return durationInMilli.toComponents { hours, minutes, _, _ ->
 
-            when (hours) {
+            /*when (hours) {
                 1L -> UiText.StringResource(R.string.one_hour)
                 2L -> UiText.StringResource(R.string.two_hours)
                 else -> {
-                    if (hours == 0L) {
-                        UiText.MixedString(minutes, R.string.minutes)
-                    } else if (minutes == 0) {
-                        UiText.MixedString(hours.toInt(), R.string.hours)
-                    } else {
-                        UiText.TimeFormatString(
-                            hours.toInt(),
-                            R.string.hours,
-                            minutes,
-                            R.string.minutes
-                        )
-                    }
+
                 }
+            }*/
+            if (hours == 0L) {
+                UiText.MixedString(minutes, R.string.minutes)
+            } else if (minutes == 0) {
+                UiText.MixedString(hours.toInt(), R.string.hours)
+            } else {
+                UiText.TimeFormatString(
+                    hours.toInt(),
+                    R.string.hours,
+                    minutes,
+                    R.string.minutes
+                )
             }
         }
     }

@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = "ly.com.tahaben.farhan"
     compileSdk = ProjectConfig.compileSdk
 
     defaultConfig {
@@ -30,11 +31,11 @@ android {
         compose = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     composeOptions {
         kotlinCompilerExtensionVersion = Compose.composeCompilerVersion
@@ -54,10 +55,11 @@ dependencies {
     implementation(Compose.ui)
     implementation(Compose.uiToolingPreview)
     implementation(Compose.hiltNavigationCompose)
-    implementation(Compose.material)
+    implementation(Compose.material3)
     implementation(Compose.runtime)
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
+    implementation(Compose.lifecycleUtilityCompose)
     implementation(Compose.activityCompose)
 
     implementation(DaggerHilt.hiltAndroid)

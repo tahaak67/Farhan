@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.CategoryBarColor
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewState
 import java.text.DecimalFormat
 
@@ -42,9 +44,11 @@ fun UsageOverviewHeader(
     val decimalFormat = DecimalFormat.getInstance()
     val animatedHoursCount = animateIntAsState(
         targetValue = state.totalUsageDuration,
+        label = "hours count",
     )
     val animatedMinutesCount = animateIntAsState(
-        targetValue = state.totalUsageMinutes
+        targetValue = state.totalUsageMinutes,
+        label = "minutes count"
     )
     Column(
         modifier = modifier
@@ -54,88 +58,105 @@ fun UsageOverviewHeader(
             modifier = Modifier
                 .padding(spacing.spaceMedium)
                 .clip(RoundedCornerShape(24.dp)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
         ) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Page)
-                    .padding(24.dp)
+                    .padding(24.dp),
+                horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = stringResource(id = R.string.total_usage),
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.primaryVariant,
-                    textAlign = TextAlign.Start
+                Image(
+                    painter = painterResource(id = R.drawable.clock_usage),
+                    contentDescription = stringResource(R.string.clock_icon)
                 )
-                Row {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.total_usage),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.75f
+                        ),
+                        textAlign = TextAlign.Start
+                    )
                     Row {
-                        Crossfade(targetState = state.isLoading) { isLoading ->
-                            if (isLoading) {
-                                Text(
-                                    text = "-",
-                                    style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.primaryVariant,
-                                    fontSize = 40.sp
-                                )
-                            } else {
-                                AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
+                        Row {
+                            Crossfade(
+                                targetState = state.isLoading,
+                                label = "cross hours -"
+                            ) { isLoading ->
+                                if (isLoading) {
                                     Text(
-                                        text = decimalFormat.format(animatedHoursCount.value),
-                                        style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.primaryVariant,
+                                        text = "-",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontSize = 40.sp
                                     )
+                                } else {
+                                    AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
+                                        Text(
+                                            text = decimalFormat.format(animatedHoursCount.value),
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontSize = 40.sp
+                                        )
+                                    }
                                 }
                             }
-                        }
-                        AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
-                            Text(
-                                text = stringResource(id = R.string.hours),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primaryVariant,
-                                fontSize = 40.sp
-                            )
-                        }
-
-
-                    }
-                    Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
-                    Row {
-                        Crossfade(targetState = state.isLoading) { isLoading ->
-                            if (isLoading) {
+                            AnimatedVisibility(visible = (state.totalUsageDuration > 0)) {
                                 Text(
-                                    text = "-",
-                                    style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.primaryVariant,
+                                    text = stringResource(id = R.string.hours),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 40.sp
                                 )
-                            } else {
-                                AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
+                            }
+
+
+                        }
+                        Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+                        Row {
+                            Crossfade(
+                                targetState = state.isLoading,
+                                label = "cross minues -"
+                            ) { isLoading ->
+                                if (isLoading) {
                                     Text(
-                                        text = decimalFormat.format(animatedMinutesCount.value),
-                                        style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.primaryVariant,
+                                        text = "-",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontSize = 40.sp
                                     )
-                                }
+                                } else {
+                                    AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
+                                        Text(
+                                            text = decimalFormat.format(animatedMinutesCount.value),
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            fontSize = 40.sp
+                                        )
+                                    }
 
+                                }
+                            }
+                            AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
+                                Text(
+                                    text = stringResource(id = R.string.minutes),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = 40.sp
+                                )
                             }
                         }
-                        AnimatedVisibility(visible = (state.totalUsageMinutes > 0)) {
-                            Text(
-                                text = stringResource(id = R.string.minutes),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primaryVariant,
-                                fontSize = 40.sp
-                            )
-                        }
                     }
-
                 }
             }
         }
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
-        Spacer(modifier = Modifier.height(spacing.spaceLarge))
+        Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

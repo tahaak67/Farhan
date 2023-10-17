@@ -1,16 +1,21 @@
 package ly.com.tahaben.onboarding_presentaion
 
-import androidx.annotation.FloatRange
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,20 +27,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.theme.BottomCardShape
 import ly.com.tahaben.domain.model.OnBoardingData
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
     onNavigateToMain: () -> Unit,
@@ -79,10 +79,11 @@ fun OnBoardingScreen(
 
 
     val pagerState = rememberPagerState(
-        pageCount = items.size,
-        initialOffscreenLimit = 2,
-        infiniteLoop = false,
         initialPage = 0,
+        initialPageOffsetFraction = 0f,
+        pageCount = {
+            items.size
+        }
     )
 
 
@@ -95,7 +96,7 @@ fun OnBoardingScreen(
 
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingPager(
     item: List<OnBoardingData>,
@@ -117,31 +118,46 @@ fun OnBoardingPager(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HorizontalPager(state = pagerState, count = item.size) { page ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                if (page == 2) {
-                                    DarkYellow
-                                } else {
-                                    White
-                                }
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top
-                    ) {
-
-                        Image(
-                            painter = painterResource(id = item[page].image),
-                            contentDescription = item[page].title,
+                HorizontalPager(
+                    modifier = Modifier,
+                    state = pagerState,
+                    pageSpacing = 0.dp,
+                    userScrollEnabled = true,
+                    reverseLayout = false,
+                    contentPadding = PaddingValues(0.dp),
+                    beyondBoundsPageCount = 0,
+                    pageSize = PageSize.Fill,
+                    flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
+                    key = null,
+                    pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
+                        Orientation.Horizontal
+                    ),
+                    pageContent = { page ->
+                        Column(
                             modifier = Modifier
-                                .padding(spacing.spaceMedium)
-                                .fillMaxWidth()
-                                .aspectRatio(2f)
-                        )
+                                .fillMaxSize()
+                                .background(
+                                    if (page == 2) {
+                                        DarkYellow
+                                    } else {
+                                        MaterialTheme.colorScheme.background
+                                    }
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+
+                            Image(
+                                painter = painterResource(id = item[page].image),
+                                contentDescription = item[page].title,
+                                modifier = Modifier
+                                    .padding(spacing.spaceMedium)
+                                    .fillMaxWidth()
+                                    .aspectRatio(2f)
+                            )
+                        }
                     }
-                }
+                )
 
             }
 
@@ -150,11 +166,13 @@ fun OnBoardingPager(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(380.dp)
-                        .padding(top = spacing.spaceLarge),
-                    backgroundColor = MaterialTheme.colors.secondary,
+                        .padding(top = spacing.spaceExtraLarge),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
                     shape = BottomCardShape.large
                 ) {
-                    Box() {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -164,8 +182,8 @@ fun OnBoardingPager(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(top = spacing.spaceMedium),
-                                color = Black,
-                                style = MaterialTheme.typography.h3,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.displaySmall,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.ExtraBold
                             )
@@ -177,8 +195,8 @@ fun OnBoardingPager(
                                     start = spacing.spaceMedium,
                                     end = spacing.spaceMedium
                                 ),
-                                color = Black,
-                                style = MaterialTheme.typography.h4,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.headlineMedium,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Normal
                             )
@@ -187,7 +205,7 @@ fun OnBoardingPager(
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
-                                .padding(spacing.spaceLarge)
+                                .padding(spacing.spaceExtraLarge)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -201,7 +219,7 @@ fun OnBoardingPager(
                                     ) {
                                         Text(
                                             text = stringResource(R.string.skip_now),
-                                            color = Black,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.Right,
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.SemiBold
@@ -213,7 +231,7 @@ fun OnBoardingPager(
                                             coroutineScope.launch {
                                                 pagerState.scrollToPage(
                                                     pagerState.currentPage + 1,
-                                                    pageOffset = 0f
+                                                    pagerState.currentPageOffsetFraction
                                                 )
                                             }
                                         },
@@ -221,7 +239,7 @@ fun OnBoardingPager(
                                         Text(
                                             text = stringResource(id = R.string.next),
                                             color = Color.White,
-                                            style = MaterialTheme.typography.button
+                                            style = MaterialTheme.typography.labelLarge
                                         )
                                     }
 
@@ -263,7 +281,10 @@ fun PagerIndicator(currentPage: Int, items: List<OnBoardingData>) {
 
 @Composable
 fun Indicator(isSelected: Boolean) {
-    val width = animateDpAsState(targetValue = if (isSelected) 40.dp else 10.dp)
+    val width = animateDpAsState(
+        targetValue = if (isSelected) 40.dp else 10.dp,
+        label = "Onboarding dot anim"
+    )
 
     Box(
         modifier = Modifier
@@ -274,19 +295,5 @@ fun Indicator(isSelected: Boolean) {
             .background(
                 if (isSelected) DarkYellow else Color.Gray.copy(alpha = 0.5f)
             )
-    )
-}
-
-@ExperimentalPagerApi
-@Composable
-fun rememberPagerState(
-    @androidx.annotation.IntRange(from = 0) pageCount: Int,
-    @androidx.annotation.IntRange(from = 0) initialPage: Int = 0,
-    @FloatRange(from = 0.0, to = 1.0) initialPageOffset: Float = 0f,
-    @androidx.annotation.IntRange(from = 1) initialOffscreenLimit: Int = 1,
-    infiniteLoop: Boolean = false
-): PagerState = rememberSaveable(saver = PagerState.Saver) {
-    PagerState(
-        currentPage = initialPage,
     )
 }

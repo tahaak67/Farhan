@@ -4,9 +4,9 @@ import android.app.TimePickerDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,10 +18,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.mirror
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationFilterSettingsScreen(
     onNavigateUp: () -> Unit,
@@ -32,20 +32,21 @@ fun NotificationFilterSettingsScreen(
     val context = LocalContext.current
     val state = viewModel.state
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
-    val isNotifyMeChecked = remember { mutableStateOf(state.isNotifyMeEnabled) }
+//    val isNotifyMeChecked = remember { mutableStateOf(state.isNotifyMeEnabled) }
     val mCalendar = Calendar.getInstance()
     val mHour = mCalendar[Calendar.HOUR_OF_DAY]
     val mMinute = mCalendar[Calendar.MINUTE]
 
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = spacing.spaceMedium)
     ) {
         TopAppBar(
             title = {
                 Text(text = stringResource(id = R.string.notifications_filter_settings))
 
             },
-            backgroundColor = White,
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -59,7 +60,7 @@ fun NotificationFilterSettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
+                .padding(vertical = spacing.spaceMedium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
 
@@ -73,10 +74,11 @@ fun NotificationFilterSettingsScreen(
                 }
             )
         }
+        Divider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
+                .padding(vertical = spacing.spaceMedium)
                 .clickable {
                     onNavigateToExceptions()
                 },
@@ -88,10 +90,11 @@ fun NotificationFilterSettingsScreen(
                 textAlign = TextAlign.Start
             )
         }
+        Divider()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
+                .padding(vertical = spacing.spaceMedium),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -103,9 +106,8 @@ fun NotificationFilterSettingsScreen(
                 )
             }
             Switch(
-                checked = isNotifyMeChecked.value,
+                checked = state.isNotifyMeEnabled,
                 onCheckedChange = { checked ->
-                    isNotifyMeChecked.value = checked
                     if (!checked) {
                         viewModel.setNotifyMeTime(-1, -1)
                     } else {
@@ -116,16 +118,72 @@ fun NotificationFilterSettingsScreen(
                         )
                         tpd.updateTime(state.notifyMeHour, state.notifyMeMinute)
                         tpd.show()
+                        tpd.setOnCancelListener {
+                            viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
+                        }
                     }
                 }
             )
         }
-        AnimatedVisibility(visible = isNotifyMeChecked.value) {
+        //Todo: wait for time picker api to be updated
+        /*if (showTimePicker){
+            Dialog(onDismissRequest = { showTimePicker = false }) {
+                //TODO()
+                Surface(
+                    shape = RoundedCornerShape(28.dp),
+                    tonalElevation = AlertDialogDefaults.TonalElevation
+                ) {
+                    Column(
+                        modifier = Modifier.padding(spacing.spaceLarge)
+                    ) {
+                        TimePicker(
+                            state = timePickerState,
+                            colors = TimePickerDefaults.colors(
+                                clockDialColor = MaterialTheme.colorScheme.background,
+                                clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                                clockDialUnselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                                timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
+                                timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
+                                selectorColor = DarkerYellowDark,
+                                timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                                timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.background,
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
+                                periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
+                            )
+                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = { showTimePicker = false }) {
+                                Text(
+                                    text = stringResource(id = R.string.cancel),
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                            TextButton(onClick = {
+                                viewModel.setNotifyMeTime(timePickerState.hour,timePickerState.minute)
+                                showTimePicker = false
+                            }) {
+                                Text(
+                                    text = stringResource(id = R.string.ok),
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+                            }
 
+                        }
+                    }
+                }
+            }
+        }*/
+        AnimatedVisibility(visible = state.isNotifyMeEnabled) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                    .padding(vertical = spacing.spaceSmall)
                     .clickable {
                         TimePickerDialog(
                             context, { _, mHour: Int, mMinute: Int ->
@@ -140,10 +198,8 @@ fun NotificationFilterSettingsScreen(
                 Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
                 Text(text = stringResource(R.string.tap_to_set_new_time))
             }
-
         }
-
-
+        Divider()
     }
 }
 

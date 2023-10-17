@@ -6,9 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -27,12 +27,13 @@ import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GrayscaleScreen(
     onNavigateUp: () -> Unit,
     onNavigateToExceptions: () -> Unit,
     viewModel: GrayscaleViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState
+    scaffoldState: SnackbarHostState
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -45,8 +46,9 @@ fun GrayscaleScreen(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
+                    scaffoldState.showSnackbar(event.message.asString(context))
                 }
+
                 else -> Unit
             }
         }
@@ -57,6 +59,7 @@ fun GrayscaleScreen(
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkServiceStats()
             }
+
             else -> Unit
         }
     }
@@ -67,7 +70,6 @@ fun GrayscaleScreen(
                 Text(text = stringResource(id = R.string.grayscale))
 
             },
-            backgroundColor = White,
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -92,41 +94,41 @@ fun GrayscaleScreen(
                 } else {
                     Text(
                         text = stringResource(R.string.secure_settings_permission_msg),
-                        style = MaterialTheme.typography.h3,
-                        color = Black
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     Text(
                         text = stringResource(R.string.secure_settings_permission_sub_msg),
-                        style = MaterialTheme.typography.h4,
-                        color = Black
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     if (state.isDeviceRooted) {
                         Text(
                             text = stringResource(R.string.device_root_detected_msg),
-                            style = MaterialTheme.typography.h4,
-                            color = Black
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
                         Button(onClick = { viewModel.askForSecureSettingsPermissionWithRoot() }) {
                             Text(
                                 text = stringResource(id = R.string.grant_access),
-                                style = MaterialTheme.typography.button,
-                                color = Black
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                         Spacer(modifier = Modifier.height(spacing.spaceMedium))
                         Text(
                             text = stringResource(R.string.grant_secure_permission_manually_msg),
-                            style = MaterialTheme.typography.h4,
-                            color = Black
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     } else {
                         Text(
                             text = stringResource(R.string.no_device_root_detected_msg),
-                            style = MaterialTheme.typography.h4,
-                            color = Black
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -140,8 +142,8 @@ fun GrayscaleScreen(
                     }) {
                         Text(
                             text = stringResource(id = R.string.how),
-                            style = MaterialTheme.typography.button,
-                            color = Black
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -166,18 +168,23 @@ fun GrayscaleScreen(
             )
         } else {
             Column(
-                Modifier.fillMaxSize()
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = spacing.spaceMedium)
             ) {
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
+                        .padding(vertical = spacing.spaceMedium),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
                     ) {
-                    Text(text = stringResource(R.string.enable_grayscale_for_white_listed_apps))
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.enable_grayscale_for_white_listed_apps)
+                    )
                     Switch(
                         checked = isServiceChecked.value,
                         onCheckedChange = { checked ->
@@ -186,10 +193,11 @@ fun GrayscaleScreen(
                         }
                     )
                 }
+                Divider()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
+                        .padding(vertical = spacing.spaceMedium)
                         .clickable {
                             onNavigateToExceptions()
                         },
@@ -201,6 +209,7 @@ fun GrayscaleScreen(
                         textAlign = TextAlign.Start
                     )
                 }
+                Divider()
             }
         }
     }
