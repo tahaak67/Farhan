@@ -1,10 +1,15 @@
 package ly.com.tahaben.onboarding_presentaion.main
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import javax.inject.Inject
@@ -16,9 +21,12 @@ class MainScreenViewModel @Inject constructor(
 
     private val _mainScreenState = MutableStateFlow(MainScreenState())
     val mainScreenState: StateFlow<MainScreenState> get() = _mainScreenState
+    private val _uiEvent = Channel<UiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
         getUiAppearanceSettings()
+        getMainSwitchState()
     }
 
     private fun getUiAppearanceSettings() {
@@ -61,7 +69,40 @@ class MainScreenViewModel @Inject constructor(
                     )
                 }
             }
+
+            is MainScreenEvent.SaveMainSwitchState -> {
+                saveMainSwitchState(event.isEnabled)
+                _mainScreenState.update { state ->
+                    state.copy(
+                        isMainSwitchEnabled = event.isEnabled
+                    )
+                }
+            }
+
+            is MainScreenEvent.ShowSnackBar -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ShowSnackbar(event.message))
+                }
+            }
+
+            MainScreenEvent.HideSnackBar -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.HideSnackBar)
+                }
+            }
         }
+    }
+
+    fun getMainSwitchState() {
+        _mainScreenState.update { state ->
+            state.copy(
+                isMainSwitchEnabled = useCases.isMainSwitchEnabled()
+            )
+        }
+    }
+
+    private fun saveMainSwitchState(isEnabled: Boolean) {
+        useCases.setMainSwitchState(isEnabled)
     }
 
 }

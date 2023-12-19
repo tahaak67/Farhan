@@ -24,6 +24,7 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
+import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
@@ -121,6 +122,10 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Routes.MAIN) {
+                            val mainScreenUiEvent =
+                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
+                                    initialValue = UiEvent.HideSnackBar
+                                ).value
                             MainScreen(
                                 tip = tip,
                                 isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
@@ -132,7 +137,9 @@ class MainActivity : ComponentActivity() {
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
                                 navController = navController,
                                 onEvent = mainScreenViewModel::onEvent,
-                                state = mainState
+                                state = mainState,
+                                snackbarHostState = snackbarHostState,
+                                uiEvent = mainScreenUiEvent
                             )
                         }
                         composable(

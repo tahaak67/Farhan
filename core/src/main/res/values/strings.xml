@@ -192,4 +192,5 @@
     <string name="follow_system">Follow system</string>
     <string name="clock_icon">Clock icon</string>
     <string name="applications">Applications</string>
+    <string name="please_turn_on_main_switch">Main switch disabled. Please turn on the main switch.</string>
 </resources>

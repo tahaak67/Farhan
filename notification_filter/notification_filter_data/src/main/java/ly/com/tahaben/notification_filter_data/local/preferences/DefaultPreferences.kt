@@ -2,6 +2,7 @@ package ly.com.tahaben.notification_filter_data.local.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import timber.log.Timber
 import java.util.*
@@ -40,7 +41,8 @@ class DefaultPreferences(
     }
 
     override fun isServiceEnabled(): Boolean {
-        return sharedPref.getBoolean(Preferences.KEY_NOTIFICATION_SERVICE_STATS, false)
+        return sharedPref.getBoolean(Preferences.KEY_NOTIFICATION_SERVICE_STATS, false) &&
+                sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
     }
 
     override fun setServiceState(isEnabled: Boolean) {

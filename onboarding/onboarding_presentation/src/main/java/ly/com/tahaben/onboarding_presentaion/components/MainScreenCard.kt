@@ -34,7 +34,9 @@ fun MainScreenCard(
     text: String,
     @DrawableRes iconId: Int?,
     status: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    mainSwitchEnabled: Boolean,
+    showSnackBar: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Card(
@@ -45,7 +47,11 @@ fun MainScreenCard(
                 RoundedCornerShape(10.dp)
             )
             .clickable {
-                onClick()
+                if (mainSwitchEnabled) {
+                    onClick()
+                } else {
+                    showSnackBar()
+                }
             },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiary

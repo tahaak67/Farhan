@@ -8,6 +8,8 @@ interface Preferences {
     fun loadDarkModeOn(): String
     fun saveDarkModeOn(darkMode: String)
 
+    fun loadMainSwitchState(): Boolean
+    fun setMainSwitchState(switchState: Boolean)
 
     companion object {
         const val KEY_APP_SHOULD_SHOW_ON_BOARDING =

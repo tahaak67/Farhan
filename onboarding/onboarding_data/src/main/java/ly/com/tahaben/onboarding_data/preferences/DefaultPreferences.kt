@@ -3,6 +3,7 @@ package ly.com.tahaben.onboarding_data.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
 
@@ -32,6 +33,16 @@ class DefaultPreferences(
     override fun saveDarkModeOn(darkMode: String) {
         sharedPref.edit()
             .putString(Preferences.KEY_APP_DARK_MODE_ON, darkMode)
+            .apply()
+    }
+
+    override fun loadMainSwitchState(): Boolean {
+        return sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
+    }
+
+    override fun setMainSwitchState(switchState: Boolean) {
+        sharedPref.edit()
+            .putBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, switchState)
             .apply()
     }
 }
