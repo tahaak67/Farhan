@@ -193,4 +193,10 @@
     <string name="clock_icon">Clock icon</string>
     <string name="applications">Applications</string>
     <string name="please_turn_on_main_switch">Main switch disabled. Please turn on the main switch.</string>
+    <string name="main_switch_is_on">Main switch is on</string>
+    <string name="main_switch_is_off">Main switch is off</string>
+    <string name="tap_to_pause_all_farhan_features">Tap to pause all Farhan features</string>
+    <string name="tap_to_resume_all_farhan_features">Tap to resume paused Farhan features</string>
+    <string name="play_arrow">Play Arrow</string>
+    <string name="pause">Pause</string>
 </resources>

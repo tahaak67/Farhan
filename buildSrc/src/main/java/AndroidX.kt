@@ -7,4 +7,7 @@ object AndroidX {
 
     private const val workManagerVersion = "2.8.1"
     const val workManger = "androidx.work:work-runtime-ktx:$workManagerVersion"
+    private const val constraintLayoutVersion = "2.1.4"
+    const val constraintLayout =
+        "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 }

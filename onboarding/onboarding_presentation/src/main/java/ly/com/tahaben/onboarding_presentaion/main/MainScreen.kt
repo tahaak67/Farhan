@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -189,20 +191,39 @@ fun MainScreen(
                             modifier = Modifier.weight(1f),
                         ) {
                             Text(
-                                text = "Main Switch",
+                                text = if (state.isMainSwitchEnabled) stringResource(R.string.main_switch_is_on) else stringResource(
+                                    R.string.main_switch_is_off
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
                             )
                             Text(
-                                text = "Switch all Farhan features on or off.",
+                                text = if (state.isMainSwitchEnabled) stringResource(R.string.tap_to_pause_all_farhan_features) else stringResource(
+                                    R.string.tap_to_resume_all_farhan_features
+                                ),
                                 style = MaterialTheme.typography.headlineMedium,
                                 lineHeight = 20.sp
                             )
                         }
                         Switch(checked = state.isMainSwitchEnabled, onCheckedChange = { isChecked ->
                             onEvent(MainScreenEvent.SaveMainSwitchState(isChecked))
-                        })
+                        },
+                            thumbContent = if (state.isMainSwitchEnabled) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = stringResource(R.string.play_arrow)
+                                    )
+                                }
+                            } else {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Pause,
+                                        contentDescription = stringResource(R.string.pause)
+                                    )
+                                }
+                            })
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                 }

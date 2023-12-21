@@ -1,3 +1,9 @@
+plugins {
+    id("com.android.library")
+}
+android {
+    namespace = "ly.com.tahaben.onboarding_presentaion"
+}
 apply {
     from("$rootDir/compose-module.gradle")
 }
