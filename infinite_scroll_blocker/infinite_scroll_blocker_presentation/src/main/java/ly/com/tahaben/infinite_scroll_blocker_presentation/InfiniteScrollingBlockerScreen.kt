@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
@@ -35,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
@@ -134,11 +137,17 @@ fun InfiniteScrollingBlockerScreen(
                 Modifier
                     .fillMaxSize()
                     .padding(horizontal = spacing.spaceMedium)
+                    .selectableGroup()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = spacing.spaceMedium),
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = state.isServiceEnabled,
+                            onClick = { viewModel.setServiceStats(!state.isServiceEnabled) },
+                            role = Role.Switch
+                        ),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -200,7 +209,6 @@ fun InfiniteScrollingBlockerScreen(
                     .wrapContentHeight(),
                 shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = AlertDialogDefaults.TonalElevation,
-//                color = Page
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -209,7 +217,6 @@ fun InfiniteScrollingBlockerScreen(
                     Text(
                         text = stringResource(R.string.remind_me_to_stop_scrolling_after),
                         style = MaterialTheme.typography.headlineMedium,
-//                        color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     val npVal = remember {
@@ -238,7 +245,6 @@ fun InfiniteScrollingBlockerScreen(
                                 .align(Alignment.CenterVertically),
                             text = stringResource(id = R.string.minutes),
                             style = MaterialTheme.typography.headlineMedium,
-//                            color = Black
                         )
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))

@@ -45,8 +45,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -237,8 +235,7 @@ private fun ThemeColorsItem(
                 selected = isSelectedMode,
                 onClick = { onEvent(MainScreenEvent.SaveThemeColorsMode(themeColorsOption)) },
                 role = Role.RadioButton
-            )
-            .semantics { contentDescription = itemContentDescription },
+            ),
         shape = RoundedCornerShape(15.dp),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)

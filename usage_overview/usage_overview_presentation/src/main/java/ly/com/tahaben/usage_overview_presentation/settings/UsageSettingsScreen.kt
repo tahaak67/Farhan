@@ -1,6 +1,5 @@
 package ly.com.tahaben.usage_overview_presentation.settings
 
-//import ly.com.tahaben.core_ui.DarkerYellow
 import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,7 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
@@ -130,12 +131,20 @@ fun UsageSettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = spacing.spaceMedium),
+                .padding(horizontal = spacing.spaceMedium)
+                .selectableGroup(),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing.spaceMedium),
+                    .padding(vertical = spacing.spaceMedium)
+                    .selectable(
+                        selected = state.isCacheEnabled,
+                        onClick = {
+                            viewModel.setCachingEnabled(!state.isCacheEnabled)
+                        },
+                        role = Role.Switch
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
 
@@ -160,11 +169,13 @@ fun UsageSettingsScreen(
                 Column(modifier = Modifier) {
                     Row(
                         modifier = Modifier
-                            .clickable {
-                                viewModel.setAutoCachingEnabled(!state.isAutoCachingEnabled)
-                            }
                             .padding(vertical = spacing.spaceMedium)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = state.isAutoCachingEnabled,
+                                onClick = { viewModel.setAutoCachingEnabled(!state.isAutoCachingEnabled) },
+                                role = Role.Switch
+                            ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
 
@@ -253,14 +264,24 @@ fun UsageSettingsScreen(
         Dialog(onDismissRequest = { viewModel.onEvent(UsageSettingsEvent.DismissSelectReportsDialog) }) {
             Surface(
                 modifier = Modifier,
-                shape = RoundedCornerShape(spacing.spaceMedium),
+                shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = AlertDialogDefaults.TonalElevation
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .selectableGroup()
+                ) {
                     Row(
                         modifier = Modifier
                             .padding(spacing.spaceMedium)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = state.isWeeklyReportsEnabled,
+                                onClick = {
+                                    viewModel.setWeeklyReportsEnabled(!state.isWeeklyReportsEnabled)
+                                },
+                                role = Role.Checkbox
+                            ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -269,7 +290,6 @@ fun UsageSettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Checkbox(
-//                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                             checked = state.isWeeklyReportsEnabled,
                             onCheckedChange = { isChecked ->
                                 viewModel.setWeeklyReportsEnabled(isChecked)
@@ -278,13 +298,19 @@ fun UsageSettingsScreen(
                     Row(
                         modifier = Modifier
                             .padding(spacing.spaceMedium)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = state.isMonthlyReportsEnabled,
+                                onClick = {
+                                    viewModel.setMonthlyReportsEnabled(!state.isMonthlyReportsEnabled)
+                                },
+                                role = Role.Checkbox
+                            ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(text = stringResource(id = R.string.monthly))
                         Checkbox(
-//                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                             checked = state.isMonthlyReportsEnabled,
                             onCheckedChange = { isChecked ->
                                 viewModel.setMonthlyReportsEnabled(isChecked)
@@ -295,13 +321,19 @@ fun UsageSettingsScreen(
                         Row(
                             modifier = Modifier
                                 .padding(spacing.spaceMedium)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = state.isYearlyReportsEnabled,
+                                    onClick = {
+                                        viewModel.setYearlyReportsEnabled(!state.isYearlyReportsEnabled)
+                                    },
+                                    role = Role.Checkbox
+                                ),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(text = stringResource(id = R.string.yearly))
                             Checkbox(
-//                                colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                                 checked = state.isYearlyReportsEnabled,
                                 onCheckedChange = { isChecked ->
                                     viewModel.setYearlyReportsEnabled(isChecked)

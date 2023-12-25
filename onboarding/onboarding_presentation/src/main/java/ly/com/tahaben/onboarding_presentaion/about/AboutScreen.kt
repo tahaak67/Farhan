@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -37,7 +36,6 @@ fun AboutScreen(
     versionName: String,
     versionCode: Int
 ) {
-
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
@@ -108,7 +106,7 @@ fun AboutScreen(
                 },
                 text = "https://github.com/tahaak67/Farhan",
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.Blue
+                color = MaterialTheme.colorScheme.tertiary
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
@@ -142,7 +140,7 @@ fun AboutScreen(
                 },
                 text = stringResource(R.string.privacy_policy),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.Blue
+                color = MaterialTheme.colorScheme.tertiary
             )
         }
     }

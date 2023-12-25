@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -195,7 +197,14 @@ fun GrayscaleScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = spacing.spaceMedium),
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = state.isServiceEnabled,
+                            onClick = {
+                                viewModel.setServiceStats(!state.isServiceEnabled)
+                            },
+                            role = Role.Switch
+                        ),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
 
@@ -205,10 +214,9 @@ fun GrayscaleScreen(
                         text = stringResource(R.string.enable_grayscale_for_white_listed_apps)
                     )
                     Switch(
-                        checked = isServiceChecked.value,
+                        checked = state.isServiceEnabled,
                         onCheckedChange = { checked ->
                             viewModel.setServiceStats(checked)
-                            isServiceChecked.value = checked
                         }
                     )
                 }

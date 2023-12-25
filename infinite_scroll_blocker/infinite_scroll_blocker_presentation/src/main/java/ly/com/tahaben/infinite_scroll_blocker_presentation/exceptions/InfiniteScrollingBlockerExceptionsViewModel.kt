@@ -1,14 +1,14 @@
 package ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.core.util.SearchEvent
@@ -22,9 +22,8 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
     private val infiniteScrollUseCases: InfiniteScrollUseCases
 ) : ViewModel() {
 
-
-    var state by mutableStateOf(InfiniteScrollExceptionsState())
-        private set
+    private val _state = MutableStateFlow(InfiniteScrollExceptionsState())
+    val state: StateFlow<InfiniteScrollExceptionsState> get() = _state
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -47,31 +46,37 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
                 apps.forEach {
                     Timber.d("app: $it")
                 }
-                state = state.copy(
-                    isLoading = false,
-                    installedApps = apps
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        installedApps = apps
+                    )
+                }
             }
             filterSystemApps()
         }
     }
 
     private fun refreshAppsList() {
-        val apps = state.searchResults
+        val apps = _state.value.searchResults
         apps.forEach {
             it.isException =
                 infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(it.packageName)
         }
-        state = state.copy(
-            searchResults = apps
-        )
-    }
+        _state.update {
+            it.copy(
+                searchResults = apps
+            )
+        }
 
+    }
 
     fun onEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnQueryChange -> {
-                state = state.copy(query = event.query)
+                _state.update {
+                    it.copy(query = event.query)
+                }
                 executeSearch()
             }
 
@@ -79,53 +84,65 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
                 executeSearch()
             }
             is SearchEvent.OnSearchFocusChange -> {
-                state = state.copy(
-                    isHintVisible = !event.isFocused && state.query.isBlank()
-                )
+                _state.update {
+                    it.copy(
+                        isHintVisible = !event.isFocused && state.value.query.isBlank()
+                    )
+                }
             }
             is SearchEvent.OnSystemAppsVisibilityChange -> {
-                state = state.copy(
-                    showSystemApps = event.showSystemApps
-                )
+                _state.update {
+                    it.copy(
+                        showSystemApps = event.showSystemApps
+                    )
+                }
+
                 filterSystemApps()
             }
             is SearchEvent.HideSearch -> {
-                state = state.copy(query = "")
+                _state.update {
+                    it.copy(query = "")
+                }
                 filterSystemApps()
             }
             is SearchEvent.OnExceptionsOnlyChange -> {
-                state = state.copy(
-                    showExceptionsOnly = event.showExceptionsOnly
-                )
+                _state.update {
+                    it.copy(
+                        showExceptionsOnly = event.showExceptionsOnly
+                    )
+                }
                 filterExceptionsOnly()
             }
         }
     }
 
     private fun executeSearch() {
-        val l = state.installedApps.filter {
-            it.name?.contains(state.query, true) == true
+        val l = _state.value.installedApps.filter {
+            it.name?.contains(state.value.query, true) == true
         }
-        Timber.d("search query: ${state.query} \n l: $l")
-        Timber.d("search list: ${state.searchResults} \n l: $l")
-        Timber.d("apps list: ${state.installedApps} \n l: $l")
-
-        state = state.copy(
-            searchResults = l
-        )
+        Timber.d("search query: ${state.value.query} \n l: $l")
+        Timber.d("search list: ${state.value.searchResults} \n l: $l")
+        Timber.d("apps list: ${state.value.installedApps} \n l: $l")
+        _state.update {
+            it.copy(
+                searchResults = l
+            )
+        }
     }
 
     private fun filterSystemApps() {
-        state = state.copy(
-            searchResults = if (state.showSystemApps) {
-                state.installedApps
-            } else {
-                state.installedApps.filter {
-                    !it.isSystemApp
+        _state.update {
+            it.copy(
+                searchResults = if (state.value.showSystemApps) {
+                    state.value.installedApps
+                } else {
+                    state.value.installedApps.filter {
+                        !it.isSystemApp
+                    }
                 }
-            }
-        )
-        if (state.showExceptionsOnly) {
+            )
+        }
+        if (state.value.showExceptionsOnly) {
             filterExceptionsOnly()
         }
     }
@@ -139,12 +156,14 @@ class InfiniteScrollingBlockerExceptionsViewModel @Inject constructor(
     }
 
     private fun filterExceptionsOnly() {
-        if (state.showExceptionsOnly) {
-            state = state.copy(
-                searchResults = state.searchResults.filter {
-                    it.isException
-                }
-            )
+        if (_state.value.showExceptionsOnly) {
+            _state.update {
+                it.copy(
+                    searchResults = state.value.searchResults.filter {
+                        it.isException
+                    }
+                )
+            }
         } else {
             filterSystemApps()
         }

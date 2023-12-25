@@ -25,8 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -126,8 +124,7 @@ private fun RadioButtonItem(
     Row(
         modifier = modifier
             .padding(vertical = spacing.spaceSmall)
-            .fillMaxWidth()
-            .semantics { contentDescription = text },
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

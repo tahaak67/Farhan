@@ -1,6 +1,5 @@
 package ly.com.tahaben.notification_filter_presentation.settings.exceptions
 
-//import ly.com.tahaben.core_ui.DarkYellow
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -170,7 +169,6 @@ fun NotificationFilterExceptionsScreen(
                                         )
                                     )
                                 },
-//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                     DropdownMenuItem(

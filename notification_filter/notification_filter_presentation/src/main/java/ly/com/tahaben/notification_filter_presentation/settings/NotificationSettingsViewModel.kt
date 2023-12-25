@@ -81,6 +81,25 @@ class NotificationSettingsViewModel @Inject constructor(
             NotificationSettingsEvent.CancelNotifyMe -> {
                 setNotifyMeTime(-1, -1)
             }
+
+            NotificationSettingsEvent.DismissNotifyMeTimePicker -> {
+                state = state.copy(
+                    isTimePickerVisible = false
+                )
+            }
+
+            NotificationSettingsEvent.ShowNotifyMeTimePicker -> {
+                state = state.copy(
+                    isTimePickerVisible = true
+                )
+            }
+
+            is NotificationSettingsEvent.SaveNotifyMeTime -> {
+                setNotifyMeTime(event.hour, event.min)
+                state = state.copy(
+                    isTimePickerVisible = false
+                )
+            }
         }
 
     }
