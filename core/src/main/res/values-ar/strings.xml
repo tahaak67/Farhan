@@ -56,8 +56,8 @@
     <string name="grayscale_onboarding_message">واحدة من الطرق التي تستخدمها التطبيقات للتنافس على انتباهك ووقتك هي من خلال الألوان، باستخدام تجريد الألوان يستطيع فرحان أن يجرد بعض التطبيقات من الألوان عندما تفتحها وبالتالي يقل تأثيرها عليك!</string>
     <string name="on_boarding_image_description">صورة ترحيب</string>
     <string name="next">التالي</string>
-    <string name="enabled">مفعل</string>
-    <string name="disabled">معطل</string>
+    <string name="enabled">مُفعل</string>
+    <string name="disabled">مُعطل</string>
     <string name="accessibility_service_name">خدمة إمكانية الوصول لفرحان</string>
     <string name="accessibility_service_description">هذه الخدمة مطلوبة لبعض الوظائف مثل مانع التمرير اللانهائي وتجريد الألوان</string>
     <string name="usage_permission_msg">إذن الوصول إلى الاستخدام غير ممنوح :(</string>
@@ -127,7 +127,7 @@
     <string name="show_whitelist_only">إظهار القائمة البيضاء فقط</string>
     <string name="range_null_error">يرجى تحديد قيم صالحة للنطاق المطلوب</string>
     <string name="delete_cache_for_day">مسح التخزين المؤقت لهذا اليوم</string>
-    <string name="delete_cache_dialog_text">هل انت متأكد من رغبتك في حذف بيانات %s من قاعدة البيانات وإعادة تحميلها مرة اخرى؟ لا يمكن التراجع عن هذه العملية.</string>
+    <string name="delete_cache_dialog_text">هل انت متأكد من رغبتك في حذف بيانات %s من قاعدة البيانات وإعادة تحميلها مرة اخرى؟ لا يمكن التراجع عن هذه العملية.\nيرجى ملاحظة انه اذا كان هذا اليوم اقدم من ٦ ايام فقد لا يستطيع فرحان الحصول على بيانات الإستخدام لهذا اليوم مرة أخرى.</string>
     <string name="delete_cache_dialog_title">حذف بيانات %s؟</string>
     <string name="usage_date_range_picker_title">حدد نطاق التاريخ المراد الاطلاع على معلوماته</string>
     <string name="usage_date_range_picker_description">يمكنك اختيار نطاق التاريخ الذي تريد الاطلاع على معلوماته من خلال تحديد تاريخ البداية والنهاية في النموذج أدناه.</string>
@@ -167,5 +167,28 @@
     <string name="monthly_usage_report_same_time">لقد استخدمت هاتفك لنفس المدة الشهر الماضي.</string>
     <string name="weekly_report_notification_title">التقرير الأسبوعي</string>
     <string name="monthly_report_notification_title">التقرير الشهري</string>
+    <string name="appearance">المظهر</string>
+    <string name="dark">مظهر داكن</string>
+    <string name="light">مظهر فاتح</string>
+    <string name="follow_system">استخدم مظهر الجهاز</string>
+    <string name="clock_icon">ايقونة ساعة</string>
+    <string name="applications">التطبيقات</string>
+    <string name="please_turn_on_main_switch">الزر الرئيسي مُعطل، يرجى تفعيل الزر الرئيسي.</string>
+    <string name="main_switch_is_on">الزر الرئيسي مُفعل</string>
+    <string name="main_switch_is_off">الزر الرئيسي مُعطل</string>
+    <string name="tap_to_pause_all_farhan_features">اضغط لإيقاف جميع مزايا فرحان</string>
+    <string name="tap_to_resume_all_farhan_features">اضغط لإستئناف جميع مزايا فرحان</string>
+    <string name="play_arrow">سهم تشغيل</string>
+    <string name="pause">ايقاف مؤقت</string>
+    <string name="theme_colors_for">ألوان السمة %1$s</string>
+    <string name="select_theme_colors">اختر ألوان السمة</string>
+    <string name="you_can_change_this_later_from_the_main_screen_menu">يمكنك تغيير اختيارك لاحقا من القائمة الموجودة في الشاشة الرئيسية</string>
+    <string name="classic">كلاسيكي</string>
+    <string name="vibrant">نابض بالحياة</string>
+    <string name="dynamic">ديناميكي</string>
+    <string name="dynamic_colors_description">يستخدم خلفية هاتفك لتوليد ألوان السمة</string>
+    <string name="vibrant_colors_description">لمسة نابضة بالحياة لألوان فرحان الكلاسيكية</string>
+    <string name="classic_colors_description">ألوان فرحان الأصلية الرائعة</string>
+    <string name="theme_colors">ألوان السمة</string>
 </resources>
 

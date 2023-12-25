@@ -1,4 +1,4 @@
-package ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding
+ package ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

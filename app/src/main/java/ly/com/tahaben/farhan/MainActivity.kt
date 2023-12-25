@@ -4,10 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +24,9 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
+import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
@@ -33,8 +40,10 @@ import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFi
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
+import ly.com.tahaben.onboarding_presentaion.SelectAppearanceScreen
 import ly.com.tahaben.onboarding_presentaion.about.AboutScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
+import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
 import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteListScreen
@@ -66,14 +75,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
+        val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
         val tip = getTip()
         setContent {
-            FarhanTheme {
+            val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+            val mainState = mainScreenViewModel.mainScreenState.collectAsStateWithLifecycle().value
+            val isDarkMode = when (mainState.uiMode) {
+                UIModeAppearance.DARK_MODE -> true
+                UIModeAppearance.LIGHT_MODE -> false
+                UIModeAppearance.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+            }
+            FarhanTheme(
+                darkMode = isDarkMode,
+                colorStyle = mainState.themeColors
+            ) {
                 val navController = rememberNavController()
-                val scaffoldState = rememberScaffoldState()
+                val snackbarHostState = remember {
+                    SnackbarHostState()
+                }
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    scaffoldState = scaffoldState
+                    snackbarHost = { SnackbarHost(snackbarHostState) }
                 ) {
                     it.calculateBottomPadding()
                     NavHost(
@@ -86,6 +109,8 @@ class MainActivity : ComponentActivity() {
                             Routes.NOTIFICATION_FILTER
                         } else if (shouldShowOnBoarding) {
                             Routes.WELCOME
+                        } else if (shouldShowSelectThemeScreen) {
+                            Routes.SELECT_THEME
                         } else {
                             Routes.MAIN
                         },
@@ -101,7 +126,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        composable(Routes.SELECT_THEME) {
+                            SelectAppearanceScreen(
+                                state = mainState,
+                                onEvent = mainScreenViewModel::onEvent,
+                                onOkClick = {
+                                    navController.navigate(Routes.MAIN) {
+                                        popUpTo(Routes.SELECT_THEME) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
                         composable(Routes.MAIN) {
+                            val mainScreenUiEvent =
+                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
+                                    initialValue = UiEvent.HideSnackBar
+                                ).value
                             MainScreen(
                                 tip = tip,
                                 isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
@@ -112,6 +154,10 @@ class MainActivity : ComponentActivity() {
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
                                 navController = navController,
+                                onEvent = mainScreenViewModel::onEvent,
+                                state = mainState,
+                                snackbarHostState = snackbarHostState,
+                                uiEvent = mainScreenUiEvent
                             )
                         }
                         composable(
@@ -138,7 +184,7 @@ class MainActivity : ComponentActivity() {
                             UsageOverviewScreen(
                                 onNavigateUp = navController::navigateUp,
                                 onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) },
-                                scaffoldState = scaffoldState,
+                                scaffoldState = snackbarHostState,
                                 startDate = startDate,
                                 endDate = endDate
                             )
@@ -147,7 +193,7 @@ class MainActivity : ComponentActivity() {
                             UsageSettingsScreen(
                                 onNavigateUp = { navController.navigateUp() },
                                 shouldShowRational = ::shouldShowRational,
-                                scaffoldState = scaffoldState
+                                scaffoldState = snackbarHostState
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING) {
@@ -179,7 +225,7 @@ class MainActivity : ComponentActivity() {
                                 GrayscaleScreen(
                                     onNavigateUp = { navController.navigateUp() },
                                     onNavigateToExceptions = { navController.navigate(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) },
-                                    scaffoldState = scaffoldState
+                                    scaffoldState = snackbarHostState
                                 )
                             }
                         }
@@ -199,7 +245,8 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onNavigateUp = {
                                         navController.navigateUp()
-                                    }
+                                    },
+                                    isUiModeDark = isDarkMode
                                 )
                             }
 
@@ -212,19 +259,19 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.INFINITE_SCROLLING_EXCEPTIONS) {
                             InfiniteScrollExceptionsScreen(
-                                scaffoldState = scaffoldState,
+                                scaffoldState = snackbarHostState,
                                 onNavigateUp = { navController.navigateUp() },
                             )
                         }
                         composable(Routes.NOTIFICATION_FILTER_EXCEPTIONS) {
                             NotificationFilterExceptionsScreen(
-                                scaffoldState = scaffoldState,
+                                snackbarHostState = snackbarHostState,
                                 onNavigateUp = { navController.navigateUp() },
                             )
                         }
                         composable(Routes.SCREEN_GRAY_SCALE_WHITE_LIST) {
                             GrayscaleWhiteListScreen(
-                                scaffoldState = scaffoldState,
+                                scaffoldState = snackbarHostState,
                                 onNavigateUp = { navController.navigateUp() })
                         }
                         composable(Routes.ABOUT_APP) {

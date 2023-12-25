@@ -3,19 +3,29 @@ package ly.com.tahaben.onboarding_presentaion.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.LocalSpacing
 
 @Composable
@@ -24,56 +34,67 @@ fun MainScreenCard(
     text: String,
     @DrawableRes iconId: Int?,
     status: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    mainSwitchEnabled: Boolean,
+    showSnackBar: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     Card(
         modifier = Modifier
-            .height(150.dp)
-            .width(150.dp)
+            .height(66.dp)
+            .fillMaxWidth()
             .clip(
-                RoundedCornerShape(20)
+                RoundedCornerShape(10.dp)
             )
             .clickable {
-                onClick()
+                if (mainSwitchEnabled) {
+                    onClick()
+                } else {
+                    showSnackBar()
+                }
             },
-        backgroundColor = MaterialTheme.colors.secondary
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = spacing.spaceMedium),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (iconId != null) {
                     Image(
-                        modifier = Modifier.padding(start = 15.dp, top = 15.dp),
+                        modifier = Modifier,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                         painter = painterResource(id = iconId),
                         contentDescription = text
                     )
-                    Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
                 }
                 Text(
-                    modifier = Modifier.padding(
-                        horizontal = if (iconId == null) 15.dp else 8.dp,
-                        vertical = 15.dp
-                    ),
+                    modifier = Modifier,
                     text = text,
-                    style = MaterialTheme.typography.h4,
-                    fontSize = 15.sp,
-                    color = Black,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                 )
             }
-            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
             Text(
-                modifier = Modifier.padding(horizontal = 15.dp),
+                modifier = Modifier,
                 text = status,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.headlineMedium,
                 fontSize = 16.sp,
-                color = Black,
+                color = MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.4f
+                ),
                 fontWeight = FontWeight.Normal
             )
         }
-
-
     }
 }

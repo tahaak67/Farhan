@@ -1,8 +1,18 @@
 package ly.com.tahaben.launcher_presentation.settings
 
+//import ly.com.tahaben.core_ui.White
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Switch
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -17,7 +27,6 @@ import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
-import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.mirror
 
 @Composable
@@ -46,7 +55,7 @@ fun LauncherSettingsScreen(
             title = {
                 Text(text = stringResource(id = R.string.launcher_settings))
             },
-            backgroundColor = White,
+//            backgroundColor = White,
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(

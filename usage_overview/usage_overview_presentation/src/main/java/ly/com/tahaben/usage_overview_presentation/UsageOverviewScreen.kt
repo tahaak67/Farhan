@@ -1,29 +1,50 @@
 package ly.com.tahaben.usage_overview_presentation
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
-import androidx.compose.runtime.*
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,20 +54,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
-import ly.com.tahaben.usage_overview_presentation.components.*
+import ly.com.tahaben.core_ui.mirror
+import ly.com.tahaben.usage_overview_presentation.components.ConfirmDeleteDialog
+import ly.com.tahaben.usage_overview_presentation.components.DaySelector
+import ly.com.tahaben.usage_overview_presentation.components.TrackedAppItem
+import ly.com.tahaben.usage_overview_presentation.components.UsageOverviewHeader
+import ly.com.tahaben.usage_overview_presentation.components.parseDateText
 import timber.log.Timber
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UsageOverviewScreen(
     onNavigateUp: () -> Unit,
     onNavigateToSettings: () -> Unit,
     viewModel: UsageOverviewViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState,
+    scaffoldState: SnackbarHostState,
     startDate: String? = null,
     endDate: String? = null
 ) {
@@ -54,7 +81,7 @@ fun UsageOverviewScreen(
     val state = viewModel.state
     val context = LocalContext.current
     val selectDateBottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        rememberModalBottomSheetState()
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -73,11 +100,11 @@ fun UsageOverviewScreen(
             when (event) {
                 UiEvent.NavigateUp -> TODO()
                 is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(event.message.asString(context))
+                    scaffoldState.showSnackbar(event.message.asString(context))
                 }
 
                 UiEvent.ShowBottomSheet -> {
-                    selectDateBottomSheetState.show()
+                    // no longer needed in M3
                 }
 
                 UiEvent.DismissBottomSheet -> {
@@ -92,7 +119,7 @@ fun UsageOverviewScreen(
     Column {
         TopAppBar(
             title = { Text(text = stringResource(id = R.string.usage)) },
-            backgroundColor = White,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -103,7 +130,9 @@ fun UsageOverviewScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { viewModel.onEvent(UsageOverviewEvent.OnShowDropDown) }) {
+                IconButton(
+                    enabled = state.isUsagePermissionGranted,
+                    onClick = { viewModel.onEvent(UsageOverviewEvent.OnShowDropDown) }) {
                     Icon(Icons.Default.MoreVert, stringResource(R.string.drop_down_menu))
                 }
                 DropdownMenu(
@@ -115,16 +144,14 @@ fun UsageOverviewScreen(
                             viewModel.onEvent(UsageOverviewEvent.OnDismissDropDown)
                             viewModel.onEvent(UsageOverviewEvent.OnShowConfirmDeleteDialog)
                             Timber.d("show dialog")
-                        }, enabled = !state.isModeRange && !state.isLoading) {
-                            Text(text = stringResource(R.string.delete_cache_for_day))
-                        }
+                        }, enabled = !state.isModeRange && !state.isLoading,
+                            text = { Text(text = stringResource(R.string.delete_cache_for_day)) })
                     }
                     DropdownMenuItem(onClick = {
                         viewModel.onEvent(UsageOverviewEvent.OnDismissDropDown)
                         onNavigateToSettings()
-                    }) {
-                        Text(text = stringResource(R.string.usage_settings))
-                    }
+                    },
+                        text = { Text(text = stringResource(R.string.usage_settings)) })
                 }
             }
         )
@@ -159,6 +186,22 @@ fun UsageOverviewScreen(
                     UsageOverviewHeader(state = state)
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 }
+                item {
+                    AnimatedVisibility(visible = !state.isLoading && state.trackedApps.isNotEmpty()) {
+                        Column(modifier = Modifier) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = spacing.spaceMedium),
+                                text = stringResource(id = R.string.applications),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onBackground.copy(
+                                    alpha = 0.75f
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                        }
+                    }
+                }
 
                 item {
                     Box(
@@ -174,7 +217,7 @@ fun UsageOverviewScreen(
                             state.trackedApps.isEmpty() -> {
                                 Text(
                                     text = stringResource(id = R.string.no_results),
-                                    style = MaterialTheme.typography.body1,
+                                    style = MaterialTheme.typography.bodyLarge,
                                     textAlign = TextAlign.Center
                                 )
                             }
@@ -215,55 +258,58 @@ fun UsageOverviewScreen(
         DateRangePickerDialog(state.currentYear, viewModel::onEvent, viewModel::isDayInUpdatedDays)
     }
 
-    ModalBottomSheetLayout(
-        modifier = Modifier,
-        sheetState = selectDateBottomSheetState,
-        sheetBackgroundColor = Color.Transparent,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(MaterialTheme.colors.surface),
-            ) {
-                Row(
+    if (state.isSelectDateBottomSheetVisible) {
+        ModalBottomSheet(
+            modifier = Modifier,
+            sheetState = selectDateBottomSheetState,
+            onDismissRequest = {
+                viewModel.onEvent(UsageOverviewEvent.OnDismissDateBottomSheet)
+            },
+            content = {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .clickable {
-                            viewModel.onEvent(UsageOverviewEvent.OnSelectDateClick)
-                        }
-                        .padding(horizontal = spacing.spaceSmall),
-                    verticalAlignment = Alignment.CenterVertically
+                        //.clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                        .background(MaterialTheme.colorScheme.surface),
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.date_calendar),
-                        contentDescription = stringResource(R.string.select_a_day)
-                    )
-                    Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                    Text(text = stringResource(R.string.select_a_day))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(spacing.spaceHuge)
+                            .clickable {
+                                viewModel.onEvent(UsageOverviewEvent.OnSelectDateClick)
+                            }
+                            .padding(horizontal = spacing.spaceSmall),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.date_calendar),
+                            contentDescription = stringResource(R.string.select_a_day)
+                        )
+                        Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                        Text(text = stringResource(R.string.select_a_day))
+                    }
+                    Divider(modifier = Modifier.padding(horizontal = spacing.spaceSmall))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(spacing.spaceHuge)
+                            .clickable {
+                                viewModel.onEvent(UsageOverviewEvent.OnSelectRangeClick)
+                            }
+                            .padding(horizontal = spacing.spaceSmall),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.range_calendar),
+                            contentDescription = stringResource(R.string.select_a_range)
+                        )
+                        Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                        Text(text = stringResource(R.string.select_a_range))
+                    }
                 }
-                Divider(modifier = Modifier.padding(horizontal = spacing.spaceSmall))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(spacing.spaceExtraLarge)
-                        .clickable {
-                            viewModel.onEvent(UsageOverviewEvent.OnSelectRangeClick)
-                        }
-                        .padding(horizontal = spacing.spaceSmall),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.range_calendar),
-                        contentDescription = stringResource(R.string.select_a_range)
-                    )
-                    Spacer(modifier = Modifier.width(spacing.spaceMedium))
-                    Text(text = stringResource(R.string.select_a_range))
-                }
-            }
-        },
-        content = {}
-    )
+            },
+        )
+    }
     if (state.isDeleteDialogVisible) {
         Timber.d("show dialog")
         ConfirmDeleteDialog(
@@ -286,7 +332,7 @@ private fun DatePickerDialog(
     }
 
     DatePickerDialog(
-        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colors.secondary),
+//        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
         onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissDatePickerDialog) },
         confirmButton = {
             TextButton(
@@ -306,12 +352,12 @@ private fun DatePickerDialog(
         }
     ) {
         DatePicker(
-            colors = DatePickerDefaults.colors(
-                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
-                selectedDayContainerColor = MaterialTheme.colors.primaryVariant,
-                selectedDayContentColor = MaterialTheme.colors.onPrimary,
-                todayDateBorderColor = MaterialTheme.colors.primary,
-            ),
+            /*colors = DatePickerDefaults.colors(
+                dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primary,
+                selectedDayContainerColor = MaterialTheme.colorScheme.secondary,
+                selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+                todayDateBorderColor = MaterialTheme.colorScheme.primary,
+            ),*/
             state = datePickerState,
             dateValidator = { dateInMilli ->
                 isDateValid(dateInMilli)
@@ -335,7 +381,7 @@ private fun DateRangePickerDialog(
         derivedStateOf { dateRangeState.selectedStartDateMillis != null && dateRangeState.selectedEndDateMillis != null }
     }
     DatePickerDialog(
-        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colors.secondary),
+//        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
         onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissRangePickerDialog) },
         confirmButton = {
             TextButton(
@@ -370,10 +416,10 @@ private fun DateRangePickerDialog(
                 .padding(spacing.spaceMedium),
             state = dateRangeState,
             colors = DatePickerDefaults.colors(
-                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
-                selectedDayContainerColor = MaterialTheme.colors.primaryVariant,
-                selectedDayContentColor = MaterialTheme.colors.onPrimary,
-                todayDateBorderColor = MaterialTheme.colors.primary,
+                dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primary,
+                selectedDayContainerColor = MaterialTheme.colorScheme.secondary,
+                selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+                todayDateBorderColor = MaterialTheme.colorScheme.primary,
             ),
             showModeToggle = true,
             dateValidator = { dateInMillis ->

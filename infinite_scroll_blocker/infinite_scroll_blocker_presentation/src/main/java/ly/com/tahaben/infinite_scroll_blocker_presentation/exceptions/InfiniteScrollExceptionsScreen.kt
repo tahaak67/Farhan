@@ -1,20 +1,42 @@
 package ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions
 
+//import ly.com.tahaben.core_ui.DarkYellow
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -24,27 +46,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.model.AppItem
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
-import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
+import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
 import ly.com.tahaben.core_ui.mirror
-import ly.com.tahaben.infinite_scroll_blocker_presentation.components.AppExceptionListItem
 import timber.log.Timber
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun InfiniteScrollExceptionsScreen(
-    scaffoldState: ScaffoldState,
+    scaffoldState: SnackbarHostState,
     onNavigateUp: () -> Unit,
     viewModel: InfiniteScrollingBlockerExceptionsViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
-    val state = viewModel.state
+    val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var mDisplayMenu by remember { mutableStateOf(false) }
@@ -55,7 +76,7 @@ fun InfiniteScrollExceptionsScreen(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
+                    scaffoldState.showSnackbar(
                         message = event.message.asString(context)
                     )
                     keyboardController?.hide()
@@ -77,14 +98,20 @@ fun InfiniteScrollExceptionsScreen(
                     Text(text = stringResource(id = R.string.exceptions))
                 }
             },
-            backgroundColor = White,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
-                IconButton(onClick = onNavigateUp) {
-                    Icon(
-                        modifier = Modifier.mirror(),
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back)
-                    )
+                AnimatedVisibility(
+                    visible = !displaySearchField,
+                    enter = fadeIn(animationSpec = tween(1000)),
+                    exit = fadeOut(animationSpec = tween(1))
+                ) {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(
+                            modifier = Modifier.mirror(),
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back)
+                        )
+                    }
                 }
             },
             actions = {
@@ -123,16 +150,21 @@ fun InfiniteScrollExceptionsScreen(
                     expanded = mDisplayMenu,
                     onDismissRequest = { mDisplayMenu = false }
                 ) {
-                    DropdownMenuItem(onClick = {
-                        viewModel.onEvent(
-                            SearchEvent.OnSystemAppsVisibilityChange(
-                                !state.showSystemApps
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = stringResource(R.string.show_system_apps),
+                                textAlign = TextAlign.Center
                             )
-                        )
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        },
+                        onClick = {
+                            viewModel.onEvent(
+                                SearchEvent.OnSystemAppsVisibilityChange(
+                                    !state.showSystemApps
+                                )
+                            )
+                        },
+                        trailingIcon = {
                             Checkbox(
                                 checked = state.showSystemApps,
                                 onCheckedChange = { checked ->
@@ -142,24 +174,24 @@ fun InfiniteScrollExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
+                        })
+                    DropdownMenuItem(
+                        text = {
                             Text(
-                                text = stringResource(R.string.show_system_apps),
+                                text = stringResource(R.string.show_exceptions_only),
                                 textAlign = TextAlign.Center
                             )
-                        }
-                    }
-                    DropdownMenuItem(onClick = {
-                        viewModel.onEvent(
-                            SearchEvent.OnExceptionsOnlyChange(
-                                !state.showExceptionsOnly
+                        },
+                        onClick = {
+                            viewModel.onEvent(
+                                SearchEvent.OnExceptionsOnlyChange(
+                                    !state.showExceptionsOnly
+                                )
                             )
-                        )
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        },
+                        trailingIcon = {
                             Checkbox(
                                 checked = state.showExceptionsOnly,
                                 onCheckedChange = { checked ->
@@ -169,18 +201,13 @@ fun InfiniteScrollExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
-                            Text(
-                                text = stringResource(R.string.show_exceptions_only),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                        })
                 }
             }
         )
-        Crossfade(targetState = state.isLoading) {
+        Crossfade(targetState = state.isLoading, label = "ISB exceptions crossfade loading") {
 
             if (it) {
                 Box(
@@ -195,10 +222,11 @@ fun InfiniteScrollExceptionsScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                        .selectableGroup(),
                 ) {
                     //Timber.d("app: list  $list")
-                    items(state.searchResults) { app ->
+                    items(state.searchResults, key = AppItem::packageName) { app ->
                         Timber.d("app: $app")
                         AppExceptionListItem(
                             app = app,

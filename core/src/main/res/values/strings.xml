@@ -145,7 +145,7 @@
     <string name="show_whitelist_only">Show whitelist only</string>
     <string name="range_null_error">Please select a valid start and end date.</string>
     <string name="delete_cache_for_day">Delete cache for this day</string>
-    <string name="delete_cache_dialog_text">Are you sure you want to delete %s\'s data from the database and reload it again? This action cannot be undone.</string>
+    <string name="delete_cache_dialog_text">Are you sure you want to delete %s\'s data from the database and reload it again? This action cannot be undone. \nPlease note that if the data is older than 6 days, Farhan may not be able to retrieve the usage data again.</string>
     <string name="delete_cache_dialog_title">Delete %s\'s data?</string>
     <string name="usage_date_range_picker_title">Select Date Range</string>
     <string name="usage_date_range_picker_description">Select the start and end dates to view an overview of usage within that time period.</string>
@@ -186,4 +186,27 @@
     <string name="monthly_usage_report_same_time">Last month, you used your phone for the same amount of time.</string>
     <string name="weekly_report_notification_title">Weekly report!</string>
     <string name="monthly_report_notification_title">Monthly report!</string>
+    <string name="appearance">Appearance</string>
+    <string name="dark">Dark theme</string>
+    <string name="light">Light</string>
+    <string name="follow_system">Follow system</string>
+    <string name="clock_icon">Clock icon</string>
+    <string name="applications">Applications</string>
+    <string name="please_turn_on_main_switch">Main switch disabled. Please turn on the main switch.</string>
+    <string name="main_switch_is_on">Main switch is on</string>
+    <string name="main_switch_is_off">Main switch is off</string>
+    <string name="tap_to_pause_all_farhan_features">Tap to pause all Farhan features</string>
+    <string name="tap_to_resume_all_farhan_features">Tap to resume all Farhan features</string>
+    <string name="play_arrow">Play Arrow</string>
+    <string name="pause">Pause</string>
+    <string name="theme_colors_for">%1$s theme colors</string>
+    <string name="theme_colors">Theme colors</string>
+    <string name="select_theme_colors">Select theme colors</string>
+    <string name="you_can_change_this_later_from_the_main_screen_menu">You can change this later from the main screen menu</string>
+    <string name="classic">Classic</string>
+    <string name="vibrant">Vibrant</string>
+    <string name="dynamic">Dynamic</string>
+    <string name="dynamic_colors_description">Uses your wallpaper to generate dynamic colors</string>
+    <string name="vibrant_colors_description">A Vibrant touch to classic colors</string>
+    <string name="classic_colors_description">Good old colors of Farhan</string>
 </resources>

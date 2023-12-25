@@ -51,6 +51,8 @@ Pull requests are welcome.
 - If you have any questions or you’re not sure about something please reach out and I’ll try to
   help.
 
+## [Donations](https://tahaben.com.ly/donations/)
+
 ## License
 
 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)

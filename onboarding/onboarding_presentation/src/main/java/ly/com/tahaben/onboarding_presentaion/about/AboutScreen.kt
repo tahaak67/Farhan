@@ -4,13 +4,22 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,16 +27,15 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.core_ui.mirror
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
     onNavigateUp: () -> Unit,
     versionName: String,
     versionCode: Int
 ) {
-
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
@@ -39,7 +47,7 @@ fun AboutScreen(
             title = {
                 Text(text = stringResource(R.string.about_app))
             },
-            backgroundColor = White,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -58,23 +66,23 @@ fun AboutScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = stringResource(R.string.about_app_content),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = stringResource(R.string.developer),
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = stringResource(R.string.taha_name_dev),
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = stringResource(R.string.source_code),
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
@@ -97,19 +105,19 @@ fun AboutScreen(
                     }
                 },
                 text = "https://github.com/tahaak67/Farhan",
-                style = MaterialTheme.typography.h4,
-                color = Color.Blue
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.tertiary
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = stringResource(R.string.version),
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
                 text = "$versionName ($versionCode)",
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             Text(
@@ -131,8 +139,8 @@ fun AboutScreen(
                     }
                 },
                 text = stringResource(R.string.privacy_policy),
-                style = MaterialTheme.typography.h4,
-                color = Color.Blue
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.tertiary
             )
         }
     }

@@ -1,7 +1,5 @@
 package ly.com.tahaben.screen_grayscale_domain.use_cases
 
-import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.*
-
 data class GrayscaleUseCases(
     val saveShouldShowOnBoarding: SaveShouldShowOnBoarding,
     val loadShouldShowOnBoarding: LoadShouldShowOnBoarding,

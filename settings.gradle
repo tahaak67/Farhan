@@ -5,6 +5,9 @@ pluginManagement {
         mavenCentral()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.5.0")
+}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -16,9 +19,6 @@ rootProject.name = "Farhan"
 include ':app'
 include ':core'
 include ':core-ui'
-include ':notification_filter_domain'
-include ':screen_grayscale_domain'
-include ':infinite_scroll_blocker_domain'
 include ':infinite_scroll_blocker'
 include ':notification_filter'
 include ':screen_grayscale'

@@ -207,23 +207,31 @@ class UsageOverviewViewModel @Inject constructor(
                 UsageOverviewEvent.OnSelectDateClick -> {
                     _uiEvent.send(UiEvent.DismissBottomSheet)
                     state = state.copy(
-                        isDatePickerDialogVisible = true
+                        isDatePickerDialogVisible = true,
+                        isSelectDateBottomSheetVisible = false
                     )
                 }
 
                 UsageOverviewEvent.OnSelectRangeClick -> {
                     _uiEvent.send(UiEvent.DismissBottomSheet)
                     state = state.copy(
-                        isRangePickerDialogVisible = true
+                        isRangePickerDialogVisible = true,
+                        isSelectDateBottomSheetVisible = false
                     )
                 }
 
                 UsageOverviewEvent.OnShowDateBottomSheet -> {
                     _uiEvent.send(UiEvent.ShowBottomSheet)
+                    state = state.copy(
+                        isSelectDateBottomSheetVisible = true
+                    )
                 }
 
                 UsageOverviewEvent.OnDismissDateBottomSheet -> {
-                    _uiEvent.send(UiEvent.DismissBottomSheet)
+//                    _uiEvent.send(UiEvent.DismissBottomSheet)
+                    state = state.copy(
+                        isSelectDateBottomSheetVisible = false
+                    )
                 }
 
                 UsageOverviewEvent.OnShowDatePickerDialog -> {

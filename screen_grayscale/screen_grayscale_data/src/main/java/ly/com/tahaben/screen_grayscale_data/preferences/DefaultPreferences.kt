@@ -4,6 +4,7 @@ package ly.com.tahaben.screen_grayscale_data.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
 import timber.log.Timber
 
@@ -25,7 +26,8 @@ class DefaultPreferences(
     }
 
     override fun isGrayscaleEnabled(): Boolean {
-        return sharedPref.getBoolean(Preferences.KEY_GRAYSCALE_SERVICE_STATS, false)
+        return sharedPref.getBoolean(Preferences.KEY_GRAYSCALE_SERVICE_STATS, false) &&
+                sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
     }
 
     override fun setServiceState(isEnabled: Boolean) {

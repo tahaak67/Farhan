@@ -1,3 +1,9 @@
+plugins {
+    id("com.android.library")
+}
+android {
+    namespace = "ly.com.tahaben.screen_grayscale_data"
+}
 apply {
     from("$rootDir/base-module.gradle")
 }

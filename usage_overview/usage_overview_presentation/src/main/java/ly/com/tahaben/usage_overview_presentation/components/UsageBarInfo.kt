@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -38,8 +38,8 @@ fun UsageBarInfo(
     strokeWidth: Dp = 8.dp,
 ) {
     val spacing = LocalSpacing.current
-    val background = MaterialTheme.colors.secondary
-    val goalExceededColor = MaterialTheme.colors.error
+    val background = MaterialTheme.colorScheme.primaryContainer
+    val goalExceededColor = MaterialTheme.colorScheme.error
     val angleRatio = remember {
         Animatable(0f)
     }
@@ -97,10 +97,10 @@ fun UsageBarInfo(
                     amount = "%.1f".format(((value / total.toFloat()) * 100)),
                     unit = stringResource(id = R.string.percent),
                     amountColor = if (value <= total) {
-                        MaterialTheme.colors.onBackground
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     } else goalExceededColor,
                     unitColor = if (value <= total) {
-                        MaterialTheme.colors.onBackground
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     } else goalExceededColor
                 )
             }
@@ -108,8 +108,8 @@ fun UsageBarInfo(
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Text(
             text = name,
-            color = MaterialTheme.colors.onBackground,
-            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center
         )

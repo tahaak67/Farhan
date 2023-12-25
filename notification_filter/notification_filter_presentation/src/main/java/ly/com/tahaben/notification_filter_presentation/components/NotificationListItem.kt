@@ -2,15 +2,20 @@ package ly.com.tahaben.notification_filter_presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -28,34 +33,44 @@ fun NotificationListItem(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
-            .padding(spacing.spaceExtraSmall)
-            .shadow(
-                elevation = 1.dp,
-                shape = RoundedCornerShape(5.dp)
-            )
-            .background(MaterialTheme.colors.secondary)
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(horizontal = spacing.spaceExtraSmall, vertical = spacing.spaceSmall)
+
             .clickable {
                 onClick()
             },
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
     ) {
 
         Spacer(modifier = Modifier.width(spacing.spaceMedium))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(spacing.spaceSmall))
-            Text(
-                text = notification.appName ?: "",
-                style = MaterialTheme.typography.body1,
-                fontWeight = FontWeight.Normal,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    text = notification.appName ?: "",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Normal,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+                Text(
+                    modifier = Modifier.alignByBaseline(),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    text = notification.time,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Text(
                 text = notification.title ?: "",
-                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
@@ -63,15 +78,13 @@ fun NotificationListItem(
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
             Text(
                 text = notification.text ?: "",
-                style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Normal,
             )
-            Spacer(modifier = Modifier.height(spacing.spaceSmall))
+//            Spacer(modifier = Modifier.height(spacing.spaceSmall))
         }
-        Text(
-            text = notification.time,
-            style = MaterialTheme.typography.body2
-        )
+
         Spacer(modifier = Modifier.width(spacing.spaceMedium))
     }
 }

@@ -43,10 +43,13 @@ class NotificationSettingsViewModel @Inject constructor(
         notificationFilterUseCases.setNotifyMeScheduleDate(-1)
         notificationFilterUseCases.setNotifyMeTime(hour, minutes)
         Timber.d("Notify me set to $hour:$minutes")
+
         state = state.copy(
             notifyMeHour = hour,
-            notifyMeMinute = minutes
+            notifyMeMinute = minutes,
+            isNotifyMeEnabled = hour != -1
         )
+
     }
 
     private fun getNotifyMeHour() {
@@ -71,5 +74,33 @@ class NotificationSettingsViewModel @Inject constructor(
         state = state.copy(
             notifyMeMinute = notificationFilterUseCases.getNotifyMeMinute()
         )
+    }
+
+    fun onEvent(event: NotificationSettingsEvent) {
+        when (event) {
+            NotificationSettingsEvent.CancelNotifyMe -> {
+                setNotifyMeTime(-1, -1)
+            }
+
+            NotificationSettingsEvent.DismissNotifyMeTimePicker -> {
+                state = state.copy(
+                    isTimePickerVisible = false
+                )
+            }
+
+            NotificationSettingsEvent.ShowNotifyMeTimePicker -> {
+                state = state.copy(
+                    isTimePickerVisible = true
+                )
+            }
+
+            is NotificationSettingsEvent.SaveNotifyMeTime -> {
+                setNotifyMeTime(event.hour, event.min)
+                state = state.copy(
+                    isTimePickerVisible = false
+                )
+            }
+        }
+
     }
 }
