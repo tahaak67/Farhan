@@ -1,0 +1,4 @@
+- New and improved UI
+- Dark mode
+- Theme colors choices and Dynamic theme
+- Bug fixes
