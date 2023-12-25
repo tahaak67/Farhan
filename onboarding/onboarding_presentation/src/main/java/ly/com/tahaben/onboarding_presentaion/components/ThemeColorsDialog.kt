@@ -1,5 +1,6 @@
 package ly.com.tahaben.onboarding_presentaion.components
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,22 +30,22 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.util.ThemeColors
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenEvent
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenState
 
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun UiModeDialog(
+fun ThemeColorsDialog(
     onEvent: (MainScreenEvent) -> Unit,
     state: MainScreenState
 ) {
     val spacing = LocalSpacing.current
     AlertDialog(
         onDismissRequest = {
-            onEvent(MainScreenEvent.DismissUiAppearanceDialog)
+            onEvent(MainScreenEvent.DismissThemeColorsDialog)
         }) {
         Surface(
             modifier = Modifier
@@ -58,52 +59,54 @@ fun UiModeDialog(
                     .padding(spacing.spaceLarge)
                     .selectableGroup()
             ) {
-                Text(text = stringResource(id = R.string.appearance))
+                Text(text = stringResource(id = R.string.theme_colors))
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 RadioButtonItem(
                     modifier = Modifier
                         .selectable(
-                            selected = state.uiMode == UIModeAppearance.DARK_MODE,
-                            onClick = { onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.DARK_MODE)) },
+                            selected = state.themeColors == ThemeColors.Classic,
+                            onClick = { onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Classic)) },
                             role = Role.RadioButton
                         ),
-                    text = stringResource(R.string.dark),
-                    isChecked = state.uiMode == UIModeAppearance.DARK_MODE
+                    text = stringResource(R.string.classic),
+                    isChecked = state.themeColors == ThemeColors.Classic
                 ) {
-                    onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.DARK_MODE))
+                    onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Classic))
                 }
                 Divider()
                 RadioButtonItem(
                     modifier = Modifier
                         .selectable(
-                            selected = state.uiMode == UIModeAppearance.LIGHT_MODE,
-                            onClick = { onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.LIGHT_MODE)) },
+                            selected = state.themeColors == ThemeColors.Vibrant,
+                            onClick = { onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Vibrant)) },
                             role = Role.RadioButton
                         ),
-                    text = stringResource(R.string.light),
-                    isChecked = state.uiMode == UIModeAppearance.LIGHT_MODE
+                    text = stringResource(R.string.vibrant),
+                    isChecked = state.themeColors == ThemeColors.Vibrant
                 ) {
-                    onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.LIGHT_MODE))
+                    onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Vibrant))
                 }
-                Divider()
-                RadioButtonItem(
-                    modifier = Modifier
-                        .selectable(
-                            selected = state.uiMode == UIModeAppearance.FOLLOW_SYSTEM,
-                            onClick = { onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.FOLLOW_SYSTEM)) },
-                            role = Role.RadioButton
-                        ),
-                    text = stringResource(R.string.follow_system),
-                    isChecked = state.uiMode == UIModeAppearance.FOLLOW_SYSTEM
-                ) {
-                    onEvent(MainScreenEvent.SaveUiMode(UIModeAppearance.FOLLOW_SYSTEM))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Divider()
+                    RadioButtonItem(
+                        modifier = Modifier
+                            .selectable(
+                                selected = state.themeColors == ThemeColors.Dynamic,
+                                onClick = { onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Dynamic)) },
+                                role = Role.RadioButton
+                            ),
+                        text = stringResource(R.string.dynamic),
+                        isChecked = state.themeColors == ThemeColors.Dynamic
+                    ) {
+                        onEvent(MainScreenEvent.SaveThemeColorsMode(ThemeColors.Dynamic))
+                    }
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    TextButton(onClick = { onEvent(MainScreenEvent.DismissUiAppearanceDialog) }) {
+                    TextButton(onClick = { onEvent(MainScreenEvent.DismissThemeColorsDialog) }) {
                         Text(
                             text = stringResource(id = R.string.cancel),
                             style = MaterialTheme.typography.labelLarge
@@ -123,11 +126,12 @@ private fun RadioButtonItem(
     checked: () -> Unit
 ) {
     val spacing = LocalSpacing.current
+    val itemDescription = stringResource(id = R.string.theme_colors_for, text)
     Row(
         modifier = modifier
             .padding(vertical = spacing.spaceSmall)
             .fillMaxWidth()
-            .semantics { contentDescription = text },
+            .semantics { contentDescription = itemDescription },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

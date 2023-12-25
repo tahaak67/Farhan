@@ -1,5 +1,6 @@
 package ly.com.tahaben.usage_overview_presentation.settings
 
+//import ly.com.tahaben.core_ui.DarkerYellow
 import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,6 +31,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -43,7 +44,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.DarkerYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.components.PermissionDialog
 import ly.com.tahaben.core_ui.components.PostNotificationPermissionTextProvider
@@ -113,12 +113,9 @@ fun UsageSettingsScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = spacing.spaceMedium),
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             title = { Text(text = stringResource(id = R.string.usage_settings)) },
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
@@ -130,33 +127,70 @@ fun UsageSettingsScreen(
                 }
             }
         )
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = spacing.spaceMedium),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+                .fillMaxSize()
+                .padding(horizontal = spacing.spaceMedium),
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing.spaceMedium),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
 
-            ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = stringResource(R.string.cache_usage_data), fontWeight = FontWeight.Bold)
-                Text(text = stringResource(R.string.cache_usage_data_description))
-            }
-
-            Switch(
-                checked = state.isCacheEnabled,
-                onCheckedChange = { checked ->
-                    viewModel.setCachingEnabled(checked)
+                ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.cache_usage_data),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(text = stringResource(R.string.cache_usage_data_description))
                 }
-            )
-        }
-        Divider()
-        AnimatedVisibility(visible = state.isCacheEnabled) {
-            Column(modifier = Modifier) {
+
+                Switch(
+                    checked = state.isCacheEnabled,
+                    onCheckedChange = { checked ->
+                        viewModel.setCachingEnabled(checked)
+                    }
+                )
+            }
+            Divider()
+            AnimatedVisibility(visible = state.isCacheEnabled) {
+                Column(modifier = Modifier) {
+                    Row(
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.setAutoCachingEnabled(!state.isAutoCachingEnabled)
+                            }
+                            .padding(vertical = spacing.spaceMedium)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+
+                        ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.auto_cache_usage_data),
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(text = stringResource(R.string.auto_cache_usage_data_description))
+                        }
+                        Switch(
+                            checked = state.isAutoCachingEnabled,
+                            onCheckedChange = { checked ->
+                                viewModel.setAutoCachingEnabled(checked)
+                            }
+                        )
+                    }
+                    Divider()
+                }
+            }
+            AnimatedVisibility(visible = state.isAutoCachingEnabled) {
                 Row(
                     modifier = Modifier
                         .clickable {
-                            viewModel.setAutoCachingEnabled(!state.isAutoCachingEnabled)
+                            viewModel.onEvent(UsageSettingsEvent.ShowSelectReportsDialog)
                         }
                         .padding(vertical = spacing.spaceMedium)
                         .fillMaxWidth(),
@@ -166,60 +200,32 @@ fun UsageSettingsScreen(
                     ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = stringResource(R.string.auto_cache_usage_data),
+                            text = stringResource(R.string.periodic_usage_reports),
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = stringResource(R.string.auto_cache_usage_data_description))
-                    }
-                    Switch(
-                        checked = state.isAutoCachingEnabled,
-                        onCheckedChange = { checked ->
-                            viewModel.setAutoCachingEnabled(checked)
-                        }
-                    )
-                }
-                Divider()
-            }
-        }
-        AnimatedVisibility(visible = state.isAutoCachingEnabled) {
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        viewModel.onEvent(UsageSettingsEvent.ShowSelectReportsDialog)
-                    }
-                    .padding(vertical = spacing.spaceMedium)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
 
-                ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(R.string.periodic_usage_reports),
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(text = buildAnnotatedString {
-                        if (!state.isMonthlyReportsEnabled && !state.isWeeklyReportsEnabled && !state.isYearlyReportsEnabled) {
-                            append(stringResource(id = R.string.usage_reports_off))
-                        } else {
-                            append(stringResource(id = R.string.enabled))
-                            append(": ")
-                            if (state.isWeeklyReportsEnabled) {
-                                append(stringResource(R.string.weekly))
-                                append(" ")
-                            }
-                            if (state.isMonthlyReportsEnabled) {
-                                append(stringResource(R.string.monthly))
-                                append(" ")
-                            }
-                            if (state.isYearlyReportsEnabled) {
-                                append(stringResource(R.string.yearly))
+                        Text(text = buildAnnotatedString {
+                            if (!state.isMonthlyReportsEnabled && !state.isWeeklyReportsEnabled && !state.isYearlyReportsEnabled) {
+                                append(stringResource(id = R.string.usage_reports_off))
+                            } else {
+                                append(stringResource(id = R.string.enabled))
+                                append(": ")
+                                if (state.isWeeklyReportsEnabled) {
+                                    append(stringResource(R.string.weekly))
+                                    append(" ")
+                                }
+                                if (state.isMonthlyReportsEnabled) {
+                                    append(stringResource(R.string.monthly))
+                                    append(" ")
+                                }
+                                if (state.isYearlyReportsEnabled) {
+                                    append(stringResource(R.string.yearly))
+                                }
                             }
                         }
+                        )
+                        Divider()
                     }
-                    )
-                    Divider()
                 }
             }
         }
@@ -263,7 +269,7 @@ fun UsageSettingsScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Checkbox(
-                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
+//                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                             checked = state.isWeeklyReportsEnabled,
                             onCheckedChange = { isChecked ->
                                 viewModel.setWeeklyReportsEnabled(isChecked)
@@ -278,7 +284,7 @@ fun UsageSettingsScreen(
                     ) {
                         Text(text = stringResource(id = R.string.monthly))
                         Checkbox(
-                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
+//                            colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                             checked = state.isMonthlyReportsEnabled,
                             onCheckedChange = { isChecked ->
                                 viewModel.setMonthlyReportsEnabled(isChecked)
@@ -295,7 +301,7 @@ fun UsageSettingsScreen(
                         ) {
                             Text(text = stringResource(id = R.string.yearly))
                             Checkbox(
-                                colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
+//                                colors = CheckboxDefaults.colors(checkedColor = DarkerYellow),
                                 checked = state.isYearlyReportsEnabled,
                                 onCheckedChange = { isChecked ->
                                     viewModel.setYearlyReportsEnabled(isChecked)

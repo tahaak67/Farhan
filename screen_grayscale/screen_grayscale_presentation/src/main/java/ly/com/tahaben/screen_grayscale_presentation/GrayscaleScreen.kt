@@ -3,12 +3,30 @@ package ly.com.tahaben.screen_grayscale_presentation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -22,10 +40,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
+import ly.com.tahaben.core_ui.mirror
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +88,8 @@ fun GrayscaleScreen(
         TopAppBar(
             title = {
                 Text(text = stringResource(id = R.string.grayscale))
-
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -143,7 +163,6 @@ fun GrayscaleScreen(
                         Text(
                             text = stringResource(id = R.string.how),
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))

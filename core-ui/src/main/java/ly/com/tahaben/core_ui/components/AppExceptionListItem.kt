@@ -40,11 +40,11 @@ fun AppExceptionListItem(
             .padding(spacing.spaceExtraSmall)
 
             .border(
-                width = 0.25.dp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f),
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
                 shape = RoundedCornerShape(5.dp)
             )
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
             .padding(end = spacing.spaceMedium)
             .height(100.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

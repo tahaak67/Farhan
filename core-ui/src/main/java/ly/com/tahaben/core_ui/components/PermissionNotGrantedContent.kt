@@ -61,7 +61,6 @@ fun PermissionNotGrantedContent(
             Text(
                 text = stringResource(R.string.grant_access),
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface
             )
         }
         Spacer(modifier = Modifier.height(spacing.spaceMedium))

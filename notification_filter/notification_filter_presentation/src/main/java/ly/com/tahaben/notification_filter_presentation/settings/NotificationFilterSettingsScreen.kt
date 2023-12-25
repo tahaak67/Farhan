@@ -17,9 +17,11 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,13 +54,12 @@ fun NotificationFilterSettingsScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = spacing.spaceMedium)
     ) {
         TopAppBar(
             title = {
                 Text(text = stringResource(id = R.string.notifications_filter_settings))
-
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -69,149 +70,155 @@ fun NotificationFilterSettingsScreen(
                 }
             }
         )
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = spacing.spaceMedium),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+                .padding(horizontal = spacing.spaceMedium)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing.spaceMedium),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
 
+                ) {
+                Text(text = stringResource(R.string.notifications_filter))
+                Switch(
+                    checked = isServiceChecked.value,
+                    onCheckedChange = { checked ->
+                        viewModel.setServiceStats(checked)
+                        isServiceChecked.value = checked
+                    }
+                )
+            }
+            Divider()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing.spaceMedium)
+                    .clickable {
+                        onNavigateToExceptions()
+                    },
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-            Text(text = stringResource(R.string.notifications_filter))
-            Switch(
-                checked = isServiceChecked.value,
-                onCheckedChange = { checked ->
-                    viewModel.setServiceStats(checked)
-                    isServiceChecked.value = checked
-                }
-            )
-        }
-        Divider()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = spacing.spaceMedium)
-                .clickable {
-                    onNavigateToExceptions()
-                },
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.exceptions),
-                textAlign = TextAlign.Start
-            )
-        }
-        Divider()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = spacing.spaceMedium),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column {
-                Text(text = stringResource(R.string.notify_me))
                 Text(
-                    text = stringResource(R.string.notify_me_description),
+                    text = stringResource(R.string.exceptions),
                     textAlign = TextAlign.Start
                 )
             }
-            Switch(
-                checked = state.isNotifyMeEnabled,
-                onCheckedChange = { checked ->
-                    if (!checked) {
-                        viewModel.setNotifyMeTime(-1, -1)
-                    } else {
-                        val tpd = TimePickerDialog(
-                            context, { _, mHour: Int, mMinute: Int ->
-                                viewModel.setNotifyMeTime(mHour, mMinute)
-                            }, mHour, mMinute, false
-                        )
-                        tpd.updateTime(state.notifyMeHour, state.notifyMeMinute)
-                        tpd.show()
-                        tpd.setOnCancelListener {
-                            viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
-                        }
-                    }
-                }
-            )
-        }
-        //Todo: wait for time picker api to be updated
-        /*if (showTimePicker){
-            Dialog(onDismissRequest = { showTimePicker = false }) {
-                //TODO()
-                Surface(
-                    shape = RoundedCornerShape(28.dp),
-                    tonalElevation = AlertDialogDefaults.TonalElevation
-                ) {
-                    Column(
-                        modifier = Modifier.padding(spacing.spaceLarge)
-                    ) {
-                        TimePicker(
-                            state = timePickerState,
-                            colors = TimePickerDefaults.colors(
-                                clockDialColor = MaterialTheme.colorScheme.background,
-                                clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
-                                clockDialUnselectedContentColor = MaterialTheme.colorScheme.onSurface,
-                                timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
-                                timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
-                                selectorColor = DarkerYellowDark,
-                                timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
-                                timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.background,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
-                                periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
-                            )
-                        )
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            TextButton(onClick = { showTimePicker = false }) {
-                                Text(
-                                    text = stringResource(id = R.string.cancel),
-                                    style = MaterialTheme.typography.labelLarge
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                            TextButton(onClick = {
-                                viewModel.setNotifyMeTime(timePickerState.hour,timePickerState.minute)
-                                showTimePicker = false
-                            }) {
-                                Text(
-                                    text = stringResource(id = R.string.ok),
-                                    style = MaterialTheme.typography.labelLarge
-                                )
-                            }
-
-                        }
-                    }
-                }
-            }
-        }*/
-        AnimatedVisibility(visible = state.isNotifyMeEnabled) {
-            Column(
+            Divider()
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing.spaceSmall)
-                    .clickable {
-                        TimePickerDialog(
-                            context, { _, mHour: Int, mMinute: Int ->
-                                viewModel.setNotifyMeTime(mHour, mMinute)
-                            }, mHour, mMinute, false
-                        ).show()
-                    },
+                    .padding(vertical = spacing.spaceMedium),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (state.notifyMeHour != -1) {
-                    Text(text = "${state.notifyMeHour}:${state.notifyMeMinute}")
+                Column {
+                    Text(text = stringResource(R.string.notify_me))
+                    Text(
+                        text = stringResource(R.string.notify_me_description),
+                        textAlign = TextAlign.Start
+                    )
                 }
-                Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
-                Text(text = stringResource(R.string.tap_to_set_new_time))
+                Switch(
+                    checked = state.isNotifyMeEnabled,
+                    onCheckedChange = { checked ->
+                        if (!checked) {
+                            viewModel.setNotifyMeTime(-1, -1)
+                        } else {
+                            val tpd = TimePickerDialog(
+                                context, { _, mHour: Int, mMinute: Int ->
+                                    viewModel.setNotifyMeTime(mHour, mMinute)
+                                }, mHour, mMinute, false
+                            )
+                            tpd.updateTime(state.notifyMeHour, state.notifyMeMinute)
+                            tpd.show()
+                            tpd.setOnCancelListener {
+                                viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
+                            }
+                        }
+                    }
+                )
             }
+            //Todo: wait for time picker api to be updated
+            /*if (showTimePicker){
+                Dialog(onDismissRequest = { showTimePicker = false }) {
+                    //TODO()
+                    Surface(
+                        shape = RoundedCornerShape(28.dp),
+                        tonalElevation = AlertDialogDefaults.TonalElevation
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(spacing.spaceLarge)
+                        ) {
+                            TimePicker(
+                                state = timePickerState,
+                                colors = TimePickerDefaults.colors(
+                                    clockDialColor = MaterialTheme.colorScheme.background,
+                                    clockDialSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                                    clockDialUnselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                                    timeSelectorSelectedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
+                                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
+                                    selectorColor = DarkerYellowDark,
+                                    timeSelectorSelectedContentColor = MaterialTheme.colorScheme.onBackground,
+                                    timeSelectorUnselectedContentColor = MaterialTheme.colorScheme.background,
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    periodSelectorSelectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    periodSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surface,
+                                )
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                TextButton(onClick = { showTimePicker = false }) {
+                                    Text(
+                                        text = stringResource(id = R.string.cancel),
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                                TextButton(onClick = {
+                                    viewModel.setNotifyMeTime(timePickerState.hour,timePickerState.minute)
+                                    showTimePicker = false
+                                }) {
+                                    Text(
+                                        text = stringResource(id = R.string.ok),
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }*/
+            AnimatedVisibility(visible = state.isNotifyMeEnabled) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceSmall)
+                        .clickable {
+                            TimePickerDialog(
+                                context, { _, mHour: Int, mMinute: Int ->
+                                    viewModel.setNotifyMeTime(mHour, mMinute)
+                                }, mHour, mMinute, false
+                            ).show()
+                        },
+                ) {
+                    if (state.notifyMeHour != -1) {
+                        Text(text = "${state.notifyMeHour}:${state.notifyMeMinute}")
+                    }
+                    Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+                    Text(text = stringResource(R.string.tap_to_set_new_time))
+                }
+            }
+            Divider()
         }
-        Divider()
+
     }
 }
 

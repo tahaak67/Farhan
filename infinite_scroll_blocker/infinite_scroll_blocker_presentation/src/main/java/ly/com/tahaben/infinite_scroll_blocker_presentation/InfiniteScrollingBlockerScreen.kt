@@ -1,13 +1,32 @@
 package ly.com.tahaben.infinite_scroll_blocker_presentation
 
+import android.os.Build
 import android.widget.NumberPicker
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -17,17 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.Black
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
-import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
@@ -64,6 +80,7 @@ fun InfiniteScrollingBlockerScreen(
             title = {
                 Text(text = stringResource(id = R.string.infinite_scroll_blocker_settings))
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -181,9 +198,9 @@ fun InfiniteScrollingBlockerScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                shape = RoundedCornerShape(28.dp),
+                shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = AlertDialogDefaults.TonalElevation,
-                color = Page
+//                color = Page
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -192,25 +209,27 @@ fun InfiniteScrollingBlockerScreen(
                     Text(
                         text = stringResource(R.string.remind_me_to_stop_scrolling_after),
                         style = MaterialTheme.typography.headlineMedium,
-                        color = Black
+//                        color = Black
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
                     val npVal = remember {
                         mutableIntStateOf(state.timeoutDuration)
                     }
                     Row {
-                        val textColor = MaterialTheme.colorScheme.onBackground.toArgb()
+                        val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
                         AndroidView(
                             factory = { context ->
                                 val np = NumberPicker(context)
                                 np.maxValue = 60
                                 np.minValue = 1
                                 np.value = state.timeoutDuration
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                    np.textColor = textColor
+                                }
                                 np.setOnValueChangedListener { _, i, i2 ->
                                     Timber.d("np: oldv: $i newv: $i2")
                                     npVal.value = i2
                                 }
-
                                 np
                             })
                         Text(
@@ -219,7 +238,7 @@ fun InfiniteScrollingBlockerScreen(
                                 .align(Alignment.CenterVertically),
                             text = stringResource(id = R.string.minutes),
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Black
+//                            color = Black
                         )
                     }
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))

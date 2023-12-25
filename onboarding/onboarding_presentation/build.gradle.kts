@@ -13,4 +13,5 @@ dependencies {
     "implementation"(project(Modules.coreUi))
     "implementation"(project(Modules.onboardingDomain))
     "implementation"(Google.accompanistPager)
+    "implementation"(ShowcaseLayoutCompose.showcaseLayout)
 }

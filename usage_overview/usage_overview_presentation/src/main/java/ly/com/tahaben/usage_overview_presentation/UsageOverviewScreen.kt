@@ -1,20 +1,50 @@
 package ly.com.tahaben.usage_overview_presentation
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,10 +54,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
-import ly.com.tahaben.usage_overview_presentation.components.*
+import ly.com.tahaben.core_ui.mirror
+import ly.com.tahaben.usage_overview_presentation.components.ConfirmDeleteDialog
+import ly.com.tahaben.usage_overview_presentation.components.DaySelector
+import ly.com.tahaben.usage_overview_presentation.components.TrackedAppItem
+import ly.com.tahaben.usage_overview_presentation.components.UsageOverviewHeader
+import ly.com.tahaben.usage_overview_presentation.components.parseDateText
 import timber.log.Timber
 
 
@@ -83,6 +119,7 @@ fun UsageOverviewScreen(
     Column {
         TopAppBar(
             title = { Text(text = stringResource(id = R.string.usage)) },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
@@ -231,7 +268,7 @@ fun UsageOverviewScreen(
             content = {
                 Column(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                        //.clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                         .background(MaterialTheme.colorScheme.surface),
                 ) {
                     Row(
@@ -295,7 +332,7 @@ private fun DatePickerDialog(
     }
 
     DatePickerDialog(
-        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
+//        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
         onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissDatePickerDialog) },
         confirmButton = {
             TextButton(
@@ -315,12 +352,12 @@ private fun DatePickerDialog(
         }
     ) {
         DatePicker(
-            colors = DatePickerDefaults.colors(
+            /*colors = DatePickerDefaults.colors(
                 dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primary,
                 selectedDayContainerColor = MaterialTheme.colorScheme.secondary,
                 selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
                 todayDateBorderColor = MaterialTheme.colorScheme.primary,
-            ),
+            ),*/
             state = datePickerState,
             dateValidator = { dateInMilli ->
                 isDateValid(dateInMilli)
@@ -344,7 +381,7 @@ private fun DateRangePickerDialog(
         derivedStateOf { dateRangeState.selectedStartDateMillis != null && dateRangeState.selectedEndDateMillis != null }
     }
     DatePickerDialog(
-        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
+//        colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.tertiary),
         onDismissRequest = { onEvent(UsageOverviewEvent.OnDismissRangePickerDialog) },
         confirmButton = {
             TextButton(

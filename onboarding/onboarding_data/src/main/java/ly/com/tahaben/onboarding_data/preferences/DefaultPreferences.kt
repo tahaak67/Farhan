@@ -45,4 +45,30 @@ class DefaultPreferences(
             .putBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, switchState)
             .apply()
     }
+
+    override fun loadThemeColors(): String {
+        return sharedPref.getString(
+            Preferences.KEY_APP_THEME_COLORS,
+            "Unknown"
+        ) ?: "Unknown"
+    }
+
+    override fun saveThemeColors(themeColors: String) {
+        sharedPref.edit()
+            .putString(Preferences.KEY_APP_THEME_COLORS, themeColors)
+            .apply()
+    }
+
+    override fun loadShouldShowcaseAppearanceMenu(): Boolean {
+        return sharedPref.getBoolean(
+            Preferences.KEY_SHOULD_SHOWCASE_APPEARANCE_MENU,
+            true
+        )
+    }
+
+    override fun saveShouldShowcaseAppearanceMenu(shouldShowcase: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.KEY_SHOULD_SHOWCASE_APPEARANCE_MENU, shouldShowcase)
+            .apply()
+    }
 }

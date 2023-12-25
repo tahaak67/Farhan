@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.util.HomeWatcher
+import ly.com.tahaben.core.util.ThemeColors
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import javax.inject.Inject
@@ -25,7 +26,8 @@ class LauncherActivity : ComponentActivity() {
         homeWatcher = HomeWatcher(this)
         setContent {
             FarhanTheme(
-                darkTheme = false
+                darkMode = false,
+                colorStyle = ThemeColors.Classic
             ) {
                 LauncherScreen(
                     homeWatcher

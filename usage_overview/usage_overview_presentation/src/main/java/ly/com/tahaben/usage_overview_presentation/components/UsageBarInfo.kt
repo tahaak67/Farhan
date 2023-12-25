@@ -38,7 +38,7 @@ fun UsageBarInfo(
     strokeWidth: Dp = 8.dp,
 ) {
     val spacing = LocalSpacing.current
-    val background = MaterialTheme.colorScheme.tertiary
+    val background = MaterialTheme.colorScheme.primaryContainer
     val goalExceededColor = MaterialTheme.colorScheme.error
     val angleRatio = remember {
         Animatable(0f)
@@ -97,10 +97,10 @@ fun UsageBarInfo(
                     amount = "%.1f".format(((value / total.toFloat()) * 100)),
                     unit = stringResource(id = R.string.percent),
                     amountColor = if (value <= total) {
-                        MaterialTheme.colorScheme.onBackground
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     } else goalExceededColor,
                     unitColor = if (value <= total) {
-                        MaterialTheme.colorScheme.onBackground
+                        MaterialTheme.colorScheme.onPrimaryContainer
                     } else goalExceededColor
                 )
             }
@@ -108,7 +108,7 @@ fun UsageBarInfo(
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Text(
             text = name,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.Light,
             textAlign = TextAlign.Center

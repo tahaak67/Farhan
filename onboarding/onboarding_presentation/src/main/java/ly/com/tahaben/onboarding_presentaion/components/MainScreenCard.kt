@@ -54,7 +54,7 @@ fun MainScreenCard(
                 }
             },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiary
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Row(

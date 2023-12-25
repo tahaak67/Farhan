@@ -6,9 +6,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.domain.use_case.GetDarkModePreference
+import ly.com.tahaben.domain.use_case.GetThemeColorsPreference
 import ly.com.tahaben.domain.use_case.IsMainSwitchState
+import ly.com.tahaben.domain.use_case.LoadShouldShowcaseAppearanceMenu
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import ly.com.tahaben.domain.use_case.SaveDarkModePreference
+import ly.com.tahaben.domain.use_case.SaveShouldShowcaseAppearanceMenu
+import ly.com.tahaben.domain.use_case.SaveThemeColorsPreference
 import ly.com.tahaben.domain.use_case.SetMainSwitchState
 import javax.inject.Singleton
 
@@ -23,7 +27,11 @@ object MainScreenModule {
             getDarkModePreference = GetDarkModePreference(preferences),
             saveDarkModePreference = SaveDarkModePreference(preferences),
             isMainSwitchEnabled = IsMainSwitchState(preferences),
-            setMainSwitchState = SetMainSwitchState(preferences)
+            setMainSwitchState = SetMainSwitchState(preferences),
+            getThemeColorsPreference = GetThemeColorsPreference(preferences),
+            saveThemeColorsPreference = SaveThemeColorsPreference(preferences),
+            loadShouldShowcaseAppearanceMenu = LoadShouldShowcaseAppearanceMenu(preferences),
+            saveShouldShowcaseAppearanceMenu = SaveShouldShowcaseAppearanceMenu(preferences)
         )
     }
 }

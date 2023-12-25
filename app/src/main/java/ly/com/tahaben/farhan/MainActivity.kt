@@ -40,6 +40,7 @@ import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFi
 import ly.com.tahaben.notification_filter_presentation.settings.NotificationFilterSettingsScreen
 import ly.com.tahaben.notification_filter_presentation.settings.exceptions.NotificationFilterExceptionsScreen
 import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
+import ly.com.tahaben.onboarding_presentaion.SelectAppearanceScreen
 import ly.com.tahaben.onboarding_presentaion.about.AboutScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
@@ -74,6 +75,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
+        val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
         val tip = getTip()
         setContent {
             val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
@@ -84,7 +86,8 @@ class MainActivity : ComponentActivity() {
                 UIModeAppearance.FOLLOW_SYSTEM -> isSystemInDarkTheme()
             }
             FarhanTheme(
-                darkTheme = isDarkMode
+                darkMode = isDarkMode,
+                colorStyle = mainState.themeColors
             ) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember {
@@ -106,6 +109,8 @@ class MainActivity : ComponentActivity() {
                             Routes.NOTIFICATION_FILTER
                         } else if (shouldShowOnBoarding) {
                             Routes.WELCOME
+                        } else if (shouldShowSelectThemeScreen) {
+                            Routes.SELECT_THEME
                         } else {
                             Routes.MAIN
                         },
@@ -115,6 +120,19 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToMain = {
                                     navController.navigate(Routes.MAIN) {
                                         popUpTo(Routes.WELCOME) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                        composable(Routes.SELECT_THEME) {
+                            SelectAppearanceScreen(
+                                state = mainState,
+                                onEvent = mainScreenViewModel::onEvent,
+                                onOkClick = {
+                                    navController.navigate(Routes.MAIN) {
+                                        popUpTo(Routes.SELECT_THEME) {
                                             inclusive = true
                                         }
                                     }
