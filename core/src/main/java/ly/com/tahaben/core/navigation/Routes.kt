@@ -6,6 +6,7 @@ import ly.com.tahaben.core.navigation.Args.START_DATE
 object Routes {
 
     const val WELCOME = "welcome"
+    const val SELECT_THEME = "select_theme"
     const val MAIN = "main"
     const val USAGE = "usage"
     const val USAGE_FOR_PERIOD = "$USAGE/{$START_DATE}/{$END_DATE}"

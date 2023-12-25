@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.CategoryBarColor
+//import ly.com.tahaben.core_ui.CategoryBarColor
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewState
 import java.text.DecimalFormat
@@ -58,7 +58,7 @@ fun UsageOverviewHeader(
             modifier = Modifier
                 .padding(spacing.spaceMedium)
                 .clip(RoundedCornerShape(24.dp)),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Row(
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun UsageOverviewHeader(
                     Text(
                         text = stringResource(id = R.string.total_usage),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(
                             alpha = 0.75f
                         ),
                         textAlign = TextAlign.Start
@@ -92,7 +92,7 @@ fun UsageOverviewHeader(
                                     Text(
                                         text = "-",
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         fontSize = 40.sp
                                     )
                                 } else {
@@ -100,7 +100,7 @@ fun UsageOverviewHeader(
                                         Text(
                                             text = decimalFormat.format(animatedHoursCount.value),
                                             style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             fontSize = 40.sp
                                         )
                                     }
@@ -110,7 +110,7 @@ fun UsageOverviewHeader(
                                 Text(
                                     text = stringResource(id = R.string.hours),
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     fontSize = 40.sp
                                 )
                             }
@@ -127,7 +127,7 @@ fun UsageOverviewHeader(
                                     Text(
                                         text = "-",
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurface,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         fontSize = 40.sp
                                     )
                                 } else {
@@ -135,7 +135,7 @@ fun UsageOverviewHeader(
                                         Text(
                                             text = decimalFormat.format(animatedMinutesCount.value),
                                             style = MaterialTheme.typography.bodyLarge,
-                                            color = MaterialTheme.colorScheme.onSurface,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             fontSize = 40.sp
                                         )
                                     }
@@ -146,7 +146,7 @@ fun UsageOverviewHeader(
                                 Text(
                                     text = stringResource(id = R.string.minutes),
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     fontSize = 40.sp
                                 )
                             }
@@ -166,21 +166,21 @@ fun UsageOverviewHeader(
                     value = state.totalSocialUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_social),
-                    color = CategoryBarColor,
+                    color = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(90.dp)
                 )
                 UsageBarInfo(
                     value = state.totalProductivityUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_productivity),
-                    color = CategoryBarColor,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.size(90.dp)
                 )
                 UsageBarInfo(
                     value = state.totalGameUsageMilli,
                     total = state.totalUsageMilli,
                     name = stringResource(id = R.string.category_game),
-                    color = CategoryBarColor,
+                    color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.size(90.dp)
                 )
             }

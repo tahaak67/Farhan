@@ -1,5 +1,6 @@
 package ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions
 
+//import ly.com.tahaben.core_ui.DarkYellow
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -11,24 +12,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,10 +46,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.model.AppItem
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
-import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
@@ -61,7 +65,7 @@ fun InfiniteScrollExceptionsScreen(
     viewModel: InfiniteScrollingBlockerExceptionsViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
-    val state = viewModel.state
+    val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var mDisplayMenu by remember { mutableStateOf(false) }
@@ -94,6 +98,7 @@ fun InfiniteScrollExceptionsScreen(
                     Text(text = stringResource(id = R.string.exceptions))
                 }
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 AnimatedVisibility(
                     visible = !displaySearchField,
@@ -169,7 +174,7 @@ fun InfiniteScrollExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                     DropdownMenuItem(
@@ -196,7 +201,7 @@ fun InfiniteScrollExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                 }
@@ -217,10 +222,11 @@ fun InfiniteScrollExceptionsScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
+                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall)
+                        .selectableGroup(),
                 ) {
                     //Timber.d("app: list  $list")
-                    items(state.searchResults) { app ->
+                    items(state.searchResults, key = AppItem::packageName) { app ->
                         Timber.d("app: $app")
                         AppExceptionListItem(
                             app = app,

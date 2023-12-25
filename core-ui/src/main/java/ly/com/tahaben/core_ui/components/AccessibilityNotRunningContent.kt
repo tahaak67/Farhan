@@ -76,7 +76,6 @@ fun AccessibilityNotRunningContent(
                 Text(
                     text = stringResource(R.string.agree),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
             Spacer(modifier = Modifier.width(spacing.spaceSmall))
@@ -84,7 +83,6 @@ fun AccessibilityNotRunningContent(
                 Text(
                     text = stringResource(R.string.cancel),
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

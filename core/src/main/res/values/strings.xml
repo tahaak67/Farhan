@@ -192,4 +192,21 @@
     <string name="follow_system">Follow system</string>
     <string name="clock_icon">Clock icon</string>
     <string name="applications">Applications</string>
+    <string name="please_turn_on_main_switch">Main switch disabled. Please turn on the main switch.</string>
+    <string name="main_switch_is_on">Main switch is on</string>
+    <string name="main_switch_is_off">Main switch is off</string>
+    <string name="tap_to_pause_all_farhan_features">Tap to pause all Farhan features</string>
+    <string name="tap_to_resume_all_farhan_features">Tap to resume all Farhan features</string>
+    <string name="play_arrow">Play Arrow</string>
+    <string name="pause">Pause</string>
+    <string name="theme_colors_for">%1$s theme colors</string>
+    <string name="theme_colors">Theme colors</string>
+    <string name="select_theme_colors">Select theme colors</string>
+    <string name="you_can_change_this_later_from_the_main_screen_menu">You can change this later from the main screen menu</string>
+    <string name="classic">Classic</string>
+    <string name="vibrant">Vibrant</string>
+    <string name="dynamic">Dynamic</string>
+    <string name="dynamic_colors_description">Uses your wallpaper to generate dynamic colors</string>
+    <string name="vibrant_colors_description">A Vibrant touch to classic colors</string>
+    <string name="classic_colors_description">Good old colors of Farhan</string>
 </resources>

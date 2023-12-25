@@ -17,16 +17,17 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +45,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
@@ -90,6 +90,7 @@ fun NotificationFilterExceptionsScreen(
                     Text(text = stringResource(id = R.string.exceptions))
                 }
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 AnimatedVisibility(
                     visible = !displaySearchField,
@@ -168,7 +169,6 @@ fun NotificationFilterExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                     DropdownMenuItem(
@@ -195,7 +195,7 @@ fun NotificationFilterExceptionsScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                 }

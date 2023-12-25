@@ -33,7 +33,7 @@ fun NotificationListItem(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
-            .background(MaterialTheme.colorScheme.tertiary)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = spacing.spaceExtraSmall, vertical = spacing.spaceSmall)
 
             .clickable {
@@ -54,6 +54,7 @@ fun NotificationListItem(
                 Text(
                     modifier = Modifier.alignByBaseline(),
                     text = notification.appName ?: "",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Normal,
                     overflow = TextOverflow.Ellipsis,
@@ -61,12 +62,14 @@ fun NotificationListItem(
                 )
                 Text(
                     modifier = Modifier.alignByBaseline(),
+                    color = MaterialTheme.colorScheme.onSurface,
                     text = notification.time,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             Text(
                 text = notification.title ?: "",
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
@@ -75,6 +78,7 @@ fun NotificationListItem(
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
             Text(
                 text = notification.text ?: "",
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Normal,
             )

@@ -54,4 +54,9 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     ),
+    titleLarge = TextStyle(
+        fontFamily = CairoFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp
+    )
 )

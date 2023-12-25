@@ -1,6 +1,7 @@
 package ly.com.tahaben.screen_grayscale_presentation.exceptions
 
 
+//import ly.com.tahaben.core_ui.DarkYellow
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -18,16 +19,17 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,7 +48,6 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
-import ly.com.tahaben.core_ui.DarkYellow
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
@@ -95,6 +96,7 @@ fun GrayscaleWhiteListScreen(
                     Text(text = stringResource(id = R.string.white_lited_apps))
                 }
             },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             navigationIcon = {
                 AnimatedVisibility(
                     visible = !displaySearchField,
@@ -175,7 +177,7 @@ fun GrayscaleWhiteListScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                     DropdownMenuItem(
@@ -202,7 +204,7 @@ fun GrayscaleWhiteListScreen(
                                         )
                                     )
                                 },
-                                colors = CheckboxDefaults.colors(DarkYellow)
+//                                colors = CheckboxDefaults.colors(DarkYellow)
                             )
                         })
                 }

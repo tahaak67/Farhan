@@ -3,20 +3,42 @@ package ly.com.tahaben.notification_filter_presentation
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDismissState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -24,9 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core_ui.*
+import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
 import ly.com.tahaben.showcase_layout_compose.model.Arrow
@@ -70,24 +94,21 @@ fun NotificationFilterScreen(
             viewModel.setShowcased()
             isShowcasing = false
         },
-        isDarkLayout = isSystemInDarkTheme()
+        isDarkLayout = false
     ) {
         Column {
             TopAppBar(
                 title = {
                     Text(text = stringResource(id = R.string.notifications))
                 },
-                //backgroundColor = MaterialTheme.colors.surface,
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
-
-
                         Icon(
                             modifier = Modifier.mirror(),
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(id = R.string.back)
                         )
-
                     }
                 },
                 actions = {
@@ -115,8 +136,7 @@ fun NotificationFilterScreen(
             )
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = spacing.spaceMedium),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
@@ -186,8 +206,8 @@ fun NotificationFilterScreen(
                                         background = {
                                             val color by animateColorAsState(
                                                 when (dismissState.targetValue) {
-                                                    DismissValue.Default -> MaterialTheme.colorScheme.surface
-                                                    else -> Color.Red
+                                                    DismissValue.Default -> MaterialTheme.colorScheme.background
+                                                    else -> MaterialTheme.colorScheme.error
                                                 }
                                             )
                                             val alignment = Alignment.CenterEnd
@@ -208,7 +228,8 @@ fun NotificationFilterScreen(
                                                 Icon(
                                                     imageVector = icon,
                                                     contentDescription = stringResource(R.string.delete_icon),
-                                                    modifier = Modifier.scale(scale)
+                                                    modifier = Modifier.scale(scale),
+                                                    tint = MaterialTheme.colorScheme.onError
                                                 )
                                             }
                                         },
@@ -219,10 +240,12 @@ fun NotificationFilterScreen(
                                                     draggedElevation = 4.dp
                                                 ),
                                                 modifier = Modifier
+                                                    .padding(horizontal = spacing.spaceMedium)
                                                     .fillMaxWidth()
                                                     .align(alignment = Alignment.CenterVertically)
                                             ) {
                                                 NotificationListItem(
+                                                    modifier = Modifier,
                                                     notification = notificationItem,
                                                     onClick = {
                                                         Timber.d("notification click composable")
@@ -244,7 +267,10 @@ fun NotificationFilterScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(spacing.spaceHuge)
-                                    .padding(vertical = spacing.spaceSmall)
+                                    .padding(
+                                        vertical = spacing.spaceSmall,
+                                        horizontal = spacing.spaceMedium
+                                    )
                                     .align(Alignment.BottomCenter),
                                 onClick = { viewModel.onEvent(NotificationFilterEvent.OnDeleteAllNotifications) }) {
                                 Text(

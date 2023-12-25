@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.Page
+//import ly.com.tahaben.core_ui.Page
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
 
@@ -38,7 +38,11 @@ fun TrackedAppItem(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
             .padding(horizontal = spacing.spaceMedium)
-            .border(width = 0.5.dp, color = Page, shape = RoundedCornerShape(5.dp))
+            .border(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(5.dp)
+            )
             .fillMaxWidth(),
     ) {
 

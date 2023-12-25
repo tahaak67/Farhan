@@ -61,9 +61,9 @@ import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.HomeWatcher
 import ly.com.tahaben.core.util.SearchEvent
-import ly.com.tahaben.core_ui.LightGray
+//import ly.com.tahaben.core_ui.LightGray
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.White
+//import ly.com.tahaben.core_ui.White
 import ly.com.tahaben.launcher_presentation.component.AppListItem
 import ly.com.tahaben.launcher_presentation.component.SearchTextFieldLauncher
 import kotlin.math.abs
@@ -122,7 +122,7 @@ fun LauncherScreen(
         ) {
             TopAppBar(
                 title = {},
-                backgroundColor = White,
+//                backgroundColor = White,
                 actions = {
                     SearchTextFieldLauncher(
                         text = state.query,
@@ -196,7 +196,7 @@ fun LauncherScreen(
                             .clip(
                                 RoundedCornerShape(20.dp, 0.dp, 0.dp, 20.dp)
                             )
-                            .background(color = LightGray),
+                            .background(color = androidx.compose.ui.graphics.Color.LightGray),
                     ) {
 
                         Column(
@@ -227,7 +227,7 @@ fun LauncherScreen(
                                             .onGloballyPositioned {
                                                 offsets[i] = it.boundsInParent().center.y
                                             },
-                                        color = White
+//                                        color = White
                                     )
                                 }
                             }
@@ -278,7 +278,7 @@ fun LauncherScreen(
                             .size(46.dp),
                         imageVector = Icons.Filled.Phone,
                         contentDescription = stringResource(R.string.dialer),
-                        tint = White
+//                        tint = White
                     )
                 }
                 IconButton(
@@ -289,7 +289,7 @@ fun LauncherScreen(
                             .size(46.dp),
                         imageVector = Icons.Filled.Camera,
                         contentDescription = stringResource(R.string.camera),
-                        tint = White
+//                        tint = White
                     )
                 }
             }

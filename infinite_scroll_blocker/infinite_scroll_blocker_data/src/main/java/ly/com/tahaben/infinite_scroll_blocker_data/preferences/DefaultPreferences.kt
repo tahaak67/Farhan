@@ -4,6 +4,7 @@ package ly.com.tahaben.infinite_scroll_blocker_data.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
 import timber.log.Timber
 
@@ -23,7 +24,8 @@ class DefaultPreferences(
     }
 
     override fun isServiceEnabled(): Boolean {
-        return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SERVICE_STATS, false)
+        return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SERVICE_STATS, false) &&
+                sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
     }
 
     override fun setServiceState(isEnabled: Boolean) {

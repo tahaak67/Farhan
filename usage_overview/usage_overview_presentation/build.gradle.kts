@@ -1,3 +1,9 @@
+plugins {
+    id("com.android.library")
+}
+android {
+    namespace = "ly.com.tahaben.usage_overview_presentation"
+}
 apply {
     from("$rootDir/compose-module.gradle")
 }
