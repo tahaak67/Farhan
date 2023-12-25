@@ -1,4 +1,5 @@
 - New and improved UI
 - Dark mode
 - Theme colors choices and Dynamic theme
+- Main switch to pause & resume all features with one tap
 - Bug fixes
