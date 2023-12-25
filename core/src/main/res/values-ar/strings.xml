@@ -56,8 +56,8 @@
     <string name="grayscale_onboarding_message">واحدة من الطرق التي تستخدمها التطبيقات للتنافس على انتباهك ووقتك هي من خلال الألوان، باستخدام تجريد الألوان يستطيع فرحان أن يجرد بعض التطبيقات من الألوان عندما تفتحها وبالتالي يقل تأثيرها عليك!</string>
     <string name="on_boarding_image_description">صورة ترحيب</string>
     <string name="next">التالي</string>
-    <string name="enabled">مفعل</string>
-    <string name="disabled">معطل</string>
+    <string name="enabled">مُفعل</string>
+    <string name="disabled">مُعطل</string>
     <string name="accessibility_service_name">خدمة إمكانية الوصول لفرحان</string>
     <string name="accessibility_service_description">هذه الخدمة مطلوبة لبعض الوظائف مثل مانع التمرير اللانهائي وتجريد الألوان</string>
     <string name="usage_permission_msg">إذن الوصول إلى الاستخدام غير ممنوح :(</string>
@@ -181,14 +181,14 @@
     <string name="play_arrow">سهم تشغيل</string>
     <string name="pause">ايقاف مؤقت</string>
     <string name="theme_colors_for">ألوان السمة %1$s</string>
-    <string name="select_theme_colors">اختر الوان السمة</string>
+    <string name="select_theme_colors">اختر ألوان السمة</string>
     <string name="you_can_change_this_later_from_the_main_screen_menu">يمكنك تغيير اختيارك لاحقا من القائمة الموجودة في الشاشة الرئيسية</string>
     <string name="classic">كلاسيكي</string>
     <string name="vibrant">نابض بالحياة</string>
     <string name="dynamic">ديناميكي</string>
-    <string name="dynamic_colors_description">يستخدم خلفية هاتفك لتوليد الوان السمة</string>
+    <string name="dynamic_colors_description">يستخدم خلفية هاتفك لتوليد ألوان السمة</string>
     <string name="vibrant_colors_description">لمسة نابضة بالحياة لألوان فرحان الكلاسيكية</string>
-    <string name="classic_colors_description">الوان فرحان الأصلية الرائعة</string>
-    <string name="theme_colors">الوان السمة</string>
+    <string name="classic_colors_description">ألوان فرحان الأصلية الرائعة</string>
+    <string name="theme_colors">ألوان السمة</string>
 </resources>
 
