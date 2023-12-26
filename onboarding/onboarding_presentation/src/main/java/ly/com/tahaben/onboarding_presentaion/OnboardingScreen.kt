@@ -53,7 +53,7 @@ import ly.com.tahaben.domain.model.OnBoardingData
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
-    onNavigateToMain: () -> Unit,
+    onFinishOnBoarding: () -> Unit,
     viewModel: OnBoardingViewModel = hiltViewModel()
 ) {
 
@@ -62,7 +62,7 @@ fun OnBoardingScreen(
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.Success -> onNavigateToMain()
+                is UiEvent.Success -> onFinishOnBoarding()
                 else -> Unit
             }
         }
@@ -86,7 +86,7 @@ fun OnBoardingScreen(
 
     items.add(
         OnBoardingData(
-            R.drawable.farhan_icon,
+            R.drawable.farhan_transparent_bg,
             stringResource(R.string.use_farhan_be_farhan),
             stringResource(R.string.use_farhan_be_farhan_desc)
         )
@@ -182,7 +182,7 @@ fun OnBoardingPager(
                         .fillMaxWidth()
                         .height(380.dp)
                         .padding(top = spacing.spaceExtraLarge),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                     shape = BottomCardShape.large
                 ) {
                     Box(

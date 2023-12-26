@@ -117,8 +117,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.WELCOME) {
                             OnBoardingScreen(
-                                onNavigateToMain = {
-                                    navController.navigate(Routes.MAIN) {
+                                onFinishOnBoarding = {
+                                    navController.navigate(Routes.SELECT_THEME) {
                                         popUpTo(Routes.WELCOME) {
                                             inclusive = true
                                         }
