@@ -79,6 +79,9 @@ fun MainScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     var mDisplayMenu by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = true) {
+        onEvent(MainScreenEvent.OnScreenLaunched)
+    }
     LaunchedEffect(key1 = uiEvent) {
         when (uiEvent) {
             UiEvent.HideSnackBar -> Unit

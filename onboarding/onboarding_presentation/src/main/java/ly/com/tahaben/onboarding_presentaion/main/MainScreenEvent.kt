@@ -15,4 +15,5 @@ sealed class MainScreenEvent {
     data class ShowSnackBar(val message: UiText) : MainScreenEvent()
     object HideSnackBar : MainScreenEvent()
     object AppearanceShowcaseFinished : MainScreenEvent()
+    object OnScreenLaunched : MainScreenEvent()
 }

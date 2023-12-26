@@ -3,8 +3,10 @@ package ly.com.tahaben.farhan
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
@@ -13,6 +15,8 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,12 +26,15 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
+import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.farhan.repository.UsageRepositoryFake
 import ly.com.tahaben.farhan.repository.WorkerRepositoryFake
 import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
+import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.preferences.Preferences
 import ly.com.tahaben.usage_overview_domain.use_case.CacheUsageDataForDate
@@ -130,12 +137,19 @@ class UsageOverviewE2E {
             )
         )
         composeRule.activity.setContent {
-            val scaffoldState = rememberScaffoldState()
+            val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+            val mainState = mainScreenViewModel.mainScreenState.collectAsStateWithLifecycle().value
+            val snackbarHostState = remember {
+                SnackbarHostState()
+            }
             navController = rememberNavController()
-            FarhanTheme {
+            FarhanTheme(
+                colorStyle = ThemeColors.Classic,
+                darkMode = false
+            ) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    scaffoldState = scaffoldState
+                    snackbarHost = { SnackbarHost(snackbarHostState) }
                 ) {
                     NavHost(
                         modifier = Modifier.padding(it),
@@ -144,7 +158,7 @@ class UsageOverviewE2E {
                     ) {
                         composable(Routes.WELCOME) {
                             OnBoardingScreen(
-                                onNavigateToMain = {
+                                onFinishOnBoarding = {
                                     navController.navigate(Routes.MAIN) {
                                         popUpTo(Routes.WELCOME) {
                                             inclusive = true
@@ -154,20 +168,28 @@ class UsageOverviewE2E {
                             )
                         }
                         composable(Routes.MAIN) {
+                            val mainScreenUiEvent =
+                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
+                                    initialValue = UiEvent.HideSnackBar
+                                ).value
                             MainScreen(
                                 tip = "A random tip for the test :)",
                                 isGrayscaleEnabled = false,
                                 isInfiniteScrollBlockerEnabled = false,
                                 isNotificationFilterEnabled = false,
                                 navController = navController,
-                                isLauncherEnabled = false
+                                isLauncherEnabled = false,
+                                snackbarHostState = snackbarHostState,
+                                state = mainState,
+                                onEvent = mainScreenViewModel::onEvent,
+                                uiEvent = mainScreenUiEvent
                             )
                         }
                         composable(Routes.USAGE) {
                             UsageOverviewScreen(
                                 onNavigateUp = { navController.navigateUp() },
                                 viewModel = usageOverviewViewModel,
-                                scaffoldState = scaffoldState,
+                                scaffoldState = snackbarHostState,
                                 onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) }
                             )
                         }

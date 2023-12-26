@@ -30,7 +30,6 @@ class MainScreenViewModel @Inject constructor(
         getUiAppearanceSettings()
         getThemeColorsSettings()
         getMainSwitchState()
-        getShouldShowcaseAppearanceMenu()
     }
 
     private fun getUiAppearanceSettings() {
@@ -55,7 +54,7 @@ class MainScreenViewModel @Inject constructor(
 
     private fun getShouldShowcaseAppearanceMenu() {
         viewModelScope.launch {
-            delay(2500) // todo: remove when showcaselayout is fixed
+            delay(1000)
             _mainScreenState.update {
                 it.copy(
                     shouldShowcaseAppearanceMenu = useCases.loadShouldShowcaseAppearanceMenu()
@@ -154,6 +153,10 @@ class MainScreenViewModel @Inject constructor(
                         shouldShowcaseAppearanceMenu = false
                     )
                 }
+            }
+
+            MainScreenEvent.OnScreenLaunched -> {
+                getShouldShowcaseAppearanceMenu()
             }
         }
     }
