@@ -1,8 +1,8 @@
 package ly.com.tahaben.onboarding_presentaion.main
 
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.UiText
-import ly.com.tahaben.domain.model.UIModeAppearance
 
 sealed class MainScreenEvent {
     data class SaveUiMode(val uiModeAppearance: UIModeAppearance) : MainScreenEvent()

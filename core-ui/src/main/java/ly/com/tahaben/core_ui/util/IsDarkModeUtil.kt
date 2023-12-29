@@ -1,8 +1,8 @@
-package ly.com.tahaben.onboarding_presentaion.components
+package ly.com.tahaben.core_ui.util
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import ly.com.tahaben.domain.model.UIModeAppearance
+import ly.com.tahaben.core.model.UIModeAppearance
 
 @Composable
 fun UIModeAppearance.isCurrentlyDark(): Boolean {

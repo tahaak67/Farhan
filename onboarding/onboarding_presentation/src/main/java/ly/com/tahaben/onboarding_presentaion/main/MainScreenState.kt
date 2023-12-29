@@ -1,7 +1,7 @@
 package ly.com.tahaben.onboarding_presentaion.main
 
-import ly.com.tahaben.core.util.ThemeColors
-import ly.com.tahaben.domain.model.UIModeAppearance
+import ly.com.tahaben.core.model.ThemeColors
+import ly.com.tahaben.core.model.UIModeAppearance
 
 data class MainScreenState(
     val uiMode: UIModeAppearance = UIModeAppearance.FOLLOW_SYSTEM,

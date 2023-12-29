@@ -1,9 +1,9 @@
 package ly.com.tahaben.domain.use_case
 
-import ly.com.tahaben.domain.model.UIModeAppearance
-import ly.com.tahaben.domain.model.UIModeAppearance.DARK_MODE
-import ly.com.tahaben.domain.model.UIModeAppearance.FOLLOW_SYSTEM
-import ly.com.tahaben.domain.model.UIModeAppearance.LIGHT_MODE
+import ly.com.tahaben.core.model.UIModeAppearance
+import ly.com.tahaben.core.model.UIModeAppearance.DARK_MODE
+import ly.com.tahaben.core.model.UIModeAppearance.FOLLOW_SYSTEM
+import ly.com.tahaben.core.model.UIModeAppearance.LIGHT_MODE
 import ly.com.tahaben.domain.preferences.Preferences
 
 class SaveDarkModePreference(

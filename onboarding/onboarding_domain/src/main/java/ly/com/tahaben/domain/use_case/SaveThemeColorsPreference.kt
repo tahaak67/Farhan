@@ -1,6 +1,6 @@
 package ly.com.tahaben.domain.use_case
 
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.domain.preferences.Preferences
 
 class SaveThemeColorsPreference(private val preferences: Preferences) {
