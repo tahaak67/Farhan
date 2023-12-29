@@ -37,7 +37,9 @@ object InfiniteScrollDomainModule {
             GetTimeOutDuration(preferences),
             GetInstalledAppsList(installedAppsRepo),
             SaveShouldShowOnBoarding(preferences),
-            LoadShouldShowOnBoarding(preferences)
+            LoadShouldShowOnBoarding(preferences),
+            IsDarkModeEnabled(preferences),
+            GetCurrentThemeColors(preferences)
         )
     }
 }

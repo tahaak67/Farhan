@@ -46,7 +46,7 @@
     <string name="percent" translatable="false">%</string>
     <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
     <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>
-    <string name="hey">Hey !!</string>
+    <string name="hey">Hey, Farhan here!!</string>
     <string name="infinite_scroll_dialog_message">Looks like you are stuck in an infinite scrolling.</string>
     <string name="take_me_out_of_here">TAKE ME OUT OF HERE</string>
     <string name="continue_scrolling">Continue scrolling …</string>
@@ -209,4 +209,5 @@
     <string name="dynamic_colors_description">Uses your wallpaper to generate dynamic colors</string>
     <string name="vibrant_colors_description">A Vibrant touch to classic colors</string>
     <string name="classic_colors_description">Good old colors of Farhan</string>
+    <string name="farhan_icon">Farhan icon</string>
 </resources>

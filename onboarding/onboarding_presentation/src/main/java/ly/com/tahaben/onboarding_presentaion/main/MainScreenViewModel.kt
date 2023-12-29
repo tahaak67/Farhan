@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.UiEvent
-import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import javax.inject.Inject
 

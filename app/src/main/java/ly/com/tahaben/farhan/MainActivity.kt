@@ -21,12 +21,12 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
-import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
