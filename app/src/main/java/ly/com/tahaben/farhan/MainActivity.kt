@@ -254,7 +254,9 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.NOTIFICATION_FILTER_SETTINGS) {
                             NotificationFilterSettingsScreen(
                                 onNavigateToExceptions = { navController.navigate(Routes.NOTIFICATION_FILTER_EXCEPTIONS) },
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                shouldShowRational = ::shouldShowRational,
+                                snackbarHostState = snackbarHostState
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING_EXCEPTIONS) {

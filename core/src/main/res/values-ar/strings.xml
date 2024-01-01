@@ -190,5 +190,7 @@
     <string name="vibrant_colors_description">لمسة نابضة بالحياة لألوان فرحان الكلاسيكية</string>
     <string name="classic_colors_description">ألوان فرحان الأصلية الرائعة</string>
     <string name="theme_colors">ألوان السمة</string>
+    <string name="exact_alarm_permission_description">يرجى تفعيل إذن التذكيرات من الشاشة القادمة حتى يتمكن فرحان من تذكيرك بتفقد الإشعارات في الوقت الذي حددته</string>
+    <string name="notify_me_permissions_needed_not_granted">فرحان يحتاج إلى بعض الإذونات لتعمل ذكرني بشكل صحيح</string>
 </resources>
 

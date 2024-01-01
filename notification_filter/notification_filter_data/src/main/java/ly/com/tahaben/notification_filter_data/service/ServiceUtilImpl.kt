@@ -7,8 +7,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.BroadcastReceiverNotification
 import ly.com.tahaben.core.util.MESSAGE_EXTRA
@@ -106,6 +108,37 @@ class ServiceUtilImpl(
                 Timber.e("e: ${e.message}")
                 e.printStackTrace()
             }
+        }
+    }
+
+    override fun openAppSettings() {
+        Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", context.packageName, null)
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(this)
+        }
+    }
+
+    override fun canScheduleExactAlarms(): Boolean {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else {
+            true
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun openExactAlarmsPermissionScreen() {
+        Timber.d("open exact alarms permission")
+        Intent(
+            Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+            Uri.fromParts("package", context.packageName, null)
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(this)
         }
     }
 }

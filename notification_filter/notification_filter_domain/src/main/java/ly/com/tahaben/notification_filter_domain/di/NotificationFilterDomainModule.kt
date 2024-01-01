@@ -51,7 +51,10 @@ object NotificationFilterDomainModule {
             CreateNotifyMeNotificationChannel(serviceUtil),
             SetNotifyMeScheduleDate(preferences),
             SaveShouldShowOnBoarding(preferences),
-            LoadShouldShowOnBoarding(preferences)
+            LoadShouldShowOnBoarding(preferences),
+            OpenSettings(serviceUtil),
+            CanScheduleExactAlarms(serviceUtil),
+            OpenExactAlarmsPermissionScreen(serviceUtil)
         )
     }
 
