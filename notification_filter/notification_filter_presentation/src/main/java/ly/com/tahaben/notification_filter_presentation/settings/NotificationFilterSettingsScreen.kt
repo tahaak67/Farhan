@@ -1,7 +1,9 @@
 package ly.com.tahaben.notification_filter_presentation.settings
 
-import android.app.TimePickerDialog
-import android.content.Context
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -31,6 +36,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,24 +50,102 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.components.PermissionDialog
+import ly.com.tahaben.core_ui.components.PostNotificationPermissionTextProvider
+import ly.com.tahaben.core_ui.components.ScheduleExactAlarmPermissionTextProvider
 import ly.com.tahaben.core_ui.mirror
-import java.util.Calendar
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationFilterSettingsScreen(
     onNavigateUp: () -> Unit,
     onNavigateToExceptions: () -> Unit,
-    viewModel: NotificationSettingsViewModel = hiltViewModel()
+    viewModel: NotificationSettingsViewModel = hiltViewModel(),
+    shouldShowRational: (String) -> Boolean,
+    snackbarHostState: SnackbarHostState
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val state = viewModel.state
-    val mCalendar = Calendar.getInstance()
-    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-    val mMinute = mCalendar[Calendar.MINUTE]
+    val dialogQueue = state.visiblePermissionDialogQueue
+    val scope = rememberCoroutineScope()
+    var checkKey by remember {
+        mutableStateOf(false)
+    }
+
+    val postNotificationPermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                viewModel.onPermissionResult(
+                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    isGranted = isGranted
+                )
+            }
+        }
+    )
+
+    val postNotificationPermissionSilentCheck = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !isGranted) {
+                viewModel.onEvent(NotificationSettingsEvent.DeclinedPermission(Manifest.permission.POST_NOTIFICATIONS))
+            }
+            checkKey = !checkKey
+        }
+    )
+
+    LaunchedEffect(key1 = true) {
+        viewModel.event.collect { event ->
+            when (event) {
+                is UiEventNotificationSettings.NotifyMeEnabled -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        viewModel.checkExactAlarmsPermissionGranted()
+                        postNotificationPermissionResultLauncher.launch(
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )
+                    }
+                }
+
+                is UiEventNotificationSettings.PerformSilentChecks -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && state.isNotifyMeEnabled) {
+                        postNotificationPermissionSilentCheck.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        viewModel.exactAlarmsSilentCheck()
+                    }
+                }
+            }
+        }
+    }
+    LaunchedEffect(key1 = checkKey) {
+        if (state.declinedPermissions.isNotEmpty()) {
+            if (dialogQueue.isEmpty()) {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        context.getString(R.string.notify_me_permissions_needed_not_granted),
+                        actionLabel = context.getString(
+                            R.string.grant_access
+                        ),
+                        duration = SnackbarDuration.Indefinite
+                    )
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            Timber.d("action performed: declined permissions: ${state.declinedPermissions.toList()} size: ${state.declinedPermissions.size}")
+                            dialogQueue.addAll(state.declinedPermissions.toList())
+                            state.declinedPermissions.clear()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        } else {
+            snackbarHostState.currentSnackbarData?.dismiss()
+        }
+    }
 
     Column(
         Modifier
@@ -131,7 +220,6 @@ fun NotificationFilterSettingsScreen(
                             if (state.isNotifyMeEnabled) {
                                 viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
                             } else {
-//                                showTimePickerDialog(context, viewModel, mHour, mMinute, state)
                                 viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
                             }
                         },
@@ -153,7 +241,6 @@ fun NotificationFilterSettingsScreen(
                         if (!checked) {
                             viewModel.setNotifyMeTime(-1, -1)
                         } else {
-//                            showTimePickerDialog(context, viewModel, mHour, mMinute, state)
                             viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
                         }
                     }
@@ -227,25 +314,38 @@ fun NotificationFilterSettingsScreen(
         }
 
     }
+
+    dialogQueue
+        .reversed()
+        .forEach { permission ->
+            PermissionDialog(
+                permissionTextProvider = when (permission) {
+                    Manifest.permission.POST_NOTIFICATIONS -> PostNotificationPermissionTextProvider()
+                    Manifest.permission.SCHEDULE_EXACT_ALARM -> ScheduleExactAlarmPermissionTextProvider()
+                    else -> return@forEach
+                },
+                isPermanentlyDeclined = !shouldShowRational(permission),
+                onDismiss = { viewModel.onEvent(NotificationSettingsEvent.DismissPermissionDialog) },
+                onOkClick = {
+                    viewModel.onEvent(NotificationSettingsEvent.DismissPermissionDialog)
+                    if (permission == Manifest.permission.SCHEDULE_EXACT_ALARM) {
+                        viewModel.openExactAlarmsPermissionScreen()
+                    } else {
+                        postNotificationPermissionResultLauncher.launch(
+                            permission
+                        )
+                    }
+                },
+                onGoToAppSettingsClick = {
+                    if (permission == Manifest.permission.SCHEDULE_EXACT_ALARM) {
+                        viewModel.openExactAlarmsPermissionScreen()
+                    } else {
+                        viewModel.openAppSettings()
+                    }
+                    viewModel.onEvent(NotificationSettingsEvent.DismissPermissionDialog)
+                }
+            )
+        }
 }
 
-
-private fun showTimePickerDialog(
-    context: Context,
-    viewModel: NotificationSettingsViewModel,
-    mHour: Int,
-    mMinute: Int,
-    state: NotificationFilterSettingsState
-) {
-    val tpd = TimePickerDialog(
-        context, { _, mHour: Int, mMinute: Int ->
-            viewModel.setNotifyMeTime(mHour, mMinute)
-        }, mHour, mMinute, false
-    )
-    tpd.updateTime(state.notifyMeHour, state.notifyMeMinute)
-    tpd.show()
-    tpd.setOnCancelListener {
-        viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
-    }
-}
 

@@ -210,4 +210,6 @@
     <string name="vibrant_colors_description">A Vibrant touch to classic colors</string>
     <string name="classic_colors_description">Good old colors of Farhan</string>
     <string name="farhan_icon">Farhan icon</string>
+    <string name="exact_alarm_permission_description">Please enable reminders permission in the next page to allow Farhan to send you a reminder at your selected time</string>
+    <string name="notify_me_permissions_needed_not_granted">Farhan is missing some permissions for Notify me to work properly</string>
 </resources>
