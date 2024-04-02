@@ -145,7 +145,7 @@ fun OnBoardingPager(
                     flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
                     key = null,
                     pageNestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
-                        Orientation.Horizontal
+                        state = pagerState, orientation = Orientation.Horizontal
                     ),
                     pageContent = { page ->
                         Column(

@@ -13,7 +13,7 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.notificationFilterDomain))
 
-    "kapt"(Room.roomCompiler)
-    "implementation"(Room.roomKtx)
-    "implementation"(Room.roomRuntime)
+    "kapt"(libs.room.compiler)
+    "implementation"(libs.room.ktx)
+    "implementation"(libs.room.runtime)
 }

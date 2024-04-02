@@ -10,6 +10,6 @@ apply {
 
 dependencies {
     "implementation"(project(Modules.core))
-    "implementation"(Coil.coilCompose)
-    "implementation"(Coil.coilGif)
+    "implementation"(libs.coil.compose)
+    "implementation"(libs.coil.gif)
 }

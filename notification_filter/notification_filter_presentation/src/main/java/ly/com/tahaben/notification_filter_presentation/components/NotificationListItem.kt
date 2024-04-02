@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
-
 
 @Composable
 fun NotificationListItem(
@@ -86,5 +88,15 @@ fun NotificationListItem(
         }
 
         Spacer(modifier = Modifier.width(spacing.spaceMedium))
+    }
+}
+
+@Preview
+@Composable
+fun NotificationListItemPreview() {
+
+    FarhanTheme(false, ThemeColors.Classic) {
+        val item = NotificationItem("sadfa", "Farhan", "Title", "text", "18:33", "ly.com")
+        NotificationListItem(notification = item, onClick = { /*TODO*/ })
     }
 }
