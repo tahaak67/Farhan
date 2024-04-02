@@ -11,5 +11,4 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.infiniteScrollBlockerDomain))
-    "implementation"(Google.material)
 }

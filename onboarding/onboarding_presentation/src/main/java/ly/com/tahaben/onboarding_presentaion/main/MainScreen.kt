@@ -97,7 +97,7 @@ fun MainScreen(
     ShowcaseLayout(
         isShowcasing = state.shouldShowcaseAppearanceMenu == true,
         onFinish = { onEvent(MainScreenEvent.AppearanceShowcaseFinished) },
-        initKey = 1,
+        initIndex = 1,
         isDarkLayout = state.uiMode.isCurrentlyDark(),
         animationDuration = 500
     ) {

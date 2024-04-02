@@ -20,17 +20,16 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +70,7 @@ fun NotificationFilterScreen(
     val spacing = LocalSpacing.current
     val state = viewModel.state
     val openDialog = remember { mutableStateOf(false) }
+    val density = LocalDensity.current
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -84,7 +85,7 @@ fun NotificationFilterScreen(
     Timber.d("isShowcasing value = $isShowcasing")
     ShowcaseLayout(
         isShowcasing = isShowcasing,
-        initKey = 0,
+        initIndex = 0,
         greeting = ShowcaseMsg(
             stringResource(R.string.notification_filter_showcase_greeting),
             msgBackground = MaterialTheme.colorScheme.onSurface,
@@ -115,7 +116,7 @@ fun NotificationFilterScreen(
                     if (state.isPermissionGranted) {
                         IconButton(onClick = navigateToNotificationSettings) {
                             Showcase(
-                                k = 1,
+                                index = 1,
                                 message = ShowcaseMsg(
                                     text = stringResource(R.string.notification_settings_shocase_tip),
                                     textStyle = TextStyle(MaterialTheme.colorScheme.onSurface),
@@ -185,10 +186,10 @@ fun NotificationFilterScreen(
                                     state.filteredNotifications,
                                     NotificationItem::id
                                 ) { notificationItem ->
-                                    val dismissState = rememberDismissState(
-                                        initialValue = DismissValue.Default,
+                                    val dismissState = rememberSwipeToDismissBoxState(
+                                        initialValue = SwipeToDismissBoxValue.Settled,
                                         confirmValueChange = {
-                                            if (it == DismissValue.DismissedToStart) {
+                                            if (it == SwipeToDismissBoxValue.EndToStart) {
                                                 viewModel.onEvent(
                                                     NotificationFilterEvent.OnDismissNotification(
                                                         notificationItem
@@ -198,15 +199,13 @@ fun NotificationFilterScreen(
                                             true
                                         }
                                     )
-                                    SwipeToDismiss(
+                                    SwipeToDismissBox(
                                         state = dismissState,
-                                        directions = setOf(
-                                            DismissDirection.EndToStart
-                                        ),
-                                        background = {
+                                        enableDismissFromStartToEnd = false,
+                                        backgroundContent = {
                                             val color by animateColorAsState(
                                                 when (dismissState.targetValue) {
-                                                    DismissValue.Default -> MaterialTheme.colorScheme.background
+                                                    SwipeToDismissBoxValue.Settled -> MaterialTheme.colorScheme.background
                                                     else -> MaterialTheme.colorScheme.error
                                                 }
                                             )
@@ -215,7 +214,7 @@ fun NotificationFilterScreen(
 
                                             val scale by animateFloatAsState(
                                                 targetValue =
-                                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                                                if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) 0.75f else 1f
                                             )
                                             Box(
                                                 modifier =
@@ -233,13 +232,14 @@ fun NotificationFilterScreen(
                                                 )
                                             }
                                         },
-                                        dismissContent = {
+                                        content = {
                                             Card(
                                                 elevation = CardDefaults.cardElevation(
                                                     defaultElevation = 0.dp,
                                                     draggedElevation = 4.dp
                                                 ),
                                                 modifier = Modifier
+                                                    .fillMaxWidth()
                                                     .padding(horizontal = spacing.spaceMedium)
                                                     .fillMaxWidth()
                                                     .align(alignment = Alignment.CenterVertically)

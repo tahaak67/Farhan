@@ -3,13 +3,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 
 android {
-    compileSdk ProjectConfig.compileSdk
+    compileSdk libs.versions.android.compileSdk.get().toInteger()
 
     defaultConfig {
-        minSdk ProjectConfig.minSdk
-        targetSdk ProjectConfig.targetSdk
-        versionCode ProjectConfig.versionCode
-        versionName ProjectConfig.versionName
+        minSdk libs.versions.android.minSdk.get().toInteger()
+        targetSdk libs.versions.android.targetSdk.get().toInteger()
+        versionCode libs.versions.app.versionCode.get().toInteger()
+        versionName libs.versions.app.versionCode.get()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -18,7 +18,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion Compose.composeCompilerVersion
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
     buildTypes {
         release {
@@ -38,41 +38,45 @@ android {
 }
 
 dependencies {
-    implementation Compose.compiler
-    implementation Compose.ui
-    implementation Compose.uiToolingPreview
-    implementation Compose.hiltNavigationCompose
-    implementation Compose.material
-    implementation Compose.material3
-    implementation Compose.runtime
-    implementation Compose.navigation
-    implementation Compose.viewModelCompose
-    implementation Compose.activityCompose
-    implementation Compose.constraintCompose
-    implementation Compose.materialExtended
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.compose.compiler)
+
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.material3)
+    implementation(libs.compose.hilt.navigation)
+    implementation(libs.google.material)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.viewModel)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.constraint)
+    implementation(libs.androidx.material.extended)
+
+    implementation(libs.dagger.hilt)
+    implementation(libs.timber)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
 
 
-    kapt DaggerHilt.hiltCompiler
-    implementation DaggerHilt.hiltAndroid
-    implementation Timber.timber
+    testImplementation(libs.junit4)
+    testImplementation(libs.junit.android.ext)
+    testImplementation(libs.truth)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.compose.ui.test)
+    testImplementation(libs.mockk)
 
-    testImplementation Testing.junit4
-    testImplementation Testing.junitAndroidExt
-    testImplementation Testing.truth
-    testImplementation Testing.coroutines
-    testImplementation Testing.turbine
-    testImplementation Testing.composeUiTest
-    testImplementation Testing.mockk
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.junit.android.ext)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.compose.ui.test)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.hilt.testing)
 
-    androidTestImplementation Testing.junit4
-    androidTestImplementation Testing.junitAndroidExt
-    androidTestImplementation Testing.truth
-    androidTestImplementation Testing.coroutines
-    androidTestImplementation Testing.turbine
-    androidTestImplementation Testing.composeUiTest
-    androidTestImplementation Testing.mockk
-    androidTestImplementation Testing.hiltTesting
 
     // Dependency required for API desugaring.
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
 }
