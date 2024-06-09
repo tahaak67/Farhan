@@ -4,7 +4,7 @@ import ly.com.tahaben.core.model.AppItem
 
 data class NotificationFilterExceptionsState(
     val isLoading: Boolean = true,
-    val installedApps: List<AppItem> = emptyList(),
+    val appsList: List<AppItem> = emptyList(),
     val searchResults: List<AppItem> = emptyList(),
     val showSystemApps: Boolean = false,
     val query: String = "",

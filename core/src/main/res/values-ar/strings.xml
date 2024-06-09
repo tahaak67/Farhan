@@ -213,5 +213,7 @@
     <string name="msg_dialog_text">اختر رسالة لإظهارها عند الوصول للحد ثم اضغط حفظ. او اختر رسالة عشوائية لإظهار رسالة مختلفة في كل مرة.</string>
     <string name="msg_dialog_edit_mode">اضف او احذف رسالة من القائمة</string>
     <string name="back_to_select_msg">العودة الى اختيار الرسالة</string>
+    <string name="exclude_this_app">استثني هذا التطبيق</string>
+    <string name="app_info">معلومات التطبيق</string>
 </resources>
 
