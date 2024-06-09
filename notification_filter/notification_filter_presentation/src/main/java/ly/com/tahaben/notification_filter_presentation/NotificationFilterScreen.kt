@@ -1,5 +1,6 @@
 package ly.com.tahaben.notification_filter_presentation
 
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +54,7 @@ import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
+import ly.com.tahaben.notification_filter_presentation.components.MenuOption
 import ly.com.tahaben.notification_filter_presentation.components.NotificationListItem
 import ly.com.tahaben.showcase_layout_compose.model.Arrow
 import ly.com.tahaben.showcase_layout_compose.model.Gravity
@@ -71,12 +74,14 @@ fun NotificationFilterScreen(
     val state = viewModel.state
     val openDialog = remember { mutableStateOf(false) }
     val density = LocalDensity.current
+    val context = LocalContext.current
 
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkServiceStats()
             }
+
             else -> Unit
         }
     }
@@ -254,7 +259,32 @@ fun NotificationFilterScreen(
                                                                 notificationItem = notificationItem
                                                             )
                                                         )
-                                                    }
+                                                    },
+                                                    menuOptions = listOf(
+                                                        MenuOption(
+                                                            text = stringResource(id = R.string.exclude_this_app),
+                                                            onClick = {
+                                                                viewModel.onEvent(
+                                                                    NotificationFilterEvent.OnExcludeAppClick(
+                                                                        notificationItem.packageName
+                                                                    )
+                                                                )
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    R.string.app_excluded,
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                            }),
+                                                        MenuOption(
+                                                            text = stringResource(id = R.string.app_info),
+                                                            onClick = {
+                                                                viewModel.onEvent(
+                                                                    NotificationFilterEvent.OnLaunchAppInfoClick(
+                                                                        notificationItem.packageName
+                                                                    )
+                                                                )
+                                                            }),
+                                                    )
                                                 )
                                             }
                                         }

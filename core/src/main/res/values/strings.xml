@@ -234,6 +234,8 @@
     <string name="msg_dialog_text">Select a message to show when limit is reached and press Save.\n or select Random message to show a random message every time.</string>
     <string name="msg_dialog_edit_mode">Add or delete messages from the list.</string>
     <string name="back_to_select_msg">Back to select message</string>
+    <string name="exclude_this_app">Exclude this app</string>
+    <string name="app_info">App info</string>
 
     <string-array name="time_up_messages">
         <item>@string/infinite_scroll_dialog_message</item>

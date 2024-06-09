@@ -14,4 +14,5 @@ interface ServiceUtil {
     fun openAppSettings()
     fun canScheduleExactAlarms(): Boolean
     fun openExactAlarmsPermissionScreen()
+    fun launchAppInfo(packageName: String)
 }

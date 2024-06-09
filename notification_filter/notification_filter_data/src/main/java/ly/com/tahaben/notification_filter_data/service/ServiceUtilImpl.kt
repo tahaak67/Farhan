@@ -141,4 +141,14 @@ class ServiceUtilImpl(
             context.startActivity(this)
         }
     }
+
+    override fun launchAppInfo(packageName: String) {
+        val appInfoIntent = Intent()
+        appInfoIntent.action =
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        appInfoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        appInfoIntent.data =
+            Uri.fromParts("package", packageName, null)
+        context.startActivity(appInfoIntent)
+    }
 }
