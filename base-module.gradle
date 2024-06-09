@@ -32,11 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    kapt {
+        correctErrorTypes = true
+    }
+
 }
 
 dependencies {
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
+    kapt(libs.dagger.hilt.compiler.kotlin)
     implementation(libs.timber)
 
     testImplementation(libs.junit4)
@@ -45,7 +50,6 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.compose.ui.test)
-    testImplementation(libs.mockk)
 
     androidTestImplementation(libs.junit4)
     androidTestImplementation(libs.junit.android.ext)
@@ -53,7 +57,6 @@ dependencies {
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.compose.ui.test)
-    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.hilt.testing)
 
     // Dependency required for API desugaring.

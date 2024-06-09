@@ -3,6 +3,7 @@
 package ly.com.tahaben.infinite_scroll_blocker_data.preferences
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.GlobalKey
@@ -10,9 +11,13 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
 import timber.log.Timber
 
 class DefaultPreferences(
-    private val sharedPref: SharedPreferences
+    private val sharedPref: SharedPreferences,
+    private val context: Context
 ) : Preferences {
 
+    private val defaultMessages by lazy {
+        context.resources.getStringArray(ly.com.tahaben.core.R.array.time_up_messages).toSet()
+    }
     override fun loadShouldShowOnBoarding(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SHOULD_SHOW_ON_BOARDING, true)
     }
@@ -109,5 +114,65 @@ class DefaultPreferences(
             Preferences.KEY_APP_THEME_COLORS,
             "Unknown"
         ) ?: "Unknown"
+    }
+
+    /** @return The count down in seconds or -1 if count down is off*/
+    override fun getCountDownSeconds(): Int {
+        return sharedPref.getInt(Preferences.KEY_COUNT_DOWN_TIME, -1)
+    }
+
+    override fun setCountDownSeconds(seconds: Int) {
+        sharedPref.edit()
+            .putInt(Preferences.KEY_COUNT_DOWN_TIME, seconds)
+            .apply()
+    }
+
+    override fun setCustomMessage(message: String) {
+        sharedPref.edit()
+            .putString(Preferences.KEY_CUSTOM_MESSAGE, message)
+            .apply()
+    }
+
+    override fun getCustomMessage(): String {
+        return sharedPref.getString(Preferences.KEY_CUSTOM_MESSAGE, "") ?: ""
+    }
+
+    override fun getRandomMessage(): String {
+        return sharedPref.getStringSet(Preferences.KEY_MESSAGES_ARRAY, defaultMessages)?.random() ?: throw NullPointerException("empty set")
+    }
+
+    override fun addMessageToArray(msg: String) {
+        val oldSet: MutableSet<String> =
+            sharedPref.getStringSet(
+                Preferences.KEY_MESSAGES_ARRAY,
+                defaultMessages
+            )!!
+        val newSet = oldSet.toMutableSet()
+        newSet.add(msg)
+        sharedPref.edit()
+            .putStringSet(Preferences.KEY_MESSAGES_ARRAY, newSet)
+            .apply()
+    }
+
+    override fun removeMessageFromArray(msg: String) {
+        val oldSet: MutableSet<String> =
+            sharedPref.getStringSet(
+                Preferences.KEY_MESSAGES_ARRAY,
+                defaultMessages
+            )!!
+        val newSet = oldSet.toMutableSet()
+        newSet.remove(msg)
+        sharedPref.edit()
+            .putStringSet(Preferences.KEY_MESSAGES_ARRAY, newSet)
+            .apply()
+    }
+    override fun getMessagesArray(): Set<String> {
+        return sharedPref.getStringSet(Preferences.KEY_MESSAGES_ARRAY, defaultMessages)!!
+    }
+
+    override fun resetMessagesArray() {
+        sharedPref.edit()
+            .remove(Preferences.KEY_MESSAGES_ARRAY)
+            .apply()
     }
 }

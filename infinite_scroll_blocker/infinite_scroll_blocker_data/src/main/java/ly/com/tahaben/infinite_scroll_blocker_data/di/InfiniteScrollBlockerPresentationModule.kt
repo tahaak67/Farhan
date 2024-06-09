@@ -19,8 +19,8 @@ object InfiniteScrollBlockerPresentationModule {
 
     @Provides
     @Singleton
-    fun provideInfiniteScrollPreferences(sharedPreferences: SharedPreferences): Preferences {
-        return DefaultPreferences(sharedPreferences)
+    fun provideInfiniteScrollPreferences(sharedPreferences: SharedPreferences, @ApplicationContext context: Context): Preferences {
+        return DefaultPreferences(sharedPreferences, context)
     }
 
     @Provides

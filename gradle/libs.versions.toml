@@ -7,24 +7,24 @@ app-versionCode = "7"
 app-versionName = "0.2.1"
 
 # Dependencies
-compose-compiler = "1.5.11"
+compose-compiler = "1.5.13"
 desugar_jdk_libs_nio = "2.0.4"
 kotlin = "1.9.23"
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 work_manager = "2.9.0"
 constraint_layout = "2.1.4"
 androidBuildToolsVersion = "8.2.2"
-hiltAndroidGradlePluginVersion = "2.50"
+hiltAndroidGradlePlugin = "2.51"
 coil = "2.2.2"
-compose = "1.6.4"
-material = "1.11.0"
+compose = "1.6.7"
+material = "1.12.0"
 navigation = "2.7.7"
 hilt_navigation_compose = "1.2.0"
-activity_compose = "1.8.2"
-lifecycle = "2.7.0"
+activity_compose = "1.9.0"
+lifecycle = "2.8.1"
 constraint_compose = "1.0.1"
 coroutines = "1.8.0"
-dagger_hilt = "2.50"
+dagger_hilt = "2.51.1"
 accompanist_pager = "0.28.0"
 accompanist_ui_controller = "0.28.0"
 leak_canary = "2.10"
@@ -33,15 +33,15 @@ rootbeer = "0.1.0"
 showcase_layout_compose = "1.0.6"
 junit = "4.13.2"
 junit_android_ext = "1.1.5"
-coroutines_test = "1.8.0"
+coroutines_test = "1.8.1"
 truth = "1.1.3"
 mockk = "1.13.9"
 turbine = "0.12.1"
 test_runner = "1.5.2"
 timber = "5.0.1"
-agp = "8.3.1"
-composeBom = "2024.03.00"
-coreKtx = "1.12.0"
+agp = "8.3.2"
+composeBom = "2024.05.00"
+coreKtx = "1.13.1"
 toolchains_foojay = "0.5.0"
 
 [libraries]
@@ -67,7 +67,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-material = { group = "androidx.compose.material", name = "material" }
 androidx-material-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose_runtime = { group = "androidx.compose.runtime", name = "runtime" }
-compose_compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose_compiler" }
+compose_compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
 
 # Compose Navigation libraries
 compose_navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
@@ -85,8 +85,8 @@ compose_constraint = { module = "androidx.constraintlayout:constraintlayout-comp
 coroutines_core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 dagger_hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger_hilt" }
-dagger_hilt_plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "dagger_hilt" }
 dagger_hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger_hilt" }
+dagger_hilt_compiler_kotlin = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger_hilt" }
 
 # Google Material library
 desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
@@ -115,10 +115,6 @@ coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 # Truth
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
-# MockK
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-mockk_android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
-
 # Turbine
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
@@ -142,4 +138,4 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 kotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlinGradle = { id = "org.jetbrains.kotlin", version.ref = "kotlin" }
-hiltAndroidGradle = { id = "com.google.dagger", version.ref = "hiltAndroidGradlePluginVersion" }
+hiltAndroidGradle = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidGradlePlugin" }

@@ -1,58 +1,70 @@
 package ly.com.tahaben.infinite_scroll_blocker_presentation
 
-import android.os.Build
-import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.AccessibilityNotRunningContent
+import ly.com.tahaben.core_ui.components.DropDownTextField
 import ly.com.tahaben.core_ui.components.HowDialog
+import ly.com.tahaben.core_ui.components.MyDialog
+import ly.com.tahaben.core_ui.components.NumberPickerDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.core_ui.components.getAnnotatedStringBulletList
 import ly.com.tahaben.core_ui.mirror
-import timber.log.Timber
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,10 +74,12 @@ fun InfiniteScrollingBlockerScreen(
     viewModel: InfiniteScrollBlockerViewModel = hiltViewModel()
 ) {
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
     val state = viewModel.state
     val openDialog = remember { mutableStateOf(false) }
     val openHowDialog = remember { mutableStateOf(false) }
     val openHowAccessibilityDialog = remember { mutableStateOf(false) }
+    val onEvent = viewModel::onEvent
 
     OnLifecycleEvent { _, event ->
         when (event) {
@@ -160,7 +174,7 @@ fun InfiniteScrollingBlockerScreen(
                         }
                     )
                 }
-                Divider()
+                HorizontalDivider()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -176,22 +190,99 @@ fun InfiniteScrollingBlockerScreen(
                         textAlign = TextAlign.Start
                     )
                 }
-                Divider()
-                AnimatedVisibility(visible = true) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                vertical = spacing.spaceSmall
-                            )
-                            .clickable {
-                                openDialog.value = true
-                            }
-                    ) {
+                HorizontalDivider()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                        .clickable {
+                            openDialog.value = true
+                        }
+                ) {
 
-                        Text(text = state.timeoutDuration.toString() + stringResource(id = R.string.minutes))
-                        Text(text = stringResource(R.string.tap_to_set_new_time))
-                        Divider()
+                    Text(text = state.timeoutDuration.toString() + stringResource(id = R.string.minutes))
+                    Text(text = stringResource(R.string.tap_to_set_new_time))
+                }
+                HorizontalDivider()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                        .clickable {
+                            onEvent(InfiniteScrollEvent.OnMsgDialogVisible(true))
+                        }
+                ) {
+
+                    Text(
+                        text = stringResource(id = R.string.msg_isb_timout),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(text = stringResource(R.string.msg_isb_timout_sub))
+                    Text(
+                        text = stringResource(
+                            id = R.string.selected_msg,
+                            state.selectedMessage.asString(context)
+                        ), maxLines = 1, overflow = TextOverflow.Ellipsis
+                    )
+                }
+                HorizontalDivider()
+                val countDownEnabled by
+                derivedStateOf { state.countDownSeconds > 0 }
+
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = countDownEnabled,
+                            onClick = {
+                                if (!countDownEnabled) {
+                                    onEvent(InfiniteScrollEvent.OnCountDownDialogVisible(true))
+                                } else {
+                                    onEvent(InfiniteScrollEvent.SaveCountDownTime(-1))
+                                }
+                            },
+                            role = Role.Switch
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(id = R.string.count_down_after_limit_isb),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(text = stringResource(id = R.string.count_down_after_limit_sub))
+                    }
+                    Switch(
+                        checked = countDownEnabled,
+                        onCheckedChange = { checked ->
+                            if (checked) {
+                                onEvent(InfiniteScrollEvent.OnCountDownDialogVisible(true))
+                            } else {
+                                onEvent(InfiniteScrollEvent.SaveCountDownTime(-1))
+                            }
+                        }
+                    )
+                }
+                HorizontalDivider()
+                AnimatedVisibility(visible = countDownEnabled) {
+                    Column(modifier = Modifier) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = spacing.spaceMedium)
+                                .clickable {
+                                    onEvent(InfiniteScrollEvent.OnCountDownDialogVisible(true))
+                                }
+                        ) {
+
+                            Text(text = state.countDownSeconds.toString() + stringResource(id = R.string.seconds))
+                            Text(text = stringResource(R.string.tap_to_set_new_time))
+                        }
+                        HorizontalDivider()
                     }
                 }
             }
@@ -199,86 +290,29 @@ fun InfiniteScrollingBlockerScreen(
     }
 
     if (openDialog.value) {
-        Dialog(
-            onDismissRequest = { openDialog.value = false },
-            properties = DialogProperties(),
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = AlertDialogDefaults.TonalElevation,
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    Text(
-                        text = stringResource(R.string.remind_me_to_stop_scrolling_after),
-                        style = MaterialTheme.typography.headlineMedium,
-                    )
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    val npVal = remember {
-                        mutableIntStateOf(state.timeoutDuration)
-                    }
-                    Row {
-                        val textColor = MaterialTheme.colorScheme.onSurface.toArgb()
-                        AndroidView(
-                            factory = { context ->
-                                val np = NumberPicker(context)
-                                np.maxValue = 60
-                                np.minValue = 1
-                                np.value = state.timeoutDuration
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    np.textColor = textColor
-                                }
-                                np.setOnValueChangedListener { _, i, i2 ->
-                                    Timber.d("np: oldv: $i newv: $i2")
-                                    npVal.value = i2
-                                }
-                                np
-                            })
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = spacing.spaceExtraSmall)
-                                .align(Alignment.CenterVertically),
-                            text = stringResource(id = R.string.minutes),
-                            style = MaterialTheme.typography.headlineMedium,
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            onClick = {
-                                openDialog.value = false
-                            }
-                        ) {
-                            Text(
-                                stringResource(R.string.dismiss),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                        }
-                        TextButton(
-                            onClick = {
-                                openDialog.value = false
-                                Timber.d("setting as new timeout ${npVal.value}")
-                                viewModel.setTimeoutDuration(npVal.value)
-                            }
-                        ) {
-                            Text(
-                                stringResource(id = R.string.confirm),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                }
+        NumberPickerDialog(
+            onDismissDialog = { openDialog.value = false },
+            initialValue = state.timeoutDuration,
+            minValue = 1,
+            maxValue = 60,
+            unit = stringResource(id = R.string.minutes),
+            onValueChangedListener = { _, _ -> },
+            onConfirmValue = {
+                viewModel.setTimeoutDuration(it)
+                openDialog.value = false
             }
-        }
+        )
+    }
+    if (state.isCountDownDialogVisible) {
+        NumberPickerDialog(
+            onDismissDialog = { onEvent(InfiniteScrollEvent.OnCountDownDialogVisible(false)) },
+            initialValue = state.countDownSeconds.absoluteValue,
+            minValue = 1,
+            maxValue = 30,
+            unit = stringResource(id = R.string.seconds),
+            onValueChangedListener = { _, _ -> },
+            onConfirmValue = { onEvent(InfiniteScrollEvent.SaveCountDownTime(it)) }
+        )
     }
     if (openHowDialog.value) {
         HowDialog(
@@ -293,5 +327,168 @@ fun InfiniteScrollingBlockerScreen(
             gifDescription = stringResource(R.string.how_to_enable_permission),
             onDismiss = { openHowAccessibilityDialog.value = false }
         )
+    }
+    if (state.isMsgDialogVisible) {
+        val msgsScroll = rememberScrollState()
+        MyDialog(onDismissRequest = { onEvent(InfiniteScrollEvent.OnMsgDialogVisible(false)) }) {
+            Crossfade(state.isMsgDialogInEditMode, label = "message dialog") { isEditMode ->
+                Column {
+                    if (isEditMode) {
+                        // Edit mode
+                        Text(text = stringResource(id = R.string.msg_dialog_edit_mode))
+                        Column(
+                            modifier = Modifier
+                                .height(200.dp)
+                                .verticalScroll(msgsScroll),
+                            verticalArrangement = Arrangement.spacedBy(spacing.spaceExtraSmall)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                OutlinedTextField(
+                                    modifier = Modifier.weight(0.80f),
+                                    value = state.msgTextFieldValue,
+                                    label = { Text(text = stringResource(id = R.string.msg_isb_timout)) },
+                                    onValueChange = {
+                                        onEvent(
+                                            InfiniteScrollEvent.OnMsgTextFieldValueChange(it)
+                                        )
+                                    })
+                                IconButton(
+                                    modifier = Modifier.weight(0.20f),
+                                    onClick = { onEvent(InfiniteScrollEvent.OnAddMsg(state.msgTextFieldValue)) }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = stringResource(id = R.string.add_icon)
+                                    )
+                                }
+                            }
+                            for (msg in state.msgSet) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        modifier = Modifier.weight(0.80f),
+                                        text = msg,
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                    IconButton(
+                                        modifier = Modifier.weight(0.20f),
+                                        onClick = { onEvent(InfiniteScrollEvent.OnDeleteMsg(msg)) }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = stringResource(
+                                                id = R.string.delete_icon
+                                            )
+                                        )
+                                    }
+                                }
+                                HorizontalDivider()
+                            }
+                        }
+
+                        Text(
+                            modifier = Modifier.padding(ButtonDefaults.TextButtonContentPadding).pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        onEvent(InfiniteScrollEvent.ResetMessages)
+                                    }
+                                )
+                            },
+                            text = stringResource(id = R.string.reset_messages),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        TextButton(onClick = { onEvent(InfiniteScrollEvent.OnSwitchMsgDialogMode) }) {
+                            Text(
+                                text = stringResource(id = R.string.back_to_select_msg),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
+                    } else {
+                        // select mode
+                        Text(text = stringResource(id = R.string.msg_dialog_text))
+                        Row {
+                            DropDownTextField(
+                                menuModifier = Modifier,
+                                readOnly = true,
+                                menuExpanded = state.isMsgDropdownExpanded,
+                                onExpandedChanged = {
+                                    onEvent(
+                                        InfiniteScrollEvent.OnMsgDropDownExpanded(
+                                            it
+                                        )
+                                    )
+                                },
+                                text = state.selectedMessage.asString(context),
+                                onTextChange = { }
+                            ) {
+                                for (msg in state.msgSet) {
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = msg,
+                                                style = MaterialTheme.typography.labelMedium
+                                            )
+                                        },
+                                        onClick = { onEvent(InfiniteScrollEvent.OnMsgSelected(msg)) },
+                                    )
+                                    HorizontalDivider()
+                                }
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(id = R.string.msg_random),
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    },
+                                    onClick = { onEvent(InfiniteScrollEvent.OnMsgSelected("")) },
+                                    trailingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Shuffle,
+                                            contentDescription = stringResource(id = R.string.msg_random)
+                                        )
+                                    })
+                            }
+                        }
+                        TextButton(onClick = { onEvent(InfiniteScrollEvent.OnSwitchMsgDialogMode) }) {
+                            Text(
+                                text = stringResource(id = R.string.msg_dialog_edit_mode),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                        }
+                        Row {
+                            TextButton(onClick = {
+                                onEvent(
+                                    InfiniteScrollEvent.OnMsgDialogVisible(
+                                        false
+                                    )
+                                )
+                            }) {
+                                Text(
+                                    text = stringResource(id = R.string.cancel),
+                                    style = MaterialTheme.typography.headlineSmall
+                                )
+                            }
+                            TextButton(onClick = {
+                                onEvent(
+                                    InfiniteScrollEvent.OnMsgDialogVisible(
+                                        false
+                                    )
+                                )
+                            }) {
+                                Text(
+                                    text = stringResource(id = R.string.save),
+                                    style = MaterialTheme.typography.headlineSmall
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

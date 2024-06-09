@@ -212,4 +212,38 @@
     <string name="farhan_icon">Farhan icon</string>
     <string name="exact_alarm_permission_description">Please enable reminders permission in the next page to allow Farhan to send you a reminder at your selected time</string>
     <string name="notify_me_permissions_needed_not_granted">Farhan is missing some permissions for Notify me to work properly</string>
+    <string name="seconds">s</string>
+    <string name="count_down_after_limit_isb">Countdown after limit reached</string>
+    <string name="count_down_after_limit_sub">Prevent dismissing the warning dialog for a few seconds after scrolling limit is reached</string>
+    <string name="msg_isb_timout">Message</string>
+    <string name="msg_isb_timout_sub">Select a message to show after scrolling limit is reached.</string>
+    <string name="msg_random">Random message</string>
+    <string name="selected_msg">Selected message: %s</string>
+
+    <string name="time_up_gentle_nudge">Hey there! Feeling good about taking a break?</string>
+    <string name="time_up_direct">Time flies! You\'ve reached your limit. Ready to switch gears?</string>
+    <string name="time_up_wellbeing">Time for a breather! How about giving your eyes and mind a rest?</string>
+    <string name="time_up_playful">Beep boop! Time\'s up. Don\'t worry, your phone will be here when you\'re ready to come back.</string>
+    <string name="time_up_choices">You\'ve reached your time. Want to take a break, or keep going for a bit longer?</string>
+    <string name="time_up_encouragement">You\'ve been infinitely scrolling for a while.  Maybe it\'s a good moment to stretch your legs or grab a snack?</string>
+    <string name="time_up_question">Still having fun?  Just checking in!</string>
+    <string name="time_up_reminder">Remember to take breaks every now and then. Your well-being matters!</string>
+    <string name="add_icon">Add icon</string>
+    <string name="reset_messages">Restore default messages (Press and hold)</string>
+    <string name="save">Save</string>
+    <string name="msg_dialog_text">Select a message to show when limit is reached and press Save.\n or select Random message to show a random message every time.</string>
+    <string name="msg_dialog_edit_mode">Add or delete messages from the list.</string>
+    <string name="back_to_select_msg">Back to select message</string>
+
+    <string-array name="time_up_messages">
+        <item>@string/infinite_scroll_dialog_message</item>
+        <item>@string/time_up_gentle_nudge</item>
+        <item>@string/time_up_direct</item>
+        <item>@string/time_up_wellbeing</item>
+        <item>@string/time_up_playful</item>
+        <item>@string/time_up_choices</item>
+        <item>@string/time_up_encouragement</item>
+        <item>@string/time_up_question</item>
+        <item>@string/time_up_reminder</item>
+    </string-array>
 </resources>
