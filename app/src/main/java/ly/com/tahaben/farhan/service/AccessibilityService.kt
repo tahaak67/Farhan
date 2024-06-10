@@ -174,11 +174,11 @@ class AccessibilityService : AccessibilityService() {
             }
 
             val scrollingTime =
-                (System.currentTimeMillis() - scrollViewInfo.addedAt).milliseconds.inWholeSeconds
+                (System.currentTimeMillis() - scrollViewInfo.addedAt).milliseconds.inWholeMinutes
 
             Timber.d("scrolling time = $scrollingTime")
             Timber.d("isinfinite = $isInfinite")
-            if (true && scrollingTime >= infiniteScrollUseCases.getTimeOutDuration()) {
+            if (isInfinite && scrollingTime >= infiniteScrollUseCases.getTimeOutDuration()) {
                 showDialog(event.packageName.toString())
                 recentScrollViews.clear()
             }
