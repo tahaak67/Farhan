@@ -94,7 +94,6 @@ fun NumberPickerDialog(
                             .padding(horizontal = spacing.spaceExtraSmall)
                             .align(Alignment.CenterVertically),
                         text = unit,
-                        style = MaterialTheme.typography.headlineMedium,
                     )
                 }
                 Spacer(modifier = androidx.compose.ui.Modifier.height(spacing.spaceMedium))
@@ -108,16 +107,14 @@ fun NumberPickerDialog(
                         }
                     ) {
                         Text(
-                            stringResource(R.string.dismiss),
-                            style = MaterialTheme.typography.headlineSmall
+                            stringResource(R.string.dismiss)
                         )
                     }
                     TextButton(
                         onClick = { onConfirmValue(currentValue) }
                     ) {
                         Text(
-                            stringResource(id = R.string.confirm),
-                            style = MaterialTheme.typography.headlineSmall
+                            stringResource(id = R.string.confirm)
                         )
                     }
                 }

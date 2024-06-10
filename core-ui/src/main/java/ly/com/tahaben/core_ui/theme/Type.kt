@@ -22,7 +22,6 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = CairoFont,
         fontWeight = FontWeight.W500,
-        fontSize = 20.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = CairoFont,
