@@ -14,6 +14,17 @@ interface Preferences {
     fun setInfiniteScrollTimeOut(minutes: Int)
     fun loadDarkModeOn(): String
     fun loadThemeColors(): String
+    fun getCountDownSeconds(): Int
+    fun setCountDownSeconds(seconds: Int)
+
+    fun setCustomMessage(message: String)
+    fun getCustomMessage(): String
+    fun getRandomMessage(): String
+    fun addMessageToArray(msg: String)
+    fun removeMessageFromArray(msg: String)
+    fun getMessagesArray(): Set<String>
+    fun resetMessagesArray()
+
 
     companion object {
         const val KEY_INFINITE_SCROLL_SERVICE_STATS = "infinite_scroll_service_stats"
@@ -23,5 +34,8 @@ interface Preferences {
             "infinite_scroll_should_show_on_boarding"
         const val KEY_APP_DARK_MODE_ON = "app_dark_mode_on"
         const val KEY_APP_THEME_COLORS = "app_theme_colors"
+        const val KEY_COUNT_DOWN_TIME = "count_down_time"
+        const val KEY_CUSTOM_MESSAGE = "custom_message"
+        const val KEY_MESSAGES_ARRAY = "message_array"
     }
 }

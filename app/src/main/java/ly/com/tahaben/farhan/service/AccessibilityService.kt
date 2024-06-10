@@ -7,20 +7,26 @@ import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
+import android.os.CountDownTimer
 import android.provider.Settings
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
@@ -31,7 +37,13 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -39,6 +51,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -59,6 +72,7 @@ import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 const val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
 const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
@@ -175,6 +189,7 @@ class AccessibilityService : AccessibilityService() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun showDialog(packageName: String) {
+        val countDownSeconds = infiniteScrollUseCases.getCountDown()
         val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -189,9 +204,32 @@ class AccessibilityService : AccessibilityService() {
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         )
-
+        val dialogMsg = infiniteScrollUseCases.getDialogMessage()
         val composeView = ComposeView(this)
         composeView.setContent {
+            var currentCountDown by remember {
+                mutableIntStateOf(countDownSeconds)
+            }
+            val dismissEnabled by remember {
+                derivedStateOf { currentCountDown <= 0 }
+            }
+            val timer = object : CountDownTimer(countDownSeconds.seconds.inWholeMilliseconds, 1.seconds.inWholeMilliseconds) {
+                override fun onTick(p0: Long) {
+                    currentCountDown -= 1
+                    Timber.d("tick: $currentCountDown")
+                }
+
+                override fun onFinish()  {
+                    currentCountDown = 0
+                    Timber.d("on finished")
+                }
+            }
+            DisposableEffect(key1 = Unit) {
+                timer.start()
+                onDispose {
+                    timer.cancel()
+                }
+            }
             FarhanTheme(darkMode = isDarkMode.isCurrentlyDark(), colorStyle = themeColors) {
                 val scope = rememberCoroutineScope()
                 val bottomSheetState = rememberBottomSheetScaffoldState(
@@ -238,9 +276,18 @@ class AccessibilityService : AccessibilityService() {
                                     colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onSurface)
                                 )
                             }
-                            Text(
-                                text = stringResource(id = R.string.infinite_scroll_dialog_message)
-                            )
+                            Row(Modifier.fillMaxWidth()) {
+                                Text(modifier = Modifier.weight(0.8f),text = dialogMsg)
+                                Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                                Crossfade(modifier = Modifier.weight(0.2f),targetState = dismissEnabled) { isEnabled ->
+                                    if (!isEnabled){
+                                        AnimatedContent(targetState = currentCountDown) {
+                                            Text(text = it.toString(), fontStyle = FontStyle.Italic)
+                                        }
+                                    }
+                                }
+                            }
+
                             Button(
                                 modifier = Modifier.fillMaxWidth(),
                                 onClick = {
@@ -253,14 +300,11 @@ class AccessibilityService : AccessibilityService() {
                                 }) {
                                 Text(text = stringResource(id = R.string.take_me_out_of_here))
                             }
-                            TextButton(onClick = {
-                                dismissOverlay()
-                            }) {
-                                Text(
-                                    text = stringResource(id = R.string.continue_scrolling),
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
+                            Text(
+                                modifier = Modifier.clickable { if (dismissEnabled) dismissOverlay() else Unit },
+                                text = stringResource(id = R.string.continue_scrolling),
+                                style = MaterialTheme.typography.labelSmall
+                            )
                             Text(
                                 modifier = Modifier
                                     .pointerInput(Unit) {

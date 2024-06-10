@@ -192,5 +192,26 @@
     <string name="theme_colors">ألوان السمة</string>
     <string name="exact_alarm_permission_description">يرجى تفعيل إذن التذكيرات من الشاشة القادمة حتى يتمكن فرحان من تذكيرك بتفقد الإشعارات في الوقت الذي حددته</string>
     <string name="notify_me_permissions_needed_not_granted">فرحان يحتاج إلى بعض الإذونات لتعمل ذكرني بشكل صحيح</string>
+    <string name="seconds">ث</string>
+    <string name="time_up_gentle_nudge">أهلًا! هل تشعر أنك بحاجة إلى استراحة؟</string>
+    <string name="time_up_direct">يمر الوقت سريعًا! لقد وصلت إلى الحد الزمني المحدد. هل أنت مستعد لتغيير النشاط؟</string>
+    <string name="time_up_wellbeing">حان وقت الاستراحة! ماذا عن إراحة عينيك وعقلك قليلً؟</string>
+    <string name="time_up_playful">بيب بوب! انتهى الوقت. لا تقلق، سيبقى هاتفك هنا في انتظارك عندما تكون مستعدًا للعودة.</string>
+    <string name="time_up_choices">لقد وصلت إلى الحد الزمني المحدد. هل تريد أخذ استراحة، أم الاستمرار قليلًا؟</string>
+    <string name="time_up_encouragement">لقد كنت تمرر في هذا التطبيق لفترة من الوقت. ربما حان الوقت لتمديد ساقيك أو تناول وجبة خفيفة؟</string>
+    <string name="time_up_question">هل ما زلت تستمتع بوقتك؟ فقط أردت الاطمئنان!</string>
+    <string name="time_up_reminder">تذكر أن تأخذ فترات راحة بين الحين والآخر. صحتك مهمة!</string>
+    <string name="add_icon">أيقونة الإضافة</string>
+    <string name="reset_messages">استرجاع الرسائل الإفتراضية (اضغط باستمرام)</string>
+    <string name="save">حفظ</string>
+    <string name="count_down_after_limit_isb">العد تنازلياً عند الوصول إلى الحد</string>
+    <string name="count_down_after_limit_sub">امنع اغلاق نافذة التحذير لثواني معدومة عند الوصول الى حد التمرير</string>
+    <string name="msg_isb_timout">رسالة</string>
+    <string name="msg_isb_timout_sub">اختر رسالة لإظهارها عند الوصول الى حد التمرير.</string>
+    <string name="msg_random">رسالة عشوائية</string>
+    <string name="selected_msg">الرسالة المختارة: %s</string>
+    <string name="msg_dialog_text">اختر رسالة لإظهارها عند الوصول للحد ثم اضغط حفظ. او اختر رسالة عشوائية لإظهار رسالة مختلفة في كل مرة.</string>
+    <string name="msg_dialog_edit_mode">اضف او احذف رسالة من القائمة</string>
+    <string name="back_to_select_msg">العودة الى اختيار الرسالة</string>
 </resources>
 

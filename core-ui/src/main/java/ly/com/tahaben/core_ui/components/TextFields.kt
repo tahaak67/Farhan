@@ -32,6 +32,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material3.*
+import androidx.compose.ui.composed
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.window.PopupProperties
 
 @Composable
 fun SearchTextField(
@@ -98,5 +106,70 @@ fun SearchTextField(
     }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDownTextField(
+    modifier: Modifier = Modifier,menuModifier: Modifier = Modifier,readOnly: Boolean = false, menuExpanded: Boolean, onExpandedChanged: (Boolean) -> Unit,
+    text: String, onTextChange: (String) -> Unit, menuContent: @Composable ColumnScope.() -> Unit
+) {
+    ExposedDropdownMenuBox(
+        modifier = modifier,
+        expanded = menuExpanded,
+        onExpandedChange = onExpandedChanged
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.menuAnchor(),
+            readOnly = readOnly,
+            value = text,
+            onValueChange = onTextChange,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuExpanded) })
+        DropdownMenu(
+            modifier = menuModifier.exposedDropdownSize(),
+            expanded = menuExpanded,
+            onDismissRequest = { onExpandedChanged(false) },
+            properties = PopupProperties(focusable = false),
+            content = menuContent
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDownTextField(
+    modifier: Modifier = Modifier, menuExpanded: Boolean, onExpandedChanged: (Boolean) -> Unit,
+    text: TextFieldValue, onTextChange: (TextFieldValue) -> Unit, menuContent: @Composable ColumnScope.() -> Unit
+) {
+    ExposedDropdownMenuBox(
+        modifier = modifier,
+        expanded = menuExpanded,
+        onExpandedChange = onExpandedChanged
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.menuAnchor(),
+            value = text,
+            onValueChange = onTextChange,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuExpanded) })
+        DropdownMenu(
+            modifier = Modifier.exposedDropdownSize(),
+            expanded = menuExpanded,
+            onDismissRequest = { onExpandedChanged(false) },
+            properties = PopupProperties(focusable = false),
+            content = menuContent
+        )
+    }
+}
+
+fun Modifier.moveDownOnTab(focusManager: FocusManager): Modifier = composed {
+    this.onPreviewKeyEvent {
+        if (it.key == Key.Tab && it.type == KeyEventType.KeyDown) {
+            focusManager.moveFocus(FocusDirection.Down)
+            true
+        } else {
+            false
+        }
     }
 }

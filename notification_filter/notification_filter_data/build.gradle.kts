@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.hiltAndroidGradle)
 }
 android {
     namespace = "ly.com.tahaben.notification_filter_data"

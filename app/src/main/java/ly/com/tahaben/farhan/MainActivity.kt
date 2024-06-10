@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -78,8 +78,8 @@ class MainActivity : ComponentActivity() {
         val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
         val tip = getTip()
         setContent {
-            val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
-            val mainState = mainScreenViewModel.mainScreenState.collectAsStateWithLifecycle().value
+            val mainScreenViewModel= hiltViewModel<MainScreenViewModel>()
+            val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
             val isDarkMode = when (mainState.uiMode) {
                 UIModeAppearance.DARK_MODE -> true
                 UIModeAppearance.LIGHT_MODE -> false
@@ -141,8 +141,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.MAIN) {
                             val mainScreenUiEvent =
-                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
-                                    initialValue = UiEvent.HideSnackBar
+                                mainScreenViewModel.uiEvent.collectAsState(
+                                    initial = UiEvent.HideSnackBar
                                 ).value
                             MainScreen(
                                 tip = tip,

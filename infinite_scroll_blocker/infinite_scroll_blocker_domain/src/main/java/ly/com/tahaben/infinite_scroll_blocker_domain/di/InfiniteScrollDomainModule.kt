@@ -39,7 +39,9 @@ object InfiniteScrollDomainModule {
             SaveShouldShowOnBoarding(preferences),
             LoadShouldShowOnBoarding(preferences),
             IsDarkModeEnabled(preferences),
-            GetCurrentThemeColors(preferences)
+            GetCurrentThemeColors(preferences),
+            GetCountDown(preferences),
+            GetDialogMessage(preferences)
         )
     }
 }
