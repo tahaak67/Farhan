@@ -35,7 +35,6 @@ junit = "4.13.2"
 junit_android_ext = "1.1.5"
 coroutines_test = "1.8.1"
 truth = "1.1.3"
-mockk = "1.13.9"
 turbine = "0.12.1"
 test_runner = "1.5.2"
 timber = "5.0.1"
@@ -86,7 +85,6 @@ coroutines_core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 
 dagger_hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger_hilt" }
 dagger_hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger_hilt" }
-dagger_hilt_compiler_kotlin = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger_hilt" }
 
 # Google Material library
 desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }

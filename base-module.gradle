@@ -41,7 +41,6 @@ android {
 dependencies {
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
-    kapt(libs.dagger.hilt.compiler.kotlin)
     implementation(libs.timber)
 
     testImplementation(libs.junit4)

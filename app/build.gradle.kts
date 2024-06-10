@@ -69,7 +69,6 @@ dependencies {
 
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
-    kapt(libs.dagger.hilt.compiler.kotlin)
 
     implementation(libs.timber)
     debugImplementation(libs.leakCanary)
@@ -113,7 +112,7 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.turbine)
     testImplementation(libs.compose.ui.test)
-//    testImplementation(libs.mockk)
+
 
     androidTestImplementation(libs.junit4)
     androidTestImplementation(libs.junit.android.ext)
@@ -121,7 +120,7 @@ dependencies {
     androidTestImplementation(libs.coroutines.test)
     androidTestImplementation(libs.turbine)
     androidTestImplementation(libs.compose.ui.test)
-//    androidTestImplementation(libs.mockk.android)
+
 
     androidTestImplementation(libs.hilt.testing)
     kaptAndroidTest(libs.dagger.hilt.compiler)
