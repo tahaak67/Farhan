@@ -67,7 +67,6 @@ dependencies {
     testImplementation(libs.truth)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.compose.ui.test)
-    testImplementation(libs.mockk)
 
     androidTestImplementation(libs.junit4)
     androidTestImplementation(libs.junit.android.ext)
