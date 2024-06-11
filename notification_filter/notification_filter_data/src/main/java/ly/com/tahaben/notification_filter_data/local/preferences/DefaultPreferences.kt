@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 class DefaultPreferences(
     private val sharedPref: SharedPreferences
@@ -133,5 +133,15 @@ class DefaultPreferences(
         return calendar.get(Calendar.DAY_OF_MONTH) == scheduleDate.get(Calendar.DAY_OF_MONTH) &&
                 calendar.get(Calendar.MONTH) == scheduleDate.get(Calendar.MONTH) &&
                 calendar.get(Calendar.YEAR) == scheduleDate.get(Calendar.YEAR)
+    }
+
+    override fun getSettingsShouldShowWarning(): Boolean {
+        return sharedPref.getBoolean(Preferences.KEY_NOTIFICATION_FILTER_WARNING, true)
+    }
+
+    override fun setSettingsShouldShowWarning(shouldShow: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.KEY_NOTIFICATION_FILTER_WARNING, shouldShow)
+            .apply()
     }
 }

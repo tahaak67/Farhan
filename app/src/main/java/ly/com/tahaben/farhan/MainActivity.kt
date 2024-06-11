@@ -256,7 +256,8 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToExceptions = { navController.navigate(Routes.NOTIFICATION_FILTER_EXCEPTIONS) },
                                 onNavigateUp = { navController.navigateUp() },
                                 shouldShowRational = ::shouldShowRational,
-                                snackbarHostState = snackbarHostState
+                                snackbarHostState = snackbarHostState,
+                                isDarkMode = isDarkMode
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING_EXCEPTIONS) {

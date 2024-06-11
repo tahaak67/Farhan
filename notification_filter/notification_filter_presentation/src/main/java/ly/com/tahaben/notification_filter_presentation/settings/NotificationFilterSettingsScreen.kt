@@ -19,6 +19,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,22 +42,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.components.MyDialog
 import ly.com.tahaben.core_ui.components.PermissionDialog
 import ly.com.tahaben.core_ui.components.PostNotificationPermissionTextProvider
 import ly.com.tahaben.core_ui.components.ScheduleExactAlarmPermissionTextProvider
 import ly.com.tahaben.core_ui.mirror
+import ly.com.tahaben.core_ui.util.getAnnotatedStringResource
+import ly.com.tahaben.showcase_layout_compose.model.Arrow
+import ly.com.tahaben.showcase_layout_compose.model.Head
+import ly.com.tahaben.showcase_layout_compose.model.ShowcaseMsg
+import ly.com.tahaben.showcase_layout_compose.model.Side
+import ly.com.tahaben.showcase_layout_compose.ui.ShowcaseLayout
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +77,8 @@ fun NotificationFilterSettingsScreen(
     onNavigateToExceptions: () -> Unit,
     viewModel: NotificationSettingsViewModel = hiltViewModel(),
     shouldShowRational: (String) -> Boolean,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    isDarkMode: Boolean
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -146,173 +158,194 @@ fun NotificationFilterSettingsScreen(
             snackbarHostState.currentSnackbarData?.dismiss()
         }
     }
+    val msgStyle = ShowcaseMsg("", msgBackground = MaterialTheme.colorScheme.background, roundedCorner = 15.dp, textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground))
+    val annotatedString = getAnnotatedStringResource( R.string.notification_filter_settings_greeting)
 
-    Column(
-        Modifier
-            .fillMaxSize()
-    ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(id = R.string.notifications_filter_settings))
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            navigationIcon = {
-                IconButton(onClick = onNavigateUp) {
-                    Icon(
-                        modifier = Modifier.mirror(),
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back)
+    ShowcaseLayout(
+        isDarkLayout = isDarkMode,
+        greeting = msgStyle.copy(annotatedString),
+        isShowcasing = state.isShowcaseOn,
+        onFinish = {
+            viewModel.onEvent(NotificationSettingsEvent.OnShouldShowcase(false))
+        }) {
+        val filterSwitchMsg = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg1), arrow = Arrow(head = Head.TRIANGLE, color = MaterialTheme.colorScheme.background))
+        val exceptionsMsg1 = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg2))
+        val exceptionsMsg2 = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg3))
+        val exceptionsMsg3 = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg4),arrow = Arrow(targetFrom = Side.Top,head = Head.TRIANGLE, color = MaterialTheme.colorScheme.background))
+        val notifyMeMsg1 = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg5))
+        val notifyMeMsg2 = msgStyle.copy(getAnnotatedStringResource(id = R.string.notification_filter_settings_showcase_msg6), arrow = Arrow(targetFrom = Side.Top, head = Head.TRIANGLE, color = MaterialTheme.colorScheme.background))
+        Column(
+            Modifier
+                .fillMaxSize()
+        ) {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.notifications_filter_settings))
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                navigationIcon = {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(
+                            modifier = Modifier.mirror(),
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back)
+                        )
+                    }
+                }
+            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = spacing.spaceMedium)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .showcase(1, filterSwitchMsg)
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = state.isServiceEnabled,
+                            onClick = {
+                                viewModel.setServiceStats(!state.isServiceEnabled)
+                            },
+                            role = Role.Switch
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                    Text(text = stringResource(R.string.notifications_filter))
+                    Switch(
+                        checked = state.isServiceEnabled,
+                        onCheckedChange = { checked ->
+                            viewModel.setServiceStats(checked)
+                        }
                     )
                 }
-            }
-        )
-        Column(
-            modifier = Modifier
-                .padding(horizontal = spacing.spaceMedium)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = spacing.spaceMedium)
-                    .selectable(
-                        selected = state.isServiceEnabled,
-                        onClick = {
-                            viewModel.setServiceStats(!state.isServiceEnabled)
+                Divider()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .showcase(2, exceptionsMsg1)
+                        .showcase(3, exceptionsMsg2)
+                        .showcase(4, exceptionsMsg3)
+                        .padding(vertical = spacing.spaceMedium)
+                        .clickable {
+                            onNavigateToExceptions()
                         },
-                        role = Role.Switch
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                Text(text = stringResource(R.string.notifications_filter))
-                Switch(
-                    checked = state.isServiceEnabled,
-                    onCheckedChange = { checked ->
-                        viewModel.setServiceStats(checked)
-                    }
-                )
-            }
-            Divider()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = spacing.spaceMedium)
-                    .clickable {
-                        onNavigateToExceptions()
-                    },
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.exceptions),
-                    textAlign = TextAlign.Start
-                )
-            }
-            Divider()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = spacing.spaceMedium)
-                    .selectable(
-                        selected = state.isNotifyMeEnabled,
-                        onClick = {
-                            if (state.isNotifyMeEnabled) {
-                                viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
-                            } else {
-                                viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
-                            }
-                        },
-                        role = Role.Switch
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column {
-                    Text(text = stringResource(R.string.notify_me))
                     Text(
-                        text = stringResource(R.string.notify_me_description),
+                        text = stringResource(R.string.exceptions),
                         textAlign = TextAlign.Start
                     )
                 }
-                Switch(
-                    checked = state.isNotifyMeEnabled,
-                    onCheckedChange = { checked ->
-                        if (!checked) {
-                            viewModel.setNotifyMeTime(-1, -1)
-                        } else {
-                            viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
-                        }
+                Divider()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .showcase(5, notifyMeMsg1)
+                        .showcase(6, notifyMeMsg2)
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = state.isNotifyMeEnabled,
+                            onClick = {
+                                if (state.isNotifyMeEnabled) {
+                                    viewModel.onEvent(NotificationSettingsEvent.CancelNotifyMe)
+                                } else {
+                                    viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
+                                }
+                            },
+                            role = Role.Switch
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column {
+                        Text(text = stringResource(R.string.notify_me))
+                        Text(
+                            text = stringResource(R.string.notify_me_description),
+                            textAlign = TextAlign.Start
+                        )
                     }
-                )
-            }
-            val timePickerState = rememberTimePickerState()
-            if (state.isTimePickerVisible) {
-                Dialog(onDismissRequest = {
-                    viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
-                }) {
-                    Surface(
-                        shape = MaterialTheme.shapes.extraLarge,
-                        tonalElevation = AlertDialogDefaults.TonalElevation
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(spacing.spaceLarge)
+                    Switch(
+                        checked = state.isNotifyMeEnabled,
+                        onCheckedChange = { checked ->
+                            if (!checked) {
+                                viewModel.setNotifyMeTime(-1, -1)
+                            } else {
+                                viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
+                            }
+                        }
+                    )
+                }
+                val timePickerState = rememberTimePickerState()
+                if (state.isTimePickerVisible) {
+                    Dialog(onDismissRequest = {
+                        viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
+                    }) {
+                        Surface(
+                            shape = MaterialTheme.shapes.extraLarge,
+                            tonalElevation = AlertDialogDefaults.TonalElevation
                         ) {
-                            TimePicker(
-                                state = timePickerState,
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
+                            Column(
+                                modifier = Modifier.padding(spacing.spaceLarge)
                             ) {
-                                TextButton(onClick = {
-                                    viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
-                                }) {
-                                    Text(
-                                        text = stringResource(id = R.string.cancel),
-                                        style = MaterialTheme.typography.labelLarge
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                                TextButton(onClick = {
-                                    viewModel.onEvent(
-                                        NotificationSettingsEvent.SaveNotifyMeTime(
-                                            timePickerState.hour,
-                                            timePickerState.minute
+                                TimePicker(
+                                    state = timePickerState,
+                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    TextButton(onClick = {
+                                        viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
+                                    }) {
+                                        Text(
+                                            text = stringResource(id = R.string.cancel),
+                                            style = MaterialTheme.typography.labelLarge
                                         )
-                                    )
-                                }) {
-                                    Text(
-                                        text = stringResource(id = R.string.ok),
-                                        style = MaterialTheme.typography.labelLarge
-                                    )
-                                }
+                                    }
+                                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                                    TextButton(onClick = {
+                                        viewModel.onEvent(
+                                            NotificationSettingsEvent.SaveNotifyMeTime(
+                                                timePickerState.hour,
+                                                timePickerState.minute
+                                            )
+                                        )
+                                    }) {
+                                        Text(
+                                            text = stringResource(id = R.string.ok),
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
+                                    }
 
+                                }
                             }
                         }
                     }
                 }
-            }
-            AnimatedVisibility(visible = state.isNotifyMeEnabled) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = spacing.spaceSmall)
-                        .clickable {
-                            viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
-                        },
-                ) {
-                    if (state.notifyMeHour != -1) {
-                        Text(text = "${state.notifyMeHour}:${state.notifyMeMinute}")
+                AnimatedVisibility(visible = state.isNotifyMeEnabled) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = spacing.spaceSmall)
+                            .clickable {
+                                viewModel.onEvent(NotificationSettingsEvent.ShowNotifyMeTimePicker)
+                            },
+                    ) {
+                        if (state.notifyMeHour != -1) {
+                            Text(text = "${state.notifyMeHour}:${state.notifyMeMinute}")
+                        }
+                        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+                        Text(text = stringResource(R.string.tap_to_set_new_time))
                     }
-                    Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
-                    Text(text = stringResource(R.string.tap_to_set_new_time))
                 }
+                Divider()
             }
-            Divider()
-        }
 
+        }
     }
 
     dialogQueue
@@ -346,6 +379,46 @@ fun NotificationFilterSettingsScreen(
                 }
             )
         }
+    if (state.isWarningDialogVisible) {
+        MyDialog(onDismissRequest = {}) {
+            var doNotShowAgain by rememberSaveable {
+                mutableStateOf(false)
+            }
+            Text(text = stringResource(id = R.string.notification_filter_warning_title), style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(id = R.string.notification_filter_warning_message))
+            Row(
+                modifier = Modifier
+                    .selectable(
+                        selected = doNotShowAgain,
+                        onClick = { doNotShowAgain = !doNotShowAgain },
+                        role = Role.Checkbox
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = stringResource(id = R.string.do_not_show_again))
+                Checkbox(checked = doNotShowAgain, onCheckedChange = {doNotShowAgain = it})
+            }
+            Row {
+                TextButton(onClick = {
+                    viewModel.onEvent(
+                        NotificationSettingsEvent.DismissWarningDialog(
+                            doNotShowAgain
+                        )
+                    )
+                }) {
+                    Text(text = stringResource(id = R.string.i_understand))
+                }
+                Spacer(modifier = Modifier.width(spacing.spaceMedium))
+                TextButton(onClick = {
+                    viewModel.onEvent(NotificationSettingsEvent.OnShouldShowcase(true))
+                    viewModel.onEvent(NotificationSettingsEvent.DismissWarningDialog(false))
+                }) {
+                    Text(text = stringResource(id = R.string.tell_me_more))
+                }
+
+            }
+        }
+    }
 }
 
 

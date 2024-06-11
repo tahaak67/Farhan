@@ -10,5 +10,7 @@ data class NotificationFilterSettingsState(
     val notifyMeMinute: Int = -1,
     val isTimePickerVisible: Boolean = false,
     val visiblePermissionDialogQueue: SnapshotStateList<String> = mutableStateListOf(),
-    val declinedPermissions: SnapshotStateList<String> = mutableStateListOf()
+    val declinedPermissions: SnapshotStateList<String> = mutableStateListOf(),
+    val isWarningDialogVisible: Boolean = false,
+    val isShowcaseOn: Boolean = false
 )

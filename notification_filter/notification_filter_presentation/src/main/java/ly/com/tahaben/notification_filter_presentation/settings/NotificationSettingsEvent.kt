@@ -8,5 +8,6 @@ sealed class NotificationSettingsEvent {
     object DismissPermissionDialog : NotificationSettingsEvent()
     object OpenExactAlarmPermissionPage : NotificationSettingsEvent()
     data class DeclinedPermission(val permission: String) : NotificationSettingsEvent()
-
+    data class DismissWarningDialog(val doNotShowAgain: Boolean) : NotificationSettingsEvent()
+    data class OnShouldShowcase(val showcase: Boolean): NotificationSettingsEvent()
 }
