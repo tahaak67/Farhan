@@ -236,6 +236,18 @@
     <string name="back_to_select_msg">Back to select message</string>
     <string name="exclude_this_app">Exclude this app</string>
     <string name="app_info">App info</string>
+    <string name="notification_filter_warning_title">Hold Up!</string>
+    <string name="notification_filter_warning_message">Turning on the notification filter means most apps won\'t be able to send you notifications directly. You\'ll need to open Farhan to see what you\'ve missed.\n\nDon\'t worry, you can add important apps (like messaging or alarms) to the exceptions list so you don\'t miss anything crucial.\n\nWant a daily reminder to check your filtered notifications? You can do that with Notify me!</string>
+    <string name="do_not_show_again">Do not show again</string>
+    <string name="i_understand">I understand</string>
+    <string name="tell_me_more">Explain please</string>
+    <string name="notification_filter_settings_greeting"><![CDATA[Hello there! Welcome to the notification filter settings.\nLet me take you on a quick tour <b>Tap anywhere</b> to continue.]]></string>
+    <string name="notification_filter_settings_showcase_msg1"><![CDATA[This is the filter switch, when the switch is on notifications <b>will be filtered</b>]]></string>
+    <string name="notification_filter_settings_showcase_msg2"><![CDATA[You can open the <b>exceptions</b> from here and add apps that you don\'t want to filter notifications for]]></string>
+    <string name="notification_filter_settings_showcase_msg3"><![CDATA[Say you want to have a notification when receive a new message on <b>Signal</b> app]]></string>
+    <string name="notification_filter_settings_showcase_msg4"><![CDATA[You can open <b>Exception</b>, find the Signal app from the list and <b>turn on the switch</b> next to it and that\'s it!]]></string>
+    <string name="notification_filter_settings_showcase_msg5"><![CDATA[Its good that you won\'t be distracted by notifications throughout the day, but sometimes you can forget to check Farhan to see what notifications you had for days! 🙁]]></string>
+    <string name="notification_filter_settings_showcase_msg6"><![CDATA[Don\'t worry 😀 you can setup <b>Notify me</b> from here!, when turned on you will be notified at a <b>time you set</b> to come check your notifications]]></string>
 
     <string-array name="time_up_messages">
         <item>@string/infinite_scroll_dialog_message</item>

@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationSettingsViewModel @Inject constructor(
-    private val notificationFilterUseCases: NotificationFilterUseCases
+    private val notificationFilterUseCases: NotificationFilterUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     var state by mutableStateOf(NotificationFilterSettingsState())
@@ -31,6 +32,7 @@ class NotificationSettingsViewModel @Inject constructor(
         checkServiceStats()
         getNotifyState()
         performPermissionSilentChecks()
+        shouldShowWarningDialog()
     }
 
 
@@ -129,6 +131,21 @@ class NotificationSettingsViewModel @Inject constructor(
             NotificationSettingsEvent.OpenExactAlarmPermissionPage -> {
                 openExactAlarmsPermissionScreen()
             }
+
+            is NotificationSettingsEvent.DismissWarningDialog -> {
+                state = state.copy(
+                    isWarningDialogVisible = false
+                )
+                if (event.doNotShowAgain) {
+                    preferences.setSettingsShouldShowWarning(false)
+                }
+            }
+
+            is NotificationSettingsEvent.OnShouldShowcase -> {
+                state = state.copy(
+                    isShowcaseOn = event.showcase
+                )
+            }
         }
 
     }
@@ -168,4 +185,11 @@ class NotificationSettingsViewModel @Inject constructor(
             _event.send(UiEventNotificationSettings.PerformSilentChecks)
         }
     }
+
+    private fun shouldShowWarningDialog(){
+        state = state.copy(
+            isWarningDialogVisible = preferences.getSettingsShouldShowWarning()
+        )
+    }
+
 }

@@ -173,4 +173,20 @@ class MainScreenViewModel @Inject constructor(
         useCases.setMainSwitchState(isEnabled)
     }
 
+    /**
+    * Forces light more regardless of user settings, can be useful in case of using showcase layout where background needs
+    * to be bright to show the tutorial.
+    * @param on weather or not light mode should be forced, pass false to fall back to user settings.
+    * */
+    fun forceLightMode(on: Boolean) {
+        if (on){
+            _mainScreenState.update {
+                it.copy(
+                    uiMode = UIModeAppearance.LIGHT_MODE
+                )
+            }
+        } else {
+            getUiAppearanceSettings()
+        }
+    }
 }

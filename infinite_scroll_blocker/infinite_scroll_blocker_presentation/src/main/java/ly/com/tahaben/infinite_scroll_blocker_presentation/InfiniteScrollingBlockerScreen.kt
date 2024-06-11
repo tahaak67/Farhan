@@ -371,8 +371,7 @@ fun InfiniteScrollingBlockerScreen(
                                 ) {
                                     Text(
                                         modifier = Modifier.weight(0.80f),
-                                        text = msg,
-                                        style = MaterialTheme.typography.labelMedium
+                                        text = msg
                                     )
                                     IconButton(
                                         modifier = Modifier.weight(0.20f),
@@ -398,14 +397,12 @@ fun InfiniteScrollingBlockerScreen(
                                 )
                             },
                             text = stringResource(id = R.string.reset_messages),
-                            style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.primary
                         )
 
                         TextButton(onClick = { onEvent(InfiniteScrollEvent.OnSwitchMsgDialogMode) }) {
                             Text(
-                                text = stringResource(id = R.string.back_to_select_msg),
-                                style = MaterialTheme.typography.headlineSmall
+                                text = stringResource(id = R.string.back_to_select_msg)
                             )
                         }
                     } else {
@@ -430,8 +427,7 @@ fun InfiniteScrollingBlockerScreen(
                                     DropdownMenuItem(
                                         text = {
                                             Text(
-                                                text = msg,
-                                                style = MaterialTheme.typography.labelMedium
+                                                text = msg
                                             )
                                         },
                                         onClick = { onEvent(InfiniteScrollEvent.OnMsgSelected(msg)) },
@@ -441,8 +437,7 @@ fun InfiniteScrollingBlockerScreen(
                                 DropdownMenuItem(
                                     text = {
                                         Text(
-                                            text = stringResource(id = R.string.msg_random),
-                                            style = MaterialTheme.typography.labelMedium
+                                            text = stringResource(id = R.string.msg_random)
                                         )
                                     },
                                     onClick = { onEvent(InfiniteScrollEvent.OnMsgSelected("")) },
@@ -457,7 +452,7 @@ fun InfiniteScrollingBlockerScreen(
                         TextButton(onClick = { onEvent(InfiniteScrollEvent.OnSwitchMsgDialogMode) }) {
                             Text(
                                 text = stringResource(id = R.string.msg_dialog_edit_mode),
-                                style = MaterialTheme.typography.headlineSmall
+
                             )
                         }
                         Row {
@@ -470,7 +465,7 @@ fun InfiniteScrollingBlockerScreen(
                             }) {
                                 Text(
                                     text = stringResource(id = R.string.cancel),
-                                    style = MaterialTheme.typography.headlineSmall
+
                                 )
                             }
                             TextButton(onClick = {
@@ -482,7 +477,7 @@ fun InfiniteScrollingBlockerScreen(
                             }) {
                                 Text(
                                     text = stringResource(id = R.string.save),
-                                    style = MaterialTheme.typography.headlineSmall
+
                                 )
                             }
                         }
