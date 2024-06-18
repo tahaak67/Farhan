@@ -81,9 +81,6 @@ class WidgetWorker constructor(
                     (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
         }
         Timber.d("filter usage data  ...")
-        filteredData.forEachIndexed { index, usageDataItem ->
-            Timber.d("$index: ${usageDataItem.appName}:${usageDataItem.usageTimestamp}")
-        }
         val usage = useCases.calculateUsageDuration(
             filteredData,
             useCases.getDurationFromMilliseconds,
@@ -104,9 +101,6 @@ class WidgetWorker constructor(
                     (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
         }
         Timber.d("filter usage data  ...")
-        filteredData.forEachIndexed { index, usageDataItem ->
-            Timber.d("$index: ${usageDataItem.appName}:${usageDataItem.usageTimestamp}")
-        }
         val usage = useCases.calculateUsageDuration(
             filteredData,
             useCases.getDurationFromMilliseconds,
