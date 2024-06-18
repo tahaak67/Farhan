@@ -139,15 +139,20 @@ class UsageOverviewViewModel @Inject constructor(
             Timber.d("usageDataList: $usageDataList")
             Timber.d("usageDataList size: ${usageDataList.size}")
 
-            val filteredList = usageOverviewUseCases.filterUsageEvents(usageDataList).filterNot {
-                (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
-                        (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+            val filteredList = if (state.isDateToday) {
+                usageOverviewUseCases.filterUsageEvents(usageDataList).dropLast(1).filterNot {
+                    (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
+                            (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+                }
+            } else {
+                usageOverviewUseCases.filterUsageEvents(usageDataList).filterNot {
+                    (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
+                            (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+                }
             }
             Timber.d("filtered data size: ${filteredList.size}")
             Timber.d("usage list")
-            filteredList.forEachIndexed { index, usageDataItem ->
-                Timber.d("$index: ${usageDataItem.appName}:${usageDataItem.usageTimestamp}")
-            }
+
             val filteredListWithDuration = usageOverviewUseCases.calculateUsageDuration(
                 filteredList,
                 usageOverviewUseCases.getDurationFromMilliseconds,
@@ -328,7 +333,8 @@ class UsageOverviewViewModel @Inject constructor(
     }
 
     private fun refreshUsageDataForRange() {
-        viewModelScope.launch {
+        getUsageDataJob?.cancel()
+        getUsageDataJob = viewModelScope.launch {
             state = state.copy(
                 isLoading = true,
                 totalUsageDuration = 0,
@@ -359,11 +365,17 @@ class UsageOverviewViewModel @Inject constructor(
                 while (date!! <= state.rangeEndDate) {
                     val usageDataList = usageOverviewUseCases.getUsageEventsFromDb(date)
 
-                    val filteredList =
+                    val filteredList = if (usageOverviewUseCases.isDateToDay(date)){
+                        usageOverviewUseCases.filterUsageEvents(usageDataList).dropLast(1).filterNot {
+                            (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
+                                    (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+                        }
+                    } else {
                         usageOverviewUseCases.filterUsageEvents(usageDataList).filterNot {
                             (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
                                     (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
                         }
+                    }
                     val filteredListWithDuration =
                         usageOverviewUseCases.calculateUsageDuration(
                             if (state.isDateToday) filteredList else filteredList,
