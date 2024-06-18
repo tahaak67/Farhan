@@ -7,4 +7,6 @@ sealed class UsageSettingsEvent {
     object ShowSelectReportsDialog : UsageSettingsEvent()
     object DismissSelectReportsDialog : UsageSettingsEvent()
     object DismissPermissionDialog : UsageSettingsEvent()
+    data class OnIgnoreLauncherClick(val ignoreLauncher: Boolean) : UsageSettingsEvent()
+    data class OnIgnoreFarhanClick(val ignoreFarhan: Boolean) : UsageSettingsEvent()
 }

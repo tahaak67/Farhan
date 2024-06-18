@@ -42,6 +42,9 @@ agp = "8.3.2"
 composeBom = "2024.05.00"
 coreKtx = "1.13.1"
 toolchains_foojay = "0.5.0"
+glance = "1.0.0"
+lifecycleRuntimeKtx = "2.8.1"
+dagger_workmanager = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +52,8 @@ androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx_work_manager = { module = "androidx.work:work-runtime-ktx", version.ref = "work_manager" }
 androidx_constraint_layout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraint_layout" }
 android_build_tools = { module = "com.android.tools.build:gradle", version.ref = "androidBuildToolsVersion" }
+androidx_hilt_workmanager = { module = "androidx.hilt:hilt-work", version.ref = "dagger_workmanager" }
+androidx_hilt_compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "dagger_workmanager" }
 
 coil_compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil_base = { module = "io.coil-kt:coil", version.ref = "coil" }
@@ -128,6 +133,9 @@ test_runner = { module = "androidx.test:runner", version.ref = "test_runner" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 leakCanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leak_canary" }
+glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

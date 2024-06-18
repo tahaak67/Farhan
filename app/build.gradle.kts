@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.extended)
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.dagger.hilt)
@@ -105,6 +106,9 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
+
+    implementation(libs.glance.appWidget)
+    implementation(libs.glance.material3)
 
     testImplementation(libs.junit4)
     testImplementation(libs.test.runner)

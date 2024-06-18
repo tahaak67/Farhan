@@ -10,6 +10,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.usage_overview_domain.preferences.Preferences
 import ly.com.tahaben.usage_overview_domain.use_case.UsageSettingsUseCases
 import ly.com.tahaben.usage_overview_domain.util.WorkerKeys
 import javax.inject.Inject
@@ -19,7 +20,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class UsageSettingsViewModel @Inject constructor(
-    private val usageSettingsUseCases: UsageSettingsUseCases
+    private val usageSettingsUseCases: UsageSettingsUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     var state by mutableStateOf(UsageSettingsState())
@@ -36,6 +38,14 @@ class UsageSettingsViewModel @Inject constructor(
         checkCachingEnabled()
         checkAutoCachingEnabled()
         getEnabledUsageReports()
+        getSavedSettings()
+    }
+
+    private fun getSavedSettings() {
+        state = state.copy(
+            isIgnoreFarhan = preferences.isIgnoreFarhan(),
+            isIgnoreLauncher = preferences.isIgnoreLauncher()
+        )
     }
 
     fun setCachingEnabled(isEnabled: Boolean) {
@@ -139,6 +149,15 @@ class UsageSettingsViewModel @Inject constructor(
 
                 UsageSettingsEvent.DismissPermissionDialog -> {
                     state.visiblePermissionDialogQueue.removeFirst()
+                }
+
+                is UsageSettingsEvent.OnIgnoreFarhanClick -> {
+                    preferences.setIgnoreFarhan(event.ignoreFarhan)
+                    state = state.copy(isIgnoreFarhan = event.ignoreFarhan)
+                }
+                is UsageSettingsEvent.OnIgnoreLauncherClick -> {
+                    preferences.setIgnoreLauncher(event.ignoreLauncher)
+                    state = state.copy(isIgnoreLauncher = event.ignoreLauncher)
                 }
             }
         }

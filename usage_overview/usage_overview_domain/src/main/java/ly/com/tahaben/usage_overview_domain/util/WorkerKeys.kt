@@ -9,4 +9,5 @@ object WorkerKeys {
     const val WEEKLY_USAGE_REPORTS = "weekly_usage_report"
     const val MONTHLY_USAGE_REPORTS = "monthly_usage_report"
     const val YEARLY_USAGE_REPORTS = "yearly_usage_report"
+    const val WIDGET_UPDATE = "today_widget_update"
 }

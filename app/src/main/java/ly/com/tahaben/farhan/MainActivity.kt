@@ -50,6 +50,7 @@ import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteLis
 import ly.com.tahaben.screen_grayscale_presentation.onboarding.GrayscaleOnBoardingScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
 import ly.com.tahaben.usage_overview_presentation.settings.UsageSettingsScreen
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -167,7 +168,12 @@ class MainActivity : ComponentActivity() {
                                     "app://$packageName/${Routes.USAGE}/{${Args.START_DATE}}/{${Args.END_DATE}}"
                                 action = Intent.ACTION_VIEW
 
-                            }),
+                            },
+                                navDeepLink {
+                                    uriPattern =
+                                        "app://$packageName/${Routes.USAGE}/{${Args.START_DATE}}"
+                                    action = Intent.ACTION_VIEW
+                                }),
                             arguments = listOf(
                                 navArgument(Args.START_DATE) {
                                     type = NavType.StringType
@@ -181,6 +187,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val startDate = backStackEntry.arguments?.getString(Args.START_DATE)
                             val endDate = backStackEntry.arguments?.getString(Args.END_DATE)
+                            Timber.d("args: $startDate")
                             UsageOverviewScreen(
                                 onNavigateUp = navController::navigateUp,
                                 onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) },
