@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import androidx.work.Configuration
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -13,14 +12,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ly.com.tahaben.usage_overview_data.local.UsageDao
 import ly.com.tahaben.usage_overview_data.local.UsageDatabase
-import ly.com.tahaben.usage_overview_data.local.UsageWorkerFactory
 import ly.com.tahaben.usage_overview_data.preferences.DefaultPreferences
 import ly.com.tahaben.usage_overview_data.repository.UsageRepositoryImpl
 import ly.com.tahaben.usage_overview_data.repository.WorkerRepoImpl
 import ly.com.tahaben.usage_overview_domain.preferences.Preferences
 import ly.com.tahaben.usage_overview_domain.repository.UsageRepository
 import ly.com.tahaben.usage_overview_domain.repository.WorkerRepository
-import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
 import javax.inject.Singleton
 
 @Module
@@ -58,23 +55,6 @@ object UsageOverviewDataModule {
         usageDao: UsageDao
     ): UsageRepository {
         return UsageRepositoryImpl(context, usageDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideCacheWorkerFactory(
-        usageRepository: UsageRepository,
-        usageOverviewUseCases: UsageOverviewUseCases
-    ): UsageWorkerFactory {
-        return UsageWorkerFactory(usageRepository, usageOverviewUseCases)
-    }
-
-    @Provides
-    @Singleton
-    fun provideCacheWorkerConfiguration(usageWorkerFactory: UsageWorkerFactory): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(usageWorkerFactory)
-            .build()
     }
 
     @Provides

@@ -47,4 +47,44 @@ class DefaultPreferences(private val sharedPref: SharedPreferences) : Preference
                 .apply()
         }
     }
+
+    override fun getTodayUsage(): Long {
+        return sharedPref.getLong(Preferences.TODAY_USAGE, 0)
+    }
+
+    override fun setTodayUsage(usage: Long) {
+        sharedPref.edit()
+            .putLong(Preferences.TODAY_USAGE, usage)
+            .apply()
+    }
+
+    override fun getYesterdayUsage(): Long {
+        return sharedPref.getLong(Preferences.YESTERDAY_USAGE, 0)
+    }
+
+    override fun setYesterdayUsage(usage: Long) {
+        sharedPref.edit()
+            .putLong(Preferences.YESTERDAY_USAGE, usage)
+            .apply()
+    }
+
+    override fun isIgnoreLauncher(): Boolean {
+        return sharedPref.getBoolean(Preferences.IGNORE_LAUNCHER_KEY, true)
+    }
+
+    override fun setIgnoreLauncher(isEnabled: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.IGNORE_LAUNCHER_KEY, isEnabled)
+            .apply()
+    }
+
+    override fun isIgnoreFarhan(): Boolean {
+        return sharedPref.getBoolean(Preferences.IGNORE_FARHAN_KEY, false)
+    }
+
+    override fun setIgnoreFarhan(isEnabled: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.IGNORE_FARHAN_KEY, isEnabled)
+            .apply()
+    }
 }

@@ -1,13 +1,16 @@
 package ly.com.tahaben.usage_overview_data.mapper
 
 import android.app.usage.UsageEvents
+import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import ly.com.tahaben.usage_overview_data.local.entity.UsageDataItemEntity
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 
 fun UsageEvents.Event.toUsageDataItem(
     appName: String,
-    appCategory: Int
+    appCategory: Int,
+    isLauncher: Boolean
 ): UsageDataItem {
     val packageName = packageName
     val usageTimestamp = timeStamp
@@ -24,7 +27,7 @@ fun UsageEvents.Event.toUsageDataItem(
         ApplicationInfo.CATEGORY_VIDEO -> UsageDataItem.Category.VIDEO
         ApplicationInfo.CATEGORY_MAPS -> UsageDataItem.Category.MAPS
         ApplicationInfo.CATEGORY_NEWS -> UsageDataItem.Category.NEWS
-        else -> UsageDataItem.Category.OTHER
+        else -> if (isLauncher) UsageDataItem.Category.LAUNCHER else UsageDataItem.Category.OTHER
     }
     return UsageDataItem(
         appName = appName,
@@ -36,7 +39,8 @@ fun UsageEvents.Event.toUsageDataItem(
 }
 
 fun UsageEvents.Event.toUsageDataItem(
-    appName: String
+    appName: String,
+    isLauncher: Boolean
 ): UsageDataItem {
     val packageName = packageName
     val usageTimestamp = timeStamp
@@ -50,7 +54,8 @@ fun UsageEvents.Event.toUsageDataItem(
         appName = appName,
         packageName = packageName,
         usageTimestamp = if (usageType == UsageDataItem.EventType.Start) (usageTimestamp * -1) else usageTimestamp,
-        usageType = usageType
+        usageType = usageType,
+        appCategory = if (isLauncher) UsageDataItem.Category.LAUNCHER else null
     )
 }
 
@@ -72,4 +77,11 @@ fun UsageDataItem.toUsageDataItemEntity(): UsageDataItemEntity {
         usageType = usageType,
         appCategory = appCategory
     )
+}
+
+fun isLauncherApp(packageManager: PackageManager, appInfo: ApplicationInfo): Boolean {
+    val intent = Intent(Intent.ACTION_MAIN)
+    intent.addCategory(Intent.CATEGORY_HOME)
+    val resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+    return resolveInfo?.activityInfo?.packageName == appInfo.packageName
 }

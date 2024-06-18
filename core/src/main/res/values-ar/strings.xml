@@ -8,6 +8,12 @@
     <string name="hello">مرحباً</string>
     <string name="one_hour">1س</string>
     <string name="two_hours">2س</string>
+    <string name="usage_for_yesterday">استخدام الأمس</string>
+    <string name="place_widget">ضع التطبيق المصغر على الشاشة</string>
+    <string name="vertical">عمودياً</string>
+    <string name="horizontal">أفقياً</string>
+    <string name="widget_update_interval_text">تحديث التطبيق المصغر كل</string>
+    <string name="compare_with_yesterday">مقارنة بالأمس</string>
     <string name="minutes">د</string>
     <string name="hours">س</string>
     <string name="previous_day">اليوم السابق</string>
@@ -190,6 +196,7 @@
     <string name="vibrant_colors_description">لمسة نابضة بالحياة لألوان فرحان الكلاسيكية</string>
     <string name="classic_colors_description">ألوان فرحان الأصلية الرائعة</string>
     <string name="theme_colors">ألوان السمة</string>
+    <string name="farhan_icon">أيقونة فرحان</string>
     <string name="exact_alarm_permission_description">يرجى تفعيل إذن التذكيرات من الشاشة القادمة حتى يتمكن فرحان من تذكيرك بتفقد الإشعارات في الوقت الذي حددته</string>
     <string name="notify_me_permissions_needed_not_granted">فرحان يحتاج إلى بعض الإذونات لتعمل ذكرني بشكل صحيح</string>
     <string name="seconds">ث</string>
@@ -227,5 +234,15 @@
     <string name="notification_filter_settings_showcase_msg4"><![CDATA[يمكنك فتح <b>الاستثناءات</b>، والعثور على تطبيق Signal من القائمة و<b>تشغيل المفتاح</b> بجانبه، وهذا كل شيء!]]></string>
     <string name="notification_filter_settings_showcase_msg5"><![CDATA[من الجيد ألا تشتت انتباهك الإشعارات طوال اليوم، ولكن في بعض الأحيان قد تنسى التحقق من تطبيق فرحان لمعرفة الإشعارات التي تلقيتها لأيام! 🙁]]></string>
     <string name="notification_filter_settings_showcase_msg6"><![CDATA[لا تقلق 😀 يمكنك إعداد <b>ميزة ذكرني</b> من هنا!، عند تشغيلها ستتلقى إشعارًا في <b>الوقت الذي تحدده</b> لتذكيرك بالتحقق من إشعاراتك]]></string>
+    <string name="usage_for_today">استخدام اليوم</string>
+    <string name="minute">دقيقة</string>
+    <string name="text_size">حجم الخط</string>
+    <string name="widget_update_notification">تحديث التطبيقات المصغرة</string>
+    <string name="ignore_farhan_usage">تجاهل فرحان عند القيام بحسابات الإستخدام</string>
+    <string name="ignore_launcher_usage">تجاهل تطبيقات الشاشة الرئيسية عند القيام بحسابات الإستخدام</string>
+    <string name="customize_your_widget">خصص تطبيقك المصغر</string>
+    <string name="today_usage_widget_description">التطبيق المصغر لإستخدام اليوم</string>
+    <string name="loading">جاري التحميل</string>
+    <string name="title_activity_widget_config">شاشة تخصيص التطبيق المصغر</string>
 
 </resources>

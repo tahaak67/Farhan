@@ -20,8 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +48,7 @@ import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.components.PermissionDialog
 import ly.com.tahaben.core_ui.components.PostNotificationPermissionTextProvider
+import ly.com.tahaben.core_ui.components.SwitchRow
 import ly.com.tahaben.core_ui.mirror
 import timber.log.Timber
 
@@ -164,7 +165,31 @@ fun UsageSettingsScreen(
                     }
                 )
             }
-            Divider()
+            HorizontalDivider()
+            SwitchRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing.spaceMedium),
+                string = stringResource(id = R.string.ignore_launcher_usage),
+                selected = state.isIgnoreLauncher,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                viewModel.onEvent(UsageSettingsEvent.OnIgnoreLauncherClick(it))
+            }
+            HorizontalDivider()
+            SwitchRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing.spaceMedium),
+                string = stringResource(id = R.string.ignore_farhan_usage),
+                selected = state.isIgnoreFarhan,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                viewModel.onEvent(UsageSettingsEvent.OnIgnoreFarhanClick(it))
+            }
+            HorizontalDivider()
             AnimatedVisibility(visible = state.isCacheEnabled) {
                 Column(modifier = Modifier) {
                     Row(
@@ -194,7 +219,7 @@ fun UsageSettingsScreen(
                             }
                         )
                     }
-                    Divider()
+                    HorizontalDivider()
                 }
             }
             AnimatedVisibility(visible = state.isAutoCachingEnabled) {
@@ -235,7 +260,7 @@ fun UsageSettingsScreen(
                             }
                         }
                         )
-                        Divider()
+                        HorizontalDivider()
                     }
                 }
             }

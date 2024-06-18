@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.usage_overview_domain.model.UsageDataItem
 import ly.com.tahaben.usage_overview_domain.model.UsageDurationDataItem
+import ly.com.tahaben.usage_overview_domain.preferences.Preferences
 import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
 import ly.com.tahaben.usage_overview_domain.use_case.UsageSettingsUseCases
 import timber.log.Timber
@@ -26,18 +28,29 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class UsageOverviewViewModel @Inject constructor(
     private val usageOverviewUseCases: UsageOverviewUseCases,
-    private val usageSettingsUseCases: UsageSettingsUseCases
+    private val usageSettingsUseCases: UsageSettingsUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
 
     var state by mutableStateOf(UsageOverviewState())
         private set
 
+    private var filterFarhan = false
+    private var filterLaunchers = false
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    private var getUsageDataJob: Job? = null
+
     init {
         getFullyUpdatedDays()
+    }
+
+    fun iniFilters() {
+        filterLaunchers = preferences.isIgnoreLauncher()
+        filterFarhan = preferences.isIgnoreFarhan()
     }
 
     private fun getFullyUpdatedDays() {
@@ -67,6 +80,13 @@ class UsageOverviewViewModel @Inject constructor(
 
     fun setRange(startDate: String?, endDate: String?) {
         Timber.d("viewmodel start end date: $startDate : $endDate")
+        if (startDate != null && endDate == null){
+            state = state.copy(
+                date = LocalDate.parse(startDate),
+                isModeRange = false
+            )
+            refreshUsageData()
+        }
         if (startDate != null && endDate != null) {
             state = state.copy(
                 rangeStartDate = LocalDate.parse(startDate),
@@ -88,7 +108,8 @@ class UsageOverviewViewModel @Inject constructor(
     }
 
     private fun refreshUsageData() {
-        viewModelScope.launch {
+        getUsageDataJob?.cancel()
+        getUsageDataJob = viewModelScope.launch {
             state = state.copy(
                 isLoading = true,
                 totalUsageDuration = 0,
@@ -102,23 +123,37 @@ class UsageOverviewViewModel @Inject constructor(
             )
             if (state.isCachingEnabled) {
                 if (!usageOverviewUseCases.isDayDataFullyUpdated(state.date)) {
+                    Timber.d("cache not updated ${state.date}")
                     usageOverviewUseCases.cacheUsageDataForDate(state.date)
                 }
             }
             val usageDataList =
                 if (state.isCachingEnabled) {
+                    Timber.d("getting data from db")
                     usageOverviewUseCases.getUsageEventsFromDb(state.date)
                 } else {
+                    Timber.d("getting data from api")
                     usageOverviewUseCases.getUsageDataForDate(state.date)
                 }
             Timber.d("is caching enabled: ${state.isCachingEnabled}")
             Timber.d("usageDataList: $usageDataList")
-            val filteredList = usageOverviewUseCases.filterUsageEvents(usageDataList)
+            Timber.d("usageDataList size: ${usageDataList.size}")
+
+            val filteredList = usageOverviewUseCases.filterUsageEvents(usageDataList).filterNot {
+                (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
+                        (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+            }
+            Timber.d("filtered data size: ${filteredList.size}")
+            Timber.d("usage list")
+            filteredList.forEachIndexed { index, usageDataItem ->
+                Timber.d("$index: ${usageDataItem.appName}:${usageDataItem.usageTimestamp}")
+            }
             val filteredListWithDuration = usageOverviewUseCases.calculateUsageDuration(
                 filteredList,
                 usageOverviewUseCases.getDurationFromMilliseconds,
                 usageOverviewUseCases.filterDuration
             ).sortedByDescending { it.usageDurationInMilliseconds }
+            Timber.d("Filtered list $filteredListWithDuration")
             val totalTimeInMilliSeconds =
                 filteredListWithDuration.sumOf { it.usageDurationInMilliseconds }
             val totalSocialUsageMilli = filteredListWithDuration
@@ -325,7 +360,10 @@ class UsageOverviewViewModel @Inject constructor(
                     val usageDataList = usageOverviewUseCases.getUsageEventsFromDb(date)
 
                     val filteredList =
-                        usageOverviewUseCases.filterUsageEvents(usageDataList)
+                        usageOverviewUseCases.filterUsageEvents(usageDataList).filterNot {
+                            (filterLaunchers && it.appCategory == UsageDataItem.Category.LAUNCHER) ||
+                                    (filterFarhan && it.packageName == "ly.com.tahaben.farhan")
+                        }
                     val filteredListWithDuration =
                         usageOverviewUseCases.calculateUsageDuration(
                             if (state.isDateToday) filteredList else filteredList,

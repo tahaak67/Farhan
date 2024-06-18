@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/today_usage_widget_description"
+    android:previewImage="@drawable/usage_widget_preview"
+    android:previewLayout="@layout/usage_widget_preview"
+    android:minWidth="100dp"
+    android:minHeight="60dp"
+    android:updatePeriodMillis="0"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable"
+    android:configure="ly.com.tahaben.farhan.widget.WidgetConfigActivity">
+
+</appwidget-provider>

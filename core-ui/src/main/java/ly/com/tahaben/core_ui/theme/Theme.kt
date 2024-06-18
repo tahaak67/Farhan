@@ -239,7 +239,7 @@ import ly.com.tahaben.core_ui.tertiaryLightMediumContrast
 import timber.log.Timber
 
 
-private val lightScheme = lightColorScheme(
+val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
     primaryContainer = primaryContainerLight,
@@ -270,7 +270,7 @@ private val lightScheme = lightColorScheme(
     inversePrimary = inversePrimaryLight,
 )
 
-private val classicLightScheme = lightColorScheme(
+val classicLightScheme = lightColorScheme(
     primary = primaryLightClassic,
     onPrimary = onPrimaryLightClassic,
     primaryContainer = primaryContainerLightClassic,
@@ -300,7 +300,7 @@ private val classicLightScheme = lightColorScheme(
     inverseOnSurface = inverseOnSurfaceLightClassic,
     inversePrimary = inversePrimaryLightClassic,
 )
-private val classicDarkScheme = darkColorScheme(
+val classicDarkScheme = darkColorScheme(
     primary = primaryDarkClassic,
     onPrimary = onPrimaryDarkClassic,
     primaryContainer = primaryContainerDarkClassic,
@@ -331,7 +331,7 @@ private val classicDarkScheme = darkColorScheme(
     inversePrimary = inversePrimaryDarkClassic,
 )
 
-private val darkScheme = darkColorScheme(
+val darkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
     primaryContainer = primaryContainerDark,

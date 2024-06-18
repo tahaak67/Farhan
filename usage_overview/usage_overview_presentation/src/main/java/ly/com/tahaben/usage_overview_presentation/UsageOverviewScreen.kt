@@ -88,6 +88,7 @@ fun UsageOverviewScreen(
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkUsagePermissionState()
                 viewModel.checkIfCachingEnabled()
+                viewModel.iniFilters()
                 viewModel.setRange(startDate, endDate)
             }
 

@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.constraint)
     implementation(libs.androidx.material.extended)
+    implementation(libs.glance.appWidget)
+    implementation(libs.glance.material3)
 
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)

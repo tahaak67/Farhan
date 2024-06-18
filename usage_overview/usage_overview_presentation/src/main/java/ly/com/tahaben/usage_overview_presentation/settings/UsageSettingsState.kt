@@ -11,5 +11,7 @@ data class UsageSettingsState(
     val isMonthlyReportsEnabled: Boolean = false,
     val isYearlyReportsEnabled: Boolean = false,
     val showSelectReportsDialog: Boolean = false,
-    val isBackgroundWorkRestricted: Boolean = false
+    val isBackgroundWorkRestricted: Boolean = false,
+    val isIgnoreLauncher: Boolean = false,
+    val isIgnoreFarhan: Boolean = false
 )
