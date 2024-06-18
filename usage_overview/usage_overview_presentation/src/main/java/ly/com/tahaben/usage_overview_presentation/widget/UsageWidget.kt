@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,13 +18,10 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.action.ActionParameters
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CircularProgressIndicator
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.color.ColorProviders
@@ -42,31 +36,18 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
-import androidx.glance.material3.ColorProviders
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.navigation.Routes
-import ly.com.tahaben.core_ui.theme.classicDarkScheme
-import ly.com.tahaben.core_ui.theme.classicLightScheme
-import ly.com.tahaben.core_ui.theme.darkScheme
-import ly.com.tahaben.core_ui.theme.lightScheme
-import ly.com.tahaben.usage_overview_domain.preferences.Preferences
 import ly.com.tahaben.usage_overview_domain.util.WorkerKeys
 import timber.log.Timber
 import java.text.DecimalFormat
@@ -366,52 +347,6 @@ object UsageWidget : GlanceAppWidget() {
     }
 }
 
-@AndroidEntryPoint
-class WidgetBroadcast() : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = UsageWidget
-}
-
-
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface WidgetEntryPoint {
-    val preferences: Preferences
-    val workManager: WorkManager
-}
-
-private fun getPreferences(context: Context): Preferences {
-    val hiltEntryPoint = EntryPointAccessors.fromApplication(
-        context, WidgetEntryPoint::class.java
-    )
-    return hiltEntryPoint.preferences
-}
-
-private fun getWorkManager(context: Context): WorkManager {
-    val hiltEntryPoint = EntryPointAccessors.fromApplication(
-        context, WidgetEntryPoint::class.java
-    )
-    return hiltEntryPoint.workManager
-}
-
-class RefreshAction : ActionCallback {
-    override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters
-    ) {
-        updateAppWidgetState(context, glanceId) { prefs ->
-            prefs[UsageWidget.todayTimeKey] = -1L
-        }
-        UsageWidget.update(context, glanceId)
-        delay(2000)
-        Timber.d("refresh action call")
-        val wm = getWorkManager(context)
-        val request = OneTimeWorkRequestBuilder<WidgetWorker>()
-            .build()
-        wm.enqueueUniqueWork("refresh", ExistingWorkPolicy.REPLACE, request)
-    }
-}
-
 private fun openFarhanAndNavigateToUsageScreen(context: Context, date: String) {
     Timber.d("openFarhanAndNavigateToUsageScreen: $date")
     val deepLinkUri =
@@ -428,50 +363,4 @@ private fun openFarhanAndNavigateToUsageScreen(context: Context, date: String) {
 private fun cancelExistingWorkers(context: Context) {
     val wm = getWorkManager(context)
     wm.cancelUniqueWork(WorkerKeys.WIDGET_UPDATE)
-}
-
-object VibrantColorScheme {
-    val light = ColorProviders(
-        light = lightScheme,
-        dark = lightScheme
-    )
-    val dark = ColorProviders(
-        light = darkScheme,
-        dark = darkScheme
-    )
-    val followSystem = ColorProviders(
-        light = lightScheme,
-        dark = darkScheme
-    )
-}
-
-object ClassicColorScheme {
-    val light = ColorProviders(
-        light = classicLightScheme,
-        dark = classicLightScheme
-    )
-    val dark = ColorProviders(
-        light = classicDarkScheme,
-        dark = classicDarkScheme
-    )
-    val followSystem = ColorProviders(
-        light = classicLightScheme,
-        dark = classicDarkScheme
-    )
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-class DynamicColorScheme(context: Context) {
-    val light = ColorProviders(
-        light = dynamicLightColorScheme(context),
-        dark = dynamicLightColorScheme(context)
-    )
-    val dark = ColorProviders(
-        light = dynamicDarkColorScheme(context),
-        dark = dynamicDarkColorScheme(context)
-    )
-    val followSystem = ColorProviders(
-        light = dynamicLightColorScheme(context),
-        dark = dynamicDarkColorScheme(context)
-    )
 }
