@@ -128,7 +128,7 @@ class UsageOverviewViewModel @Inject constructor(
                 }
             }
             val usageDataList =
-                if (state.isCachingEnabled) {
+                if (state.isCachingEnabled && usageOverviewUseCases.isDayOver(state.date)) {
                     Timber.d("getting data from db")
                     usageOverviewUseCases.getUsageEventsFromDb(state.date)
                 } else {

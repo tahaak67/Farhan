@@ -3,8 +3,8 @@
 android-compileSdk = "34"
 android-minSdk = "23"
 android-targetSdk = "33"
-app-versionCode = "7"
-app-versionName = "0.2.1"
+app-versionCode = "8"
+app-versionName = "0.2.2"
 
 # Dependencies
 compose-compiler = "1.5.13"
