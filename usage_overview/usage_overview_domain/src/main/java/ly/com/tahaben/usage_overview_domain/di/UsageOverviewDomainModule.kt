@@ -5,7 +5,21 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ly.com.tahaben.usage_overview_domain.repository.UsageRepository
-import ly.com.tahaben.usage_overview_domain.use_case.*
+import ly.com.tahaben.usage_overview_domain.use_case.CacheUsageDataForDate
+import ly.com.tahaben.usage_overview_domain.use_case.CalculateUsageDuration
+import ly.com.tahaben.usage_overview_domain.use_case.DeleteCacheForDay
+import ly.com.tahaben.usage_overview_domain.use_case.FilterDuration
+import ly.com.tahaben.usage_overview_domain.use_case.FilterUsageEvents
+import ly.com.tahaben.usage_overview_domain.use_case.GetDurationFromMilliseconds
+import ly.com.tahaben.usage_overview_domain.use_case.GetUpdatedDays
+import ly.com.tahaben.usage_overview_domain.use_case.GetUsageDataForDate
+import ly.com.tahaben.usage_overview_domain.use_case.GetUsageEventsFromDb
+import ly.com.tahaben.usage_overview_domain.use_case.IsDateToday
+import ly.com.tahaben.usage_overview_domain.use_case.IsDayDataFullyUpdated
+import ly.com.tahaben.usage_overview_domain.use_case.IsDayOver
+import ly.com.tahaben.usage_overview_domain.use_case.IsUsagePermissionGranted
+import ly.com.tahaben.usage_overview_domain.use_case.MergeDaysUsageDuration
+import ly.com.tahaben.usage_overview_domain.use_case.UsageOverviewUseCases
 import javax.inject.Singleton
 
 
@@ -31,7 +45,8 @@ object UsageOverviewDomainModule {
             isDayDataFullyUpdated = IsDayDataFullyUpdated(usageRepository),
             mergeDaysUsageDuration = MergeDaysUsageDuration(),
             getUpdatedDays = GetUpdatedDays(usageRepository),
-            deleteCacheForDay = DeleteCacheForDay(usageRepository)
+            deleteCacheForDay = DeleteCacheForDay(usageRepository),
+            isDayOver = IsDayOver()
         )
     }
 }

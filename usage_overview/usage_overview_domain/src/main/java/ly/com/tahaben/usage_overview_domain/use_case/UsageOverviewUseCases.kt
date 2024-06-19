@@ -13,5 +13,6 @@ data class UsageOverviewUseCases(
     val isDayDataFullyUpdated: IsDayDataFullyUpdated,
     val mergeDaysUsageDuration: MergeDaysUsageDuration,
     val getUpdatedDays: GetUpdatedDays,
-    val deleteCacheForDay: DeleteCacheForDay
+    val deleteCacheForDay: DeleteCacheForDay,
+    val isDayOver: IsDayOver
 )

@@ -1,0 +1,8 @@
+- Today's usage widget! (with yesterday's usage for you to compare ;))
+- Long press the notifications in notification filter to directly exclude apps or see app info in system settings
+- The ability to ignore launcher apps in usage calculations (defaults to true)
+- The ability to ignore Farhan in usage calculations (defaults to false)
+- Fix Infinite scroll dialog theme
+- Added the ability to add a custom message to Infinite scroll dialog.
+- Added the ability to lock the Infinite scroll dialog for a few seconds before allowing continue scroll.
+- and many more bug fixes :)
