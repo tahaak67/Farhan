@@ -1,20 +1,20 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.hiltAndroidGradle)
     id("kotlin-kapt")
 }
 
 android {
     namespace = "ly.com.tahaben.farhan"
-    compileSdk = ProjectConfig.compileSdk
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = ProjectConfig.appId
-        minSdk = ProjectConfig.minSdk
-        targetSdk = ProjectConfig.targetSdk
-        versionCode = ProjectConfig.versionCode
-        versionName = ProjectConfig.versionName
+        applicationId = "ly.com.tahaben.farhan"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        versionCode = libs.versions.app.versionCode.get().toInt()
+        versionName = libs.versions.app.versionName.get()
 
         testInstrumentationRunner = "ly.com.tahaben.farhan.HiltTestRunner"
         vectorDrawables {
@@ -40,9 +40,9 @@ android {
         jvmTarget = "17"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Compose.composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
         resources.excludes.add("**/attach_hotspot_windows.dll")
@@ -53,22 +53,26 @@ android {
 }
 
 dependencies {
-    implementation(Compose.compiler)
-    implementation(Compose.ui)
-    implementation(Compose.uiToolingPreview)
-    implementation(Compose.hiltNavigationCompose)
-    implementation(Compose.material3)
-    implementation(Compose.runtime)
-    implementation(Compose.navigation)
-    implementation(Compose.viewModelCompose)
-    implementation(Compose.lifecycleUtilityCompose)
-    implementation(Compose.activityCompose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.compose.compiler)
+    implementation(libs.compose.hilt.navigation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.viewModel)
+    implementation(libs.compose.lifecycle.runtime)
+    implementation(libs.compose.activity)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.extended)
+    implementation(libs.androidx.core.ktx)
 
-    implementation(DaggerHilt.hiltAndroid)
-    kapt(DaggerHilt.hiltCompiler)
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
 
-    implementation(Timber.timber)
-    debugImplementation(LeakCanary.leakCanary)
+    implementation(libs.timber)
+    debugImplementation(libs.leakCanary)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreUi))
@@ -91,39 +95,41 @@ dependencies {
     implementation(project(Modules.launcherDomain))
     implementation(project(Modules.launcherPresentation))
 
-    implementation(AndroidX.coreKtx)
-    implementation(AndroidX.appCompat)
-    implementation(AndroidX.workManger)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.work.manager)
 
-    implementation(Coil.coilCompose)
+    implementation(libs.coil.compose)
 
-    implementation(Google.material)
-    implementation(Google.accompanistUiController)
+    implementation(libs.google.material)
+    implementation(libs.accompanist.ui.controller)
 
-    kapt(Room.roomCompiler)
-    implementation(Room.roomKtx)
-    implementation(Room.roomRuntime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
 
-    testImplementation(Testing.junit4)
-    testImplementation(Testing.junitAndroidExt)
-    testImplementation(Testing.truth)
-    testImplementation(Testing.coroutines)
-    testImplementation(Testing.turbine)
-    testImplementation(Testing.composeUiTest)
-    testImplementation(Testing.mockk)
+    implementation(libs.glance.appWidget)
+    implementation(libs.glance.material3)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.test.runner)
+    testImplementation(libs.truth)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.compose.ui.test)
 
 
-    androidTestImplementation(Testing.junit4)
-    androidTestImplementation(Testing.junitAndroidExt)
-    androidTestImplementation(Testing.truth)
-    androidTestImplementation(Testing.coroutines)
-    androidTestImplementation(Testing.turbine)
-    androidTestImplementation(Testing.composeUiTest)
-    androidTestImplementation(Testing.mockkAndroid)
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.junit.android.ext)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.compose.ui.test)
 
-    androidTestImplementation(Testing.hiltTesting)
-    kaptAndroidTest(DaggerHilt.hiltCompiler)
-    androidTestImplementation(Testing.testRunner)
+
+    androidTestImplementation(libs.hilt.testing)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
+    androidTestImplementation(libs.test.runner)
+
     // Dependency required for API desugaring.
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
 }

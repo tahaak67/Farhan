@@ -11,10 +11,10 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.usageOverviewDomain))
-    "implementation"(Coroutines.coroutines)
-    "implementation"(AndroidX.appCompat)
-    "kapt"(Room.roomCompiler)
-    "implementation"(Room.roomKtx)
-    "implementation"(Room.roomRuntime)
-    "implementation"(AndroidX.workManger)
+    "implementation"(libs.coroutines.core)
+    "implementation"(libs.androidx.appcompat)
+    "kapt"(libs.room.compiler)
+    "implementation"(libs.room.ktx)
+    "implementation"(libs.room.ktx)
+    "implementation"(libs.androidx.work.manager)
 }

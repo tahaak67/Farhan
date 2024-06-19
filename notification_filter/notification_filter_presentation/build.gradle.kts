@@ -12,5 +12,5 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.coreUi))
     "implementation"(project(Modules.notificationFilterDomain))
-    "implementation"(ShowcaseLayoutCompose.showcaseLayout)
+    "implementation"(libs.showcase.layout.compose)
 }

@@ -12,8 +12,6 @@
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission
@@ -106,6 +104,31 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+
+        <receiver android:name="ly.com.tahaben.usage_overview_presentation.widget.WidgetBroadcast"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/counter_widget_info" />
+        </receiver>
+
+
+            <activity
+                android:name="ly.com.tahaben.farhan.widget.WidgetConfigActivity"
+                android:exported="false"
+                android:label="@string/title_activity_widget_config"
+                android:theme="@style/Theme.Farhan" >
+                <intent-filter>
+                    <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                </intent-filter>
+            </activity>
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
 
     </application>
 

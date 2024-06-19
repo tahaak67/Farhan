@@ -25,8 +25,8 @@ import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core.navigation.Routes
-import ly.com.tahaben.core.util.ThemeColors
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.theme.FarhanTheme

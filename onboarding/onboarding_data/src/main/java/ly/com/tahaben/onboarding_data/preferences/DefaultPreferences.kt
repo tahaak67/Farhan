@@ -3,8 +3,8 @@ package ly.com.tahaben.onboarding_data.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.GlobalKey
-import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
 
 class DefaultPreferences(

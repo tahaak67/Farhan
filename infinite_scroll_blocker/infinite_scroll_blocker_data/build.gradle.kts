@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.hiltAndroidGradle)
 }
 android {
     namespace = "ly.com.tahaben.launcher_data"
@@ -11,5 +11,4 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.infiniteScrollBlockerDomain))
-    "implementation"(Google.material)
 }

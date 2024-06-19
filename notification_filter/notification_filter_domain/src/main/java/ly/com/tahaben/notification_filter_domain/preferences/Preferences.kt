@@ -17,6 +17,9 @@ interface Preferences {
     fun setNotifyMeScheduledDate(date: Long)
     fun getNotifyMeHours(): Int
     fun getNotifyMeMinutes(): Int
+    fun getSettingsShouldShowWarning(): Boolean
+    fun setSettingsShouldShowWarning(shouldShow: Boolean)
+
 
     companion object {
         const val KEY_NOTIFICATION_SERVICE_STATS = "notification_service_stats"
@@ -28,5 +31,6 @@ interface Preferences {
             "notification_filter_should_show_on_boarding"
         const val KEY_NOTIFICATION_FILTER_SHOULD_SHOWCASE =
             "notification_filter_should_showcase"
+        const val KEY_NOTIFICATION_FILTER_WARNING = "notification_filter_settings_warning"
     }
 }

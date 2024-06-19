@@ -49,11 +49,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
-import ly.com.tahaben.domain.model.UIModeAppearance
-import ly.com.tahaben.onboarding_presentaion.components.isCurrentlyDark
+import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenEvent
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenState
 

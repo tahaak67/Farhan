@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +21,12 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
-import ly.com.tahaben.domain.model.UIModeAppearance
 import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
@@ -50,6 +50,7 @@ import ly.com.tahaben.screen_grayscale_presentation.exceptions.GrayscaleWhiteLis
 import ly.com.tahaben.screen_grayscale_presentation.onboarding.GrayscaleOnBoardingScreen
 import ly.com.tahaben.usage_overview_presentation.UsageOverviewScreen
 import ly.com.tahaben.usage_overview_presentation.settings.UsageSettingsScreen
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -78,8 +79,8 @@ class MainActivity : ComponentActivity() {
         val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
         val tip = getTip()
         setContent {
-            val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
-            val mainState = mainScreenViewModel.mainScreenState.collectAsStateWithLifecycle().value
+            val mainScreenViewModel= hiltViewModel<MainScreenViewModel>()
+            val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
             val isDarkMode = when (mainState.uiMode) {
                 UIModeAppearance.DARK_MODE -> true
                 UIModeAppearance.LIGHT_MODE -> false
@@ -141,8 +142,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.MAIN) {
                             val mainScreenUiEvent =
-                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
-                                    initialValue = UiEvent.HideSnackBar
+                                mainScreenViewModel.uiEvent.collectAsState(
+                                    initial = UiEvent.HideSnackBar
                                 ).value
                             MainScreen(
                                 tip = tip,
@@ -167,7 +168,12 @@ class MainActivity : ComponentActivity() {
                                     "app://$packageName/${Routes.USAGE}/{${Args.START_DATE}}/{${Args.END_DATE}}"
                                 action = Intent.ACTION_VIEW
 
-                            }),
+                            },
+                                navDeepLink {
+                                    uriPattern =
+                                        "app://$packageName/${Routes.USAGE}/{${Args.START_DATE}}"
+                                    action = Intent.ACTION_VIEW
+                                }),
                             arguments = listOf(
                                 navArgument(Args.START_DATE) {
                                     type = NavType.StringType
@@ -181,6 +187,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val startDate = backStackEntry.arguments?.getString(Args.START_DATE)
                             val endDate = backStackEntry.arguments?.getString(Args.END_DATE)
+                            Timber.d("args: $startDate")
                             UsageOverviewScreen(
                                 onNavigateUp = navController::navigateUp,
                                 onNavigateToSettings = { navController.navigate(Routes.USAGE_SETTINGS) },
@@ -254,7 +261,10 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.NOTIFICATION_FILTER_SETTINGS) {
                             NotificationFilterSettingsScreen(
                                 onNavigateToExceptions = { navController.navigate(Routes.NOTIFICATION_FILTER_EXCEPTIONS) },
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                shouldShowRational = ::shouldShowRational,
+                                snackbarHostState = snackbarHostState,
+                                isDarkMode = isDarkMode
                             )
                         }
                         composable(Routes.INFINITE_SCROLLING_EXCEPTIONS) {

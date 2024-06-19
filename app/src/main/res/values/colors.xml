@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="darker_yellow">#B58439</color>
+    <color name="icon_tint">#000000</color>
 </resources>

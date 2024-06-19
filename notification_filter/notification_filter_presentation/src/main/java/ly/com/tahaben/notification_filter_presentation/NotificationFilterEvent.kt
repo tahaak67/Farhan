@@ -10,4 +10,6 @@ sealed class NotificationFilterEvent {
         NotificationFilterEvent()
 
     object OnDeleteAllNotifications : NotificationFilterEvent()
+    data class OnExcludeAppClick(val appPackageName: String) : NotificationFilterEvent()
+    data class OnLaunchAppInfoClick(val appPackageName: String):NotificationFilterEvent()
 }

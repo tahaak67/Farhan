@@ -80,18 +80,22 @@ class UsageRepositoryImpl(
                     }
                     val applicationName =
                         (if (ai != null) pm.getApplicationLabel(ai) else usageEvent.packageName) as String
-
+                    val intent = Intent(Intent.ACTION_MAIN)
+                    intent.addCategory(Intent.CATEGORY_HOME)
+                    val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                    val isLauncherApp = resolveInfo?.activityInfo?.packageName == ai?.packageName
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         val applicationCategory =
                             (ai?.category ?: -1)
                         usageDataItems.add(
                             usageEvent.toUsageDataItem(
                                 applicationName,
-                                applicationCategory
+                                applicationCategory,
+                                isLauncherApp
                             )
                         )
                     } else {
-                        usageDataItems.add(usageEvent.toUsageDataItem(applicationName))
+                        usageDataItems.add(usageEvent.toUsageDataItem(applicationName, isLauncherApp))
                     }
                     if (usageEvent.eventType == 1 || usageEvent.eventType == 2)
                         Timber.e("APP ${usageEvent.packageName} ${usageEvent.timeStamp}")
@@ -137,7 +141,8 @@ class UsageRepositoryImpl(
                 val usageEvents = usageStatsManager.queryEvents(from, to)
                 val usageEvent = UsageEvents.Event()
                 val pm: PackageManager = context.packageManager
-
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_HOME)
                 while (usageEvents.hasNextEvent()) {
                     usageEvents.getNextEvent(usageEvent)
                     val ai: ApplicationInfo? = try {
@@ -148,18 +153,20 @@ class UsageRepositoryImpl(
                     }
                     val applicationName =
                         (if (ai != null) pm.getApplicationLabel(ai) else usageEvent.packageName) as String
-
+                    val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                    val isLauncherApp = resolveInfo?.activityInfo?.packageName == ai?.packageName
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         val applicationCategory =
                             (ai?.category ?: -1)
                         usageDataItems.add(
                             usageEvent.toUsageDataItem(
                                 applicationName,
-                                applicationCategory
+                                applicationCategory,
+                                isLauncherApp
                             )
                         )
                     } else {
-                        usageDataItems.add(usageEvent.toUsageDataItem(applicationName))
+                        usageDataItems.add(usageEvent.toUsageDataItem(applicationName, isLauncherApp))
                     }
                     if (usageEvent.eventType == 1 || usageEvent.eventType == 2)
                         Timber.e("APP ${usageEvent.packageName} ${usageEvent.timeStamp}")

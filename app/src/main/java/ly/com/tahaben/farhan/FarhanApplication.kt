@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+//import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class FarhanApplication : Application() {
 
     @Inject
-    lateinit var cacheWorkerConfiguration: Configuration
+    lateinit var farhanWorkerConfiguration: Configuration
 
     init {
         if (BuildConfig.DEBUG) {
@@ -36,6 +37,7 @@ class FarhanApplication : Application() {
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-        WorkManager.initialize(this, cacheWorkerConfiguration)
+        WorkManager.initialize(this, farhanWorkerConfiguration)
     }
+
 }

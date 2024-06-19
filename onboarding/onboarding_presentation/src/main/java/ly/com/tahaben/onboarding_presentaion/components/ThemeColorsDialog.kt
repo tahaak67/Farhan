@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenEvent
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenState

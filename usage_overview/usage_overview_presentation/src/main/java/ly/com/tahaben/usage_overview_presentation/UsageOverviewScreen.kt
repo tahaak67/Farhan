@@ -16,21 +16,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,7 +59,6 @@ import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
-import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.usage_overview_presentation.components.ConfirmDeleteDialog
 import ly.com.tahaben.usage_overview_presentation.components.DaySelector
 import ly.com.tahaben.usage_overview_presentation.components.TrackedAppItem
@@ -88,6 +88,7 @@ fun UsageOverviewScreen(
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.checkUsagePermissionState()
                 viewModel.checkIfCachingEnabled()
+                viewModel.iniFilters()
                 viewModel.setRange(startDate, endDate)
             }
 
@@ -123,8 +124,8 @@ fun UsageOverviewScreen(
             navigationIcon = {
                 IconButton(onClick = onNavigateUp) {
                     Icon(
-                        modifier = Modifier.mirror(),
-                        imageVector = Icons.Filled.ArrowBack,
+                        modifier = Modifier,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back)
                     )
                 }
@@ -288,7 +289,7 @@ fun UsageOverviewScreen(
                         Spacer(modifier = Modifier.width(spacing.spaceMedium))
                         Text(text = stringResource(R.string.select_a_day))
                     }
-                    Divider(modifier = Modifier.padding(horizontal = spacing.spaceSmall))
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = spacing.spaceSmall))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -326,7 +327,13 @@ private fun DatePickerDialog(
     onEvent: (UsageOverviewEvent) -> Unit,
     isDateValid: (Long) -> Boolean
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return isDateValid(utcTimeMillis)
+            }
+        }
+    )
     val confirmEnabled = remember {
         derivedStateOf { datePickerState.selectedDateMillis != null }
     }
@@ -358,10 +365,7 @@ private fun DatePickerDialog(
                 selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
                 todayDateBorderColor = MaterialTheme.colorScheme.primary,
             ),*/
-            state = datePickerState,
-            dateValidator = { dateInMilli ->
-                isDateValid(dateInMilli)
-            }
+            state = datePickerState
         )
     }
 }
@@ -375,6 +379,11 @@ private fun DateRangePickerDialog(
 ) {
     val spacing = LocalSpacing.current
     val dateRangeState = rememberDateRangePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return isDateValid(utcTimeMillis)
+            }
+        },
         yearRange = 2022..currentYear
     )
     val confirmEnabled = remember {
@@ -421,10 +430,7 @@ private fun DateRangePickerDialog(
                 selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
                 todayDateBorderColor = MaterialTheme.colorScheme.primary,
             ),
-            showModeToggle = true,
-            dateValidator = { dateInMillis ->
-                isDateValid(dateInMillis)
-            }
+            showModeToggle = true
         )
     }
 }

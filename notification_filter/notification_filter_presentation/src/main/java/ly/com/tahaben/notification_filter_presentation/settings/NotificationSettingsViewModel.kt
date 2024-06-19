@@ -1,27 +1,38 @@
 package ly.com.tahaben.notification_filter_presentation.settings
 
+import android.Manifest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationSettingsViewModel @Inject constructor(
-    private val notificationFilterUseCases: NotificationFilterUseCases
+    private val notificationFilterUseCases: NotificationFilterUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     var state by mutableStateOf(NotificationFilterSettingsState())
         private set
+    private val _event = Channel<UiEventNotificationSettings>()
+    val event = _event.receiveAsFlow()
 
     init {
         getNotifyMeMinute()
         getNotifyMeHour()
         checkServiceStats()
         getNotifyState()
+        performPermissionSilentChecks()
+        shouldShowWarningDialog()
     }
 
 
@@ -50,6 +61,11 @@ class NotificationSettingsViewModel @Inject constructor(
             isNotifyMeEnabled = hour != -1
         )
 
+        if (hour != -1 && minutes != -1) {
+            viewModelScope.launch {
+                _event.send(UiEventNotificationSettings.NotifyMeEnabled)
+            }
+        }
     }
 
     private fun getNotifyMeHour() {
@@ -99,8 +115,81 @@ class NotificationSettingsViewModel @Inject constructor(
                 state = state.copy(
                     isTimePickerVisible = false
                 )
+
+            }
+
+            NotificationSettingsEvent.DismissPermissionDialog -> {
+                Timber.d("remove permission called")
+                state.visiblePermissionDialogQueue.removeFirst()
+            }
+
+            is NotificationSettingsEvent.DeclinedPermission -> {
+                Timber.d("declined permission is: ${event.permission}")
+                state.declinedPermissions.add(event.permission)
+            }
+
+            NotificationSettingsEvent.OpenExactAlarmPermissionPage -> {
+                openExactAlarmsPermissionScreen()
+            }
+
+            is NotificationSettingsEvent.DismissWarningDialog -> {
+                state = state.copy(
+                    isWarningDialogVisible = false
+                )
+                if (event.doNotShowAgain) {
+                    preferences.setSettingsShouldShowWarning(false)
+                }
+            }
+
+            is NotificationSettingsEvent.OnShouldShowcase -> {
+                state = state.copy(
+                    isShowcaseOn = event.showcase
+                )
             }
         }
 
     }
+
+    fun onPermissionResult(
+        permission: String,
+        isGranted: Boolean
+    ) {
+        if (!isGranted && !state.visiblePermissionDialogQueue.contains(permission)) {
+            state.visiblePermissionDialogQueue.add(permission)
+        }
+        Timber.d("permissions queue: ${state.visiblePermissionDialogQueue} size: ${state.visiblePermissionDialogQueue.size}")
+    }
+
+    fun openAppSettings() {
+        notificationFilterUseCases.openAppSettings()
+    }
+
+    fun checkExactAlarmsPermissionGranted() {
+        if (!notificationFilterUseCases.canScheduleExactAlarms()) {
+            state.visiblePermissionDialogQueue.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
+        }
+    }
+
+    fun exactAlarmsSilentCheck() {
+        if (!notificationFilterUseCases.canScheduleExactAlarms()) {
+            state.declinedPermissions.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
+        }
+    }
+
+    fun openExactAlarmsPermissionScreen() {
+        notificationFilterUseCases.openExactAlarmsPermissionScreen()
+    }
+
+    private fun performPermissionSilentChecks() {
+        viewModelScope.launch {
+            _event.send(UiEventNotificationSettings.PerformSilentChecks)
+        }
+    }
+
+    private fun shouldShowWarningDialog(){
+        state = state.copy(
+            isWarningDialogVisible = preferences.getSettingsShouldShowWarning()
+        )
+    }
+
 }

@@ -15,5 +15,9 @@ data class InfiniteScrollUseCases(
     val getTimeOutDuration: GetTimeOutDuration,
     val getInstalledAppsList: GetInstalledAppsList,
     val saveShouldShowOnBoarding: SaveShouldShowOnBoarding,
-    val loadShouldShowOnBoarding: LoadShouldShowOnBoarding
+    val loadShouldShowOnBoarding: LoadShouldShowOnBoarding,
+    val isDarkModeEnabled: IsDarkModeEnabled,
+    val getCurrentThemeColors: GetCurrentThemeColors,
+    val getCountDown: GetCountDown,
+    val getDialogMessage: GetDialogMessage
 )

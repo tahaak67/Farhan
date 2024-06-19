@@ -12,6 +12,6 @@ data class UsageDataItem(
     }
 
     enum class Category {
-        SOCIAL, PRODUCTIVITY, GAME, VIDEO, NEWS, MAPS, OTHER
+        SOCIAL, PRODUCTIVITY, GAME, VIDEO, NEWS, MAPS, OTHER, LAUNCHER
     }
 }

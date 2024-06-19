@@ -1,6 +1,5 @@
 package ly.com.tahaben.core_ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,13 +8,10 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
-import ly.com.tahaben.core.util.ThemeColors
+import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core_ui.backgroundDark
 import ly.com.tahaben.core_ui.backgroundDarkClassic
 import ly.com.tahaben.core_ui.backgroundDarkHighContrast
@@ -243,7 +239,7 @@ import ly.com.tahaben.core_ui.tertiaryLightMediumContrast
 import timber.log.Timber
 
 
-private val lightScheme = lightColorScheme(
+val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
     primaryContainer = primaryContainerLight,
@@ -274,7 +270,7 @@ private val lightScheme = lightColorScheme(
     inversePrimary = inversePrimaryLight,
 )
 
-private val classicLightScheme = lightColorScheme(
+val classicLightScheme = lightColorScheme(
     primary = primaryLightClassic,
     onPrimary = onPrimaryLightClassic,
     primaryContainer = primaryContainerLightClassic,
@@ -304,7 +300,7 @@ private val classicLightScheme = lightColorScheme(
     inverseOnSurface = inverseOnSurfaceLightClassic,
     inversePrimary = inversePrimaryLightClassic,
 )
-private val classicDarkScheme = darkColorScheme(
+val classicDarkScheme = darkColorScheme(
     primary = primaryDarkClassic,
     onPrimary = onPrimaryDarkClassic,
     primaryContainer = primaryContainerDarkClassic,
@@ -335,7 +331,7 @@ private val classicDarkScheme = darkColorScheme(
     inversePrimary = inversePrimaryDarkClassic,
 )
 
-private val darkScheme = darkColorScheme(
+val darkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
     primaryContainer = primaryContainerDark,
@@ -532,13 +528,13 @@ fun FarhanTheme(
         }
     }
     val view = LocalView.current
-    if (!view.isInEditMode) {
+    /*if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkMode
         }
-    }
+    }*/
 
     MaterialTheme(
         colorScheme = colorScheme,

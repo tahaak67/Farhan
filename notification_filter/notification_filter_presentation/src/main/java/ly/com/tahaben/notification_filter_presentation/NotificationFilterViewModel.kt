@@ -15,13 +15,15 @@ import kotlinx.coroutines.withContext
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
+import ly.com.tahaben.notification_filter_domain.util.ServiceUtil
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationFilterViewModel @Inject constructor(
     private val notificationFilterUseCases: NotificationFilterUseCases,
-    private val sharedPref: Preferences
+    private val sharedPref: Preferences,
+    private val serviceUtil: ServiceUtil
 ) : ViewModel() {
 
 
@@ -86,6 +88,14 @@ class NotificationFilterViewModel @Inject constructor(
             is NotificationFilterEvent.OnDeleteAllNotifications -> {
                 Timber.d("delete all notifications")
                 deleteAllNotifications()
+            }
+
+            is NotificationFilterEvent.OnExcludeAppClick -> {
+                notificationFilterUseCases.addPackageToNotificationException(event.appPackageName)
+            }
+
+            is NotificationFilterEvent.OnLaunchAppInfoClick -> {
+                serviceUtil.launchAppInfo(event.appPackageName)
             }
         }
     }

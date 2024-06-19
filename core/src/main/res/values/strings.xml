@@ -8,6 +8,7 @@
     <string name="one_hour">1H</string>
     <string name="two_hours">2H</string>
     <string name="minutes">m</string>
+    <string name="minute">Minute</string>
     <string name="hours">h</string>
     <string name="previous_day">Previous day</string>
     <string name="next_day">Next day</string>
@@ -46,7 +47,7 @@
     <string name="percent" translatable="false">%</string>
     <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
     <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>
-    <string name="hey">Hey !!</string>
+    <string name="hey">Hey, Farhan here!!</string>
     <string name="infinite_scroll_dialog_message">Looks like you are stuck in an infinite scrolling.</string>
     <string name="take_me_out_of_here">TAKE ME OUT OF HERE</string>
     <string name="continue_scrolling">Continue scrolling …</string>
@@ -209,4 +210,71 @@
     <string name="dynamic_colors_description">Uses your wallpaper to generate dynamic colors</string>
     <string name="vibrant_colors_description">A Vibrant touch to classic colors</string>
     <string name="classic_colors_description">Good old colors of Farhan</string>
+    <string name="farhan_icon">Farhan icon</string>
+    <string name="exact_alarm_permission_description">Please enable reminders permission in the next page to allow Farhan to send you a reminder at your selected time</string>
+    <string name="notify_me_permissions_needed_not_granted">Farhan is missing some permissions for Notify me to work properly</string>
+    <string name="seconds">s</string>
+    <string name="count_down_after_limit_isb">Countdown after limit reached</string>
+    <string name="count_down_after_limit_sub">Prevent dismissing the warning dialog for a few seconds after scrolling limit is reached</string>
+    <string name="msg_isb_timout">Message</string>
+    <string name="msg_isb_timout_sub">Select a message to show after scrolling limit is reached.</string>
+    <string name="msg_random">Random message</string>
+    <string name="selected_msg">Selected message: %s</string>
+
+    <string name="time_up_gentle_nudge">Hey there! Feeling good about taking a break?</string>
+    <string name="time_up_direct">Time flies! You\'ve reached your limit. Ready to switch gears?</string>
+    <string name="time_up_wellbeing">Time for a breather! How about giving your eyes and mind a rest?</string>
+    <string name="time_up_playful">Beep boop! Time\'s up. Don\'t worry, your phone will be here when you\'re ready to come back.</string>
+    <string name="time_up_choices">You\'ve reached your time. Want to take a break, or keep going for a bit longer?</string>
+    <string name="time_up_encouragement">You\'ve been infinitely scrolling for a while.  Maybe it\'s a good moment to stretch your legs or grab a snack?</string>
+    <string name="time_up_question">Still having fun?  Just checking in!</string>
+    <string name="time_up_reminder">Remember to take breaks every now and then. Your well-being matters!</string>
+    <string name="add_icon">Add icon</string>
+    <string name="reset_messages">Restore default messages (Press and hold)</string>
+    <string name="save">Save</string>
+    <string name="msg_dialog_text">Select a message to show when limit is reached and press Save.\n or select Random message to show a random message every time.</string>
+    <string name="msg_dialog_edit_mode">Add or delete messages from the list.</string>
+    <string name="back_to_select_msg">Back to select message</string>
+    <string name="exclude_this_app">Exclude this app</string>
+    <string name="app_info">App info</string>
+    <string name="notification_filter_warning_title">Hold Up!</string>
+    <string name="notification_filter_warning_message">Turning on the notification filter means most apps won\'t be able to send you notifications directly. You\'ll need to open Farhan to see what you\'ve missed.\n\nDon\'t worry, you can add important apps (like messaging or alarms) to the exceptions list so you don\'t miss anything crucial.\n\nWant a daily reminder to check your filtered notifications? You can do that with Notify me!</string>
+    <string name="do_not_show_again">Do not show again</string>
+    <string name="i_understand">I understand</string>
+    <string name="tell_me_more">Explain please</string>
+    <string name="notification_filter_settings_greeting"><![CDATA[Hello there! Welcome to the notification filter settings.\nLet me take you on a quick tour <b>Tap anywhere</b> to continue.]]></string>
+    <string name="notification_filter_settings_showcase_msg1"><![CDATA[This is the filter switch, when the switch is on notifications <b>will be filtered</b>]]></string>
+    <string name="notification_filter_settings_showcase_msg2"><![CDATA[You can open the <b>exceptions</b> from here and add apps that you don\'t want to filter notifications for]]></string>
+    <string name="notification_filter_settings_showcase_msg3"><![CDATA[Say you want to have a notification when receive a new message on <b>Signal</b> app]]></string>
+    <string name="notification_filter_settings_showcase_msg4"><![CDATA[You can open <b>Exception</b>, find the Signal app from the list and <b>turn on the switch</b> next to it and that\'s it!]]></string>
+    <string name="notification_filter_settings_showcase_msg5"><![CDATA[Its good that you won\'t be distracted by notifications throughout the day, but sometimes you can forget to check Farhan to see what notifications you had for days! 🙁]]></string>
+    <string name="notification_filter_settings_showcase_msg6"><![CDATA[Don\'t worry 😀 you can setup <b>Notify me</b> from here!, when turned on you will be notified at a <b>time you set</b> to come check your notifications]]></string>
+
+    <string-array name="time_up_messages">
+        <item>@string/infinite_scroll_dialog_message</item>
+        <item>@string/time_up_gentle_nudge</item>
+        <item>@string/time_up_direct</item>
+        <item>@string/time_up_wellbeing</item>
+        <item>@string/time_up_playful</item>
+        <item>@string/time_up_choices</item>
+        <item>@string/time_up_encouragement</item>
+        <item>@string/time_up_question</item>
+        <item>@string/time_up_reminder</item>
+    </string-array>
+
+    <string name="usage_for_today">Usage for today</string>
+    <string name="usage_for_yesterday">Usage for yesterday</string>
+    <string name="place_widget">Place widget</string>
+    <string name="vertical">Vertical</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="widget_update_interval_text">Update widget every</string>
+    <string name="compare_with_yesterday">Compare with yesterday</string>
+    <string name="text_size">Text size</string>
+    <string name="widget_update_notification">Updating widgets</string>
+    <string name="ignore_farhan_usage">Ignore Farhan when doing usage calculations</string>
+    <string name="ignore_launcher_usage">Ignore launcher apps (Ex: Home screen app) when doing usage calculations</string>
+    <string name="customize_your_widget">Customize your widget</string>
+    <string name="today_usage_widget_description">Today\'s usage widget</string>
+    <string name="loading">Loading</string>
+    <string name="title_activity_widget_config">Widget configuration screen</string>
 </resources>

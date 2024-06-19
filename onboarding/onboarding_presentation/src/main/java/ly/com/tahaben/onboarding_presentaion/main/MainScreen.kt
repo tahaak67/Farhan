@@ -53,10 +53,10 @@ import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core.util.UiText
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.onboarding_presentaion.components.MainScreenCard
 import ly.com.tahaben.onboarding_presentaion.components.ThemeColorsDialog
 import ly.com.tahaben.onboarding_presentaion.components.UiModeDialog
-import ly.com.tahaben.onboarding_presentaion.components.isCurrentlyDark
 import ly.com.tahaben.showcase_layout_compose.model.Arrow
 import ly.com.tahaben.showcase_layout_compose.model.ShowcaseMsg
 import ly.com.tahaben.showcase_layout_compose.ui.ShowcaseLayout
@@ -97,7 +97,7 @@ fun MainScreen(
     ShowcaseLayout(
         isShowcasing = state.shouldShowcaseAppearanceMenu == true,
         onFinish = { onEvent(MainScreenEvent.AppearanceShowcaseFinished) },
-        initKey = 1,
+        initIndex = 1,
         isDarkLayout = state.uiMode.isCurrentlyDark(),
         animationDuration = 500
     ) {

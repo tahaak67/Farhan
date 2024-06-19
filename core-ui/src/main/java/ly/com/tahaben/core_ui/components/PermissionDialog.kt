@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,38 +43,52 @@ fun PermissionDialog(
         onDismissRequest = onDismiss,
         modifier = modifier
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
+
+        Surface(
+            modifier = Modifier,
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = AlertDialogDefaults.TonalElevation
         ) {
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            Text(text = stringResource(id = R.string.permission_required))
-            Spacer(modifier = Modifier.height(spacing.spaceSmall))
-            Text(
-                text = permissionTextProvider.getDescription(
-                    isPermanentlyDeclined = isPermanentlyDeclined
-                ).asString(context = context)
-            )
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            Divider()
-            Text(
-                text = if (isPermanentlyDeclined) {
-                    stringResource(id = R.string.grant_runtime_permission)
-                } else {
-                    stringResource(id = R.string.ok)
-                },
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        if (isPermanentlyDeclined) {
-                            onGoToAppSettingsClick()
-                        } else {
-                            onOkClick()
+            ) {
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = spacing.spaceLarge),
+                    text = stringResource(id = R.string.permission_required)
+                )
+                Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = spacing.spaceLarge),
+                    text = permissionTextProvider.getDescription(
+                        isPermanentlyDeclined = isPermanentlyDeclined
+                    ).asString(context = context)
+                )
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+                Divider()
+                Text(
+                    text = if (isPermanentlyDeclined) {
+                        stringResource(id = R.string.grant_runtime_permission)
+                    } else {
+                        stringResource(id = R.string.ok)
+                    },
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            if (isPermanentlyDeclined) {
+                                onGoToAppSettingsClick()
+                            } else {
+                                onOkClick()
+                            }
                         }
-                    }
-                    .padding(spacing.spaceMedium)
-            )
+                        .padding(spacing.spaceMedium)
+                )
+            }
         }
     }
 }
@@ -87,6 +104,12 @@ class PostNotificationPermissionTextProvider : PermissionTextProvider {
         } else {
             UiText.StringResource(R.string.post_notification_permission_description)
         }
+    }
+}
+
+class ScheduleExactAlarmPermissionTextProvider : PermissionTextProvider {
+    override fun getDescription(isPermanentlyDeclined: Boolean): UiText {
+        return UiText.StringResource(R.string.exact_alarm_permission_description)
     }
 }
 

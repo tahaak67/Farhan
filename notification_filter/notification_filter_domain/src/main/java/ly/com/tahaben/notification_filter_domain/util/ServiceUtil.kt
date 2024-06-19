@@ -11,4 +11,8 @@ interface ServiceUtil {
     fun deleteNotificationIntent(notificationKey: String)
     fun createNotifyMeNotificationChannel()
     fun scheduleNotifyMeNotification(hour: Int, minute: Int)
+    fun openAppSettings()
+    fun canScheduleExactAlarms(): Boolean
+    fun openExactAlarmsPermissionScreen()
+    fun launchAppInfo(packageName: String)
 }
