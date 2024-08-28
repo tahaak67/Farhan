@@ -1,2 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="one_hour">1H</string>
+    <string name="check_filtered_notifications">Vérifiez vos notifications filtrées</string>
+    <string name="you_have_unchecked_filtered_notifications">Vous avez filtré des notifications que vous n\'avez pas vérifiées</string>
+    <string name="back">Retour</string>
+    <string name="notifications_filter_settings">Paramètres du filtre de notification</string>
+    <string name="notifications">Notifications</string>
+    <string name="infinite_scrolling">Bloqueur de défilement infini</string>
+    <string name="previous_day">Jour précédent</string>
+    <string name="social">social</string>
+    <string name="productivity">productivité</string>
+    <string name="open_search_field">Ouvrir le champ de recherche</string>
+    <string name="hello">Bonjour</string>
+    <string name="category_game">Jeux</string>
+    <string name="notify_me_channel_description">Un rappel pour vérifier votre notification filtrée à l\'heure souhaitée.</string>
+    <string name="two_hours">2H</string>
+    <string name="minute">Minute</string>
+    <string name="next_day">Le jour suivant</string>
+    <string name="minutes">m</string>
+    <string name="hours">h</string>
+    <string name="daily_limit">Limite journalière</string>
+    <string name="category_other">Autres</string>
+    <string name="total_usage">Utilisation totale :</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="yesterday">Hier</string>
+    <string name="tomorrow">Demain</string>
+    <string name="no_results">Aucun résultats</string>
+    <string name="category_maps">Cartes</string>
+    <string name="category_social">Social</string>
+    <string name="category_productivity">Productivité</string>
+    <string name="category_video">Vidéo</string>
+    <string name="category_news">Actualités</string>
+    <string name="package_not_found_error">Erreur inconnue : êtes-vous sûr que l\'application est installée ?</string>
+    <string name="search">Recherche</string>
+    <string name="close_search">Fermer la recherche</string>
+    <string name="notify_me_channel">Me notifier</string>
+</resources>
