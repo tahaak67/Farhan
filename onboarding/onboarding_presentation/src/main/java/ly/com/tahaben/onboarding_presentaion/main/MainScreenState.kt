@@ -9,5 +9,7 @@ data class MainScreenState(
     val themeColors: ThemeColors = ThemeColors.Classic,
     val isThemeColorsDialogVisible: Boolean = false,
     val isMainSwitchEnabled: Boolean = true,
-    val shouldShowcaseAppearanceMenu: Boolean? = null
+    val shouldShowcaseAppearanceMenu: Boolean? = null,
+    val isCombineDbDialogVisible: Boolean = false,
+    val isCombiningDb: Boolean = false
 )

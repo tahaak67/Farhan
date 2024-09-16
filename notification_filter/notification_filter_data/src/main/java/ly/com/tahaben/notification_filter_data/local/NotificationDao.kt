@@ -1,6 +1,10 @@
 package ly.com.tahaben.notification_filter_data.local
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ly.com.tahaben.notification_filter_data.local.entity.NotificationItemEntity
 
@@ -18,6 +22,9 @@ interface NotificationDao {
 
     @Query("SELECT * FROM notificationitementity")
     fun getNotifications(): Flow<List<NotificationItemEntity>>
+
+    @Query("SELECT * FROM notificationitementity")
+    suspend fun getNotificationsAsList(): List<NotificationItemEntity>
 
 
 }
