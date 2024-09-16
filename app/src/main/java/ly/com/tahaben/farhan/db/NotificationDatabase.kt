@@ -1,7 +1,8 @@
-package ly.com.tahaben.notification_filter_data.local
+package ly.com.tahaben.farhan.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import ly.com.tahaben.notification_filter_data.local.NotificationDao
 import ly.com.tahaben.notification_filter_data.local.entity.NotificationItemEntity
 
 @Database(

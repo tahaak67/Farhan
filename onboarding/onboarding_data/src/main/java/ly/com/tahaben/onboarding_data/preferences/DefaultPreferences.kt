@@ -2,13 +2,15 @@
 package ly.com.tahaben.onboarding_data.preferences
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.domain.preferences.Preferences
 
 class DefaultPreferences(
-    private val sharedPref: SharedPreferences
+    private val sharedPref: SharedPreferences,
+    private val context: Context
 ) : Preferences {
 
     override fun loadShouldShowOnBoarding(): Boolean {
@@ -69,6 +71,21 @@ class DefaultPreferences(
     override fun saveShouldShowcaseAppearanceMenu(shouldShowcase: Boolean) {
         sharedPref.edit()
             .putBoolean(Preferences.KEY_SHOULD_SHOWCASE_APPEARANCE_MENU, shouldShowcase)
+            .apply()
+    }
+
+    override fun loadShouldCombineDb(): Boolean {
+        val dbList = context.databaseList().toList()
+        val oldDbsExist = dbList.contains("notifications_db") || dbList.contains("usage_db")
+        return sharedPref.getBoolean(
+            Preferences.KEY_SHOULD_COMBINE_DB,
+            true
+        ) && oldDbsExist
+    }
+
+    override fun saveShouldCombineDb(shouldCombine: Boolean) {
+        sharedPref.edit()
+            .putBoolean(Preferences.KEY_SHOULD_COMBINE_DB, shouldCombine)
             .apply()
     }
 }

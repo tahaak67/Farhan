@@ -8,6 +8,7 @@ import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.domain.use_case.GetDarkModePreference
 import ly.com.tahaben.domain.use_case.GetThemeColorsPreference
 import ly.com.tahaben.domain.use_case.IsMainSwitchState
+import ly.com.tahaben.domain.use_case.LoadShouldShowCombineDbDialog
 import ly.com.tahaben.domain.use_case.LoadShouldShowcaseAppearanceMenu
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import ly.com.tahaben.domain.use_case.SaveDarkModePreference
@@ -31,7 +32,8 @@ object MainScreenModule {
             getThemeColorsPreference = GetThemeColorsPreference(preferences),
             saveThemeColorsPreference = SaveThemeColorsPreference(preferences),
             loadShouldShowcaseAppearanceMenu = LoadShouldShowcaseAppearanceMenu(preferences),
-            saveShouldShowcaseAppearanceMenu = SaveShouldShowcaseAppearanceMenu(preferences)
+            saveShouldShowcaseAppearanceMenu = SaveShouldShowcaseAppearanceMenu(preferences),
+            loadShouldShowCombineDbDialog = LoadShouldShowCombineDbDialog(preferences)
         )
     }
 }

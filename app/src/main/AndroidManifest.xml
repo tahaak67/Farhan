@@ -50,9 +50,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ly.com.tahaben.launcher_presentation.LauncherActivity"
+            android:name="ly.com.tahaben.launcher_presentation.launcher.LauncherActivity"
             android:exported="true"
-            android:enabled="false"
+            android:enabled="true"
             android:theme="@style/Theme.FarhanLauncher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -129,6 +129,9 @@
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
+        <service android:name="ly.com.tahaben.launcher_data.service.TimeLimitService"
+            android:enabled="true"
+            android:exported="false"/>
 
     </application>
 
