@@ -1,2 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="usage">Uso</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="grayscale">Escala de grises</string>
+    <string name="infinite_scrolling">Bloqueo del desplazamiento infinito</string>
+    <string name="hello">Hola</string>
+    <string name="one_hour">1H</string>
+    <string name="two_hours">2H</string>
+    <string name="minutes">min</string>
+    <string name="minute">Minuto</string>
+    <string name="hours">h</string>
+    <string name="previous_day">Día anterior</string>
+    <string name="next_day">Próximo día</string>
+    <string name="daily_limit">Límite diario</string>
+    <string name="social">social</string>
+    <string name="productivity">productividad</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="no_results">Sin resultados</string>
+    <string name="category_maps">Mapas</string>
+    <string name="category_social">Social</string>
+    <string name="category_productivity">Productividad</string>
+    <string name="category_game">Juego</string>
+    <string name="category_video">Vídeo</string>
+    <string name="category_news">Noticias</string>
+    <string name="category_other">Otro</string>
+    <string name="total_usage">Uso total:</string>
+    <string name="package_not_found_error">Error desconocido: ¿estás seguro de que la aplicación está instalada?</string>
+    <string name="search">Buscar</string>
+    <string name="close_search">Cerrar búsqueda</string>
+    <string name="open_search_field">Abre el cuadro de búsqueda</string>
+    <string name="notify_me_channel">Notificarme</string>
+    <string name="notify_me_channel_description">Un recordatorio para que compruebes tu notificación a la hora que desees.</string>
+    <string name="show_system_apps">Mostrar aplicaciones del sistema</string>
+</resources>
