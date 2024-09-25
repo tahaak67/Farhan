@@ -244,5 +244,26 @@
     <string name="today_usage_widget_description">التطبيق المصغر لإستخدام اليوم</string>
     <string name="loading">جاري التحميل</string>
     <string name="title_activity_widget_config">شاشة تخصيص التطبيق المصغر</string>
+    <string name="time_is_up">انتهى الوقت!</string>
+    <string name="or_add_more_time">أو قم بإضافة المزيد من الوقت …</string>
+    <string name="one_min">1 د</string>
+    <string name="three_min">3 د</string>
+    <string name="five_min">5 د</string>
+    <string name="will_remind_you_in_one_min">سأذكرك بعد دقيقة</string>
+    <string name="will_remind_you_in_three_min">سأذكرك بعد 3 دقائق</string>
+    <string name="will_remind_you_in_five_min">سأذكرك بعد 5 دقائق</string>
+    <string name="app_time_limiter">مؤقت التطبيقات</string>
+    <string name="app_time_limiter_settings">اعدادات مؤقت التطبيقات</string>
+    <string name="set_time_limite_dialog_text">كم من الوقت تود أن تقضي على %s؟</string>
+    <string name="ten_min">10 د</string>
+    <string name="fifteen_min">15 د</string>
+    <string name="db_combine_dialog_text">لقد قمنا ببعض التحديثات لتحسين تطبيق فرحان! لضمان أن كل شيء يعمل بسلاسة، نحتاج إلى نقل بياناتك إلى نظام جديد. قد يستغرق ذلك بضع دقائق، ولن تتمكن من استخدام فرحان خلال هذه الفترة. يرجى إبقاء التطبيق مفتوحًا حتى تكتمل العملية.</string>
+    <string name="please_wait">يرجى الإنتظار</string>
+    <string name="db_combine_dialog_title">يبدو انك قمت بتحديث التطبيق!</string>
+    <string name="start_migrating">ابدأ النقل</string>
+    <string name="remind_me_later">ذكرني لاحقاً</string>
+    <string name="db_migration_sucsessful">تم نقل البيانات بنجاح! :D</string>
+    <string name="db_migration_fail">خطأ في نقل البيانات :(</string>
+    <string name="close_app">اغلق التطبيق</string>
 
 </resources>

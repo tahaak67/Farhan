@@ -16,4 +16,7 @@ sealed class MainScreenEvent {
     object HideSnackBar : MainScreenEvent()
     object AppearanceShowcaseFinished : MainScreenEvent()
     object OnScreenLaunched : MainScreenEvent()
+    object OnDismissCombineDbDialog: MainScreenEvent()
+    object OnCombineDbAgreeClick: MainScreenEvent()
+    object OnExitApp: MainScreenEvent()
 }

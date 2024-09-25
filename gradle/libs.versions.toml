@@ -45,6 +45,7 @@ toolchains_foojay = "0.5.0"
 glance = "1.0.0"
 lifecycleRuntimeKtx = "2.8.1"
 dagger_workmanager = "1.2.0"
+uiAndroid = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -136,6 +137,7 @@ leakCanary = { module = "com.squareup.leakcanary:leakcanary-android", version.re
 glance-appWidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

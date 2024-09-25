@@ -1,6 +1,9 @@
 package ly.com.tahaben.usage_overview_data.local
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import ly.com.tahaben.usage_overview_data.local.entity.DayLastUpdatedEntity
 import ly.com.tahaben.usage_overview_data.local.entity.UsageDataItemEntity
 import java.time.LocalDate
@@ -31,4 +34,10 @@ interface UsageDao {
 
     @Query("SELECT day FROM DayLastUpdatedEntity")
     suspend fun getUpdatedDays(): List<LocalDate>
+
+    @Query("SELECT * FROM UsageDataItemEntity")
+    suspend fun getAllUsageEvents(): List<UsageDataItemEntity>
+
+    @Query("SELECT * FROM DayLastUpdatedEntity")
+    suspend fun getAllDayLastUpdatedEntities(): List<DayLastUpdatedEntity>
 }

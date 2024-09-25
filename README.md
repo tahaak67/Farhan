@@ -1,6 +1,7 @@
 # Farhan
 
-[![GitHub issues](https://img.shields.io/github/issues/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/issues) [![GitHub stars](https://img.shields.io/github/stars/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/stargazers) [![GitHub license](https://img.shields.io/github/license/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/issues) [![GitHub stars](https://img.shields.io/github/stars/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/stargazers) [![GitHub license](https://img.shields.io/github/license/tahaak67/Farhan?style=flat-square)](https://github.com/tahaak67/Farhan/blob/main/LICENSE) [![Weblate project translated](https://img.shields.io/weblate/progress/farhan?style=flat-square&color=orange&link=https%3A%2F%2Fhosted.weblate.org%2Fengage%2Ffarhan%2F)](https://hosted.weblate.org/engage/farhan/)
+
 
 ## Downloads
 
@@ -42,6 +43,10 @@ Check your usage for every app & for different categories with a simple easy to 
 <img src="metadata/en-US/images/phoneScreenshots/farhan-ss1.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss2.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss3.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss4.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss5.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss6.jpg" width="190" /><img src="metadata/en-US/images/phoneScreenshots/farhan-ss7.jpg" width="190" />
 
 ## Contributing
+
+Help by translating (click the image below)!
+
+[![Translation status](https://hosted.weblate.org/widget/farhan/287x66-black.png)](https://hosted.weblate.org/engage/farhan/)
 
 Pull requests are welcome.
 

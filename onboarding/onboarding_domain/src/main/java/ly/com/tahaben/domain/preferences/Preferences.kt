@@ -17,11 +17,15 @@ interface Preferences {
     fun loadShouldShowcaseAppearanceMenu(): Boolean
     fun saveShouldShowcaseAppearanceMenu(shouldShowcase: Boolean)
 
+    fun loadShouldCombineDb(): Boolean
+    fun saveShouldCombineDb(shouldCombine: Boolean)
+
     companion object {
         const val KEY_APP_SHOULD_SHOW_ON_BOARDING =
             "app_should_show_on_boarding"
         const val KEY_APP_DARK_MODE_ON = "app_dark_mode_on"
         const val KEY_APP_THEME_COLORS = "app_theme_colors"
         const val KEY_SHOULD_SHOWCASE_APPEARANCE_MENU = "should_show_appearance_menu"
+        const val KEY_SHOULD_COMBINE_DB = "should_combine_db"
     }
 }

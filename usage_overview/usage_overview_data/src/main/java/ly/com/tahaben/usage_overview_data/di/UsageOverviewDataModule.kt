@@ -3,7 +3,6 @@ package ly.com.tahaben.usage_overview_data.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.room.Room
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -11,7 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ly.com.tahaben.usage_overview_data.local.UsageDao
-import ly.com.tahaben.usage_overview_data.local.UsageDatabase
 import ly.com.tahaben.usage_overview_data.preferences.DefaultPreferences
 import ly.com.tahaben.usage_overview_data.repository.UsageRepositoryImpl
 import ly.com.tahaben.usage_overview_data.repository.WorkerRepoImpl
@@ -23,20 +21,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UsageOverviewDataModule {
-
-
-    @Provides
-    @Singleton
-    fun provideUsageDB(app: Application): UsageDatabase {
-        return Room.databaseBuilder(app, UsageDatabase::class.java, "usage_db")
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUsageDao(usageDB: UsageDatabase): UsageDao {
-        return usageDB.dao
-    }
 
     @Provides
     @Singleton

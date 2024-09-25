@@ -157,7 +157,24 @@ class MainScreenViewModel @Inject constructor(
 
             MainScreenEvent.OnScreenLaunched -> {
                 getShouldShowcaseAppearanceMenu()
+                _mainScreenState.update {
+                    it.copy(
+                        isCombineDbDialogVisible = useCases.loadShouldShowCombineDbDialog()
+                    )
+                }
             }
+
+            MainScreenEvent.OnCombineDbAgreeClick -> {
+                _mainScreenState.update {
+                    it.copy(isCombiningDb = true)
+                }
+            }
+            MainScreenEvent.OnDismissCombineDbDialog -> {
+                _mainScreenState.update {
+                    it.copy(isCombineDbDialogVisible = false)
+                }
+            }
+            MainScreenEvent.OnExitApp -> Unit
         }
     }
 

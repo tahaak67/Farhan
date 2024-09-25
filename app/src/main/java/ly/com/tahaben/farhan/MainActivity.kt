@@ -20,6 +20,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.navigation.Args
@@ -28,12 +32,15 @@ import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.domain.preferences.Preferences
+import ly.com.tahaben.farhan.db.DatabaseCombineHelper
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding.InfiniteScrollOnBoardingScreen
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_presentation.settings.LauncherSettingsScreen
+import ly.com.tahaben.launcher_presentation.settings.TimeLimiterSettingsScreen
+import ly.com.tahaben.launcher_presentation.settings.TimeLimiterWhitelistScreen
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
@@ -43,6 +50,7 @@ import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
 import ly.com.tahaben.onboarding_presentaion.SelectAppearanceScreen
 import ly.com.tahaben.onboarding_presentaion.about.AboutScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
+import ly.com.tahaben.onboarding_presentaion.main.MainScreenEvent
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
@@ -73,11 +81,15 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var launcherPref: Preference
 
+    @Inject
+    lateinit var databaseCombineHelper: DatabaseCombineHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
         val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
         val tip = getTip()
+        val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         setContent {
             val mainScreenViewModel= hiltViewModel<MainScreenViewModel>()
             val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
@@ -155,7 +167,25 @@ class MainActivity : ComponentActivity() {
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
                                 navController = navController,
-                                onEvent = mainScreenViewModel::onEvent,
+                                onEvent = { event ->
+                                    when(event) {
+                                        MainScreenEvent.OnCombineDbAgreeClick -> {
+                                            mainScreenViewModel.onEvent(event)
+                                            coroutineScope.launch {
+                                                val result = databaseCombineHelper.combineDatabases()
+                                                mainScreenViewModel.onEvent(MainScreenEvent.OnDismissCombineDbDialog)
+                                                if (result){
+                                                    snackbarHostState.showSnackbar(getString(R.string.db_migration_sucsessful))
+                                                } else {
+                                                    snackbarHostState.showSnackbar(getString(R.string.db_migration_fail))
+                                                    finish()
+                                                }
+                                            }
+                                        }
+                                        MainScreenEvent.OnExitApp -> finish()
+                                        else -> mainScreenViewModel.onEvent(event)
+                                    }
+                                },
                                 state = mainState,
                                 snackbarHostState = snackbarHostState,
                                 uiEvent = mainScreenUiEvent
@@ -293,8 +323,19 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.LAUNCHER_SETTINGS) {
                             LauncherSettingsScreen(
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToTimeLimiter = { navController.navigate(Routes.TimeLimiter_SETTINGS) }
                             )
+                        }
+                        composable(Routes.TimeLimiter_SETTINGS) {
+                            TimeLimiterSettingsScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToWhitelist = { navController.navigate(Routes.TimeLimiter_WHITELIST_SETTINGS) })
+                        }
+                        composable(Routes.TimeLimiter_WHITELIST_SETTINGS) {
+                            TimeLimiterWhitelistScreen(
+                                snackbarHostState = snackbarHostState,
+                                onNavigateUp = { navController.navigateUp() })
                         }
                     }
                 }

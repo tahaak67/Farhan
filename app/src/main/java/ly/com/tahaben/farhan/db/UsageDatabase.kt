@@ -1,8 +1,9 @@
-package ly.com.tahaben.usage_overview_data.local
+package ly.com.tahaben.farhan.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import ly.com.tahaben.usage_overview_data.local.UsageDao
 import ly.com.tahaben.usage_overview_data.local.entity.DayLastUpdatedEntity
 import ly.com.tahaben.usage_overview_data.local.entity.LocalDateTypeConverter
 import ly.com.tahaben.usage_overview_data.local.entity.UsageDataItemEntity
