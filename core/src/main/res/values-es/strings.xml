@@ -182,4 +182,28 @@
     <string name="customize_your_widget">Personaliza tu complemento</string>
     <string name="loading">Cargando</string>
     <string name="title_activity_widget_config">Pantalla de configuración de complemento</string>
+    <string name="grayscale_onboarding_message">Una de las formas en las que las aplicaciones compiten por tu tiempo y atención es a través de los colores, utilizando la escala de grises Farhan puede desactivar los colores de las aplicaciones seleccionadas cuando las inicias, ¡eliminando su efecto sobre ti!</string>
+    <string name="on_boarding_image_description">Imagen de bienvenida</string>
+    <string name="accessibility_service_description">Este servicio es necesario para que funcionen funcionalidades como el bloqueador de desplazamiento infinito o la escala de grises de la pantalla</string>
+    <string name="appear_on_top_permission_needed_message">Farhan necesita permiso para aparecer encima de otras aplicaciones para ayudarte a evitar el desplazamiento interminable</string>
+    <string name="infinite_scroll_onboarding_message">El desplazamiento infinito es una técnica utilizada por las aplicaciones para seguir dándote nuevo contenido no importa cuánto te desplazas reduciendo así el control sobre tu tiempo, ¡Farhan puede tratar de detectar cuando estás atascado en un desplazamiento infinito y te recuerda salir de esa aplicación!</string>
+    <string name="notification_filter_onboarding_message">Las notificaciones son como un despertador, pero pueden distraerte en cualquier momento sin previo aviso. Farhan puede excluir estas distracciones filtrando las notificaciones. Por lo tanto, las aplicaciones no podrán distraerte con notificaciones. Puedes excluir aplicaciones importantes de las que quieras. Recibe notificaciones, y el resto de las notificaciones se filtrarán y guardarán dentro de la aplicación, ¡donde podrás verlas cuando quieras!</string>
+    <string name="no_internet_permission_desc">Farhan no se conecta a Internet de ninguna manera. De hecho, no tiene ningún permiso para acceder a Internet, por lo que sus datos no saldrán de su teléfono</string>
+    <string name="about_app_content">Farhan es un proyecto de Android de código abierto que ofrece diferentes herramientas para ayudarte a reducir el efecto de las estrategias de manipulación de las aplicaciones que se utilizan para drenar tu tiempo y atención, ¡para que puedas usar tu teléfono pero no al revés!</string>
+    <string name="secure_settings_permission_sub_msg">Farhan necesita permiso de configuración segura para poner la pantalla en escala de grises por ti</string>
+    <string name="device_root_detected_msg">¡Parece que tu dispositivo está rooteado!, usa el botón de abajo si quieres otorgar el permiso con root</string>
+    <string name="no_device_root_detected_msg">Para conceder este permiso necesitarás un PC, no te preocupes solo tienes que hacerlo una vez y solo te llevará unos minutos</string>
+    <string name="launcher_settings">Ajustes del lanzador</string>
+    <string name="launcher">Lanzador</string>
+    <string name="set_default_launcher_text">Por favor, seleccione Farhan para configurarlo como su launcher predeterminado</string>
+    <string name="set_other_default_launcher_text">Por favor, seleccione el otro launcher que desea utilizar</string>
+    <string name="productivity_tip1">Para mejorar la productividad durante las horas de trabajo, ponga el teléfono en silencio y manténgalo fuera de la vista (por ejemplo, en un cajón)</string>
+    <string name="notification_filter_exception_tip">¿No quieres perderte una notificación de una aplicación? Asegúrate de excluir esa aplicación en el filtro de notificaciones</string>
+    <string name="notification_filter_notifyme_tip">Utiliza Notificarme en el filtro de notificaciones y establece una hora de notificación para comprobar diariamente las notificaciones filtradas</string>
+    <string name="grayscale_whitelist_tip">Cuando la escala de grises está activada, sólo se aplica a las aplicaciones de la lista blanca</string>
+    <string name="beta_version_tip">Esta es una versión beta de Farhan, asegúrate de informar de cualquier error al desarrollador y haz capturas de pantalla si es posible</string>
+    <string name="if_you_choose_agree_msg">Cuando elijas Aceptar, accederás a la configuración de accesibilidad de tu dispositivo.</string>
+    <string name="grant_secure_permission_manually_msg">O conceder el permiso manualmente usando ADB en tu PC, no te preocupes solo tienes que hacerlo una vez y solo toma unos minutos</string>
+    <string name="delete_cache_dialog_text">¿Estás seguro de que quieres borrar los datos %s de la base de datos y volver a cargarlos? Esta acción no se puede deshacer.
+\nPor favor, ten en cuenta que si los datos tienen más de 6 días, es posible que Farhan no pueda volver a recuperar los datos de uso.</string>
 </resources>
