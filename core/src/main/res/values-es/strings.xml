@@ -280,4 +280,5 @@
     <string name="ignore_farhan_usage">Ignora a Farhan cuando hagas cálculos de uso</string>
     <string name="ignore_launcher_usage">Ignorar las aplicaciones del launcher (por ejemplo, la aplicación de la pantalla de inicio) al realizar los cálculos de uso</string>
     <string name="today_usage_widget_description">Widget de uso actual</string>
+    <string name="classic_colors_description">Fabulosos colores clásicos de Farhan</string>
 </resources>
