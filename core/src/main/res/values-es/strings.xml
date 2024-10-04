@@ -281,4 +281,6 @@
     <string name="ignore_launcher_usage">Ignorar las aplicaciones del launcher (por ejemplo, la aplicación de la pantalla de inicio) al realizar los cálculos de uso</string>
     <string name="today_usage_widget_description">Widget de uso actual</string>
     <string name="classic_colors_description">Fabulosos colores clásicos de Farhan</string>
+    <string name="time_limiter_notification_channel_name">Limitador de la duración de las notificaciones</string>
+    <string name="time_limiter_channel_description">Tiempo límite para las notificaciones</string>
 </resources>
