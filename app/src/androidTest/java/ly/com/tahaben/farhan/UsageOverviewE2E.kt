@@ -51,6 +51,7 @@ import ly.com.tahaben.usage_overview_domain.use_case.IsAutoCachingEnabled
 import ly.com.tahaben.usage_overview_domain.use_case.IsCachingEnabled
 import ly.com.tahaben.usage_overview_domain.use_case.IsDateToday
 import ly.com.tahaben.usage_overview_domain.use_case.IsDayDataFullyUpdated
+import ly.com.tahaben.usage_overview_domain.use_case.IsDayOver
 import ly.com.tahaben.usage_overview_domain.use_case.IsUsagePermissionGranted
 import ly.com.tahaben.usage_overview_domain.use_case.MergeDaysUsageDuration
 import ly.com.tahaben.usage_overview_domain.use_case.OpenAppSettings
@@ -105,7 +106,8 @@ class UsageOverviewE2E {
             getUsageEventsFromDb = GetUsageEventsFromDb(repositoryFake),
             getUpdatedDays = GetUpdatedDays(repositoryFake),
             isDayDataFullyUpdated = IsDayDataFullyUpdated(repositoryFake),
-            mergeDaysUsageDuration = MergeDaysUsageDuration()
+            mergeDaysUsageDuration = MergeDaysUsageDuration(),
+            isDayOver = IsDayOver()
         )
         usageSettingsUseCases = UsageSettingsUseCases(
             openAppSettings = OpenAppSettings(workerRepositoryFake),
@@ -117,7 +119,7 @@ class UsageOverviewE2E {
             setCachingEnabled = SetCachingEnabled(usagePreferences),
         )
         usageOverviewViewModel =
-            UsageOverviewViewModel(usageOverviewUseCases, usageSettingsUseCases)
+            UsageOverviewViewModel(usageOverviewUseCases, usageSettingsUseCases, usagePreferences)
         repositoryFake.usageItems.add(
             UsageDataItem(
                 appName = "Farhan",
