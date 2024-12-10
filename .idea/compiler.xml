@@ -2,7 +2,31 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17">
+      <module name="Farhan.app" target="21" />
+      <module name="Farhan.buildSrc" target="21" />
+      <module name="Farhan.buildSrc.main" target="21" />
+      <module name="Farhan.buildSrc.test" target="21" />
+      <module name="Farhan.core" target="21" />
+      <module name="Farhan.core-ui" target="21" />
+      <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_data" target="21" />
+      <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_domain" target="21" />
+      <module name="Farhan.infinite_scroll_blocker.infinite_scroll_blocker_presentation" target="21" />
+      <module name="Farhan.launcher.launcher_data" target="21" />
+      <module name="Farhan.launcher.launcher_domain" target="21" />
+      <module name="Farhan.launcher.launcher_presentation" target="21" />
+      <module name="Farhan.notification_filter.notification_filter_data" target="21" />
+      <module name="Farhan.notification_filter.notification_filter_domain" target="21" />
+      <module name="Farhan.notification_filter.notification_filter_presentation" target="21" />
+      <module name="Farhan.onboarding.onboarding_data" target="21" />
+      <module name="Farhan.onboarding.onboarding_domain" target="21" />
+      <module name="Farhan.onboarding.onboarding_presentation" target="21" />
+      <module name="Farhan.screen_grayscale.screen_grayscale_data" target="21" />
+      <module name="Farhan.screen_grayscale.screen_grayscale_domain" target="21" />
+      <module name="Farhan.screen_grayscale.screen_grayscale_presentation" target="21" />
       <module name="Farhan.showcase_layout_compose" target="11" />
+      <module name="Farhan.usage_overview.usage_overview_data" target="21" />
+      <module name="Farhan.usage_overview.usage_overview_domain" target="21" />
+      <module name="Farhan.usage_overview.usage_overview_presentation" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

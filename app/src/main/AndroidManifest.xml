@@ -131,7 +131,8 @@
             tools:node="merge" />
         <service android:name="ly.com.tahaben.launcher_data.service.TimeLimitService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false"
+            android:foregroundServiceType="specialUse"/>
 
     </application>
 

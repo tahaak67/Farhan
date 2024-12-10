@@ -9,7 +9,7 @@ import ly.com.tahaben.domain.preferences.Preferences
 class SaveDarkModePreference(
     private val preferences: Preferences
 ) {
-    operator fun invoke(uiModeAppearance: UIModeAppearance) {
+    operator suspend fun invoke(uiModeAppearance: UIModeAppearance) {
         when (uiModeAppearance) {
             DARK_MODE -> preferences.saveDarkModeOn(DARK_MODE.name)
             LIGHT_MODE -> preferences.saveDarkModeOn(LIGHT_MODE.name)

@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     alias(libs.plugins.hiltAndroidGradle)
     id("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -39,9 +40,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
+
     packaging {
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
@@ -54,7 +53,6 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.compose.compiler)
     implementation(libs.compose.hilt.navigation)
     implementation(libs.compose.runtime)
     implementation(libs.compose.navigation)
@@ -67,6 +65,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.extended)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore)
 
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)

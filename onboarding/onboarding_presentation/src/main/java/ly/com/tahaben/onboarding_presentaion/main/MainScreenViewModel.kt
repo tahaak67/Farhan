@@ -7,18 +7,21 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val useCases: MainScreenUseCases
+    private val useCases: MainScreenUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _mainScreenState = MutableStateFlow(MainScreenState())
@@ -33,21 +36,27 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun getUiAppearanceSettings() {
-        val uiMode = useCases.getDarkModePreference()
-        _mainScreenState.update {
-            it.copy(
-                uiMode = uiMode
-            )
+        viewModelScope.launch {
+            useCases.getDarkModePreference().collectLatest { uiMode ->
+                _mainScreenState.update {
+                    it.copy(
+                        uiMode = uiMode
+                    )
+                }
+            }
         }
     }
 
     private fun getThemeColorsSettings() {
-        val themeColors = useCases.getThemeColorsPreference()
-        if (themeColors != null) {
-            _mainScreenState.update {
-                it.copy(
-                    themeColors = themeColors
-                )
+        viewModelScope.launch {
+            useCases.getThemeColorsPreference().collectLatest { themeColors ->
+                if (themeColors != null) {
+                    _mainScreenState.update {
+                        it.copy(
+                            themeColors = themeColors
+                        )
+                    }
+                }
             }
         }
     }
@@ -64,11 +73,15 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun saveUiAppearanceSettings(uiModeAppearance: UIModeAppearance) {
-        useCases.saveDarkModePreference(uiModeAppearance)
+        viewModelScope.launch {
+            useCases.saveDarkModePreference(uiModeAppearance)
+        }
     }
 
     private fun saveThemeColorsSettings(themeColors: ThemeColors) {
-        useCases.saveThemeColorsPreference(themeColors)
+        viewModelScope.launch {
+            useCases.saveThemeColorsPreference(themeColors)
+        }
     }
 
     fun onEvent(event: MainScreenEvent) {

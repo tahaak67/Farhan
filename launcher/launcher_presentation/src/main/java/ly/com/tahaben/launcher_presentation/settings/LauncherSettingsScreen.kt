@@ -1,20 +1,23 @@
 package ly.com.tahaben.launcher_presentation.settings
 
-//import ly.com.tahaben.core_ui.White
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,10 +32,13 @@ import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.mirror
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LauncherSettingsScreen(
     onNavigateUp: () -> Unit,
-    viewModel: LauncherSettingsViewModel = hiltViewModel()
+    onNavigateToTimeLimiter: () -> Unit,
+    viewModel: LauncherSettingsViewModel = hiltViewModel(),
+    onNavigateToMindfulLaunch: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -64,7 +70,7 @@ fun LauncherSettingsScreen(
                         contentDescription = stringResource(id = R.string.back)
                     )
                 }
-            }
+            },
         )
         Row(
             modifier = Modifier
@@ -76,10 +82,9 @@ fun LauncherSettingsScreen(
             ) {
             Text(text = stringResource(R.string.launcher))
             Switch(
-                checked = launcherEnabled.value,
+                checked = state.isLauncherEnabled,
                 onCheckedChange = { checked ->
-                    viewModel.setLauncherEnabled(checked)
-                    launcherEnabled.value = checked
+                    viewModel.openLauncherSettings()
                     if (checked) {
                         Toast.makeText(
                             context,
@@ -96,7 +101,31 @@ fun LauncherSettingsScreen(
                 }
             )
         }
-
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
+                .clickable {
+                    onNavigateToTimeLimiter()
+                },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = stringResource(R.string.app_time_limiter))
+        }
+        Spacer(modifier = Modifier.height(spacing.spaceMedium))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
+                .clickable {
+                    onNavigateToMindfulLaunch()
+                },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = stringResource(R.string.mindful_launch))
+        }
     }
 }
-

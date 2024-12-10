@@ -13,4 +13,5 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.coreUi))
     "implementation"(project(Modules.launcherDomain))
+    implementation(project(":onboarding:onboarding_presentation"))
 }

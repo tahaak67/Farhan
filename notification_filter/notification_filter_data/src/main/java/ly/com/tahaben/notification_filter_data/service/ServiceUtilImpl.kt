@@ -12,14 +12,13 @@ import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core.util.BroadcastReceiverNotification
+import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.MESSAGE_EXTRA
-import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.TITLE_EXTRA
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.util.ServiceUtil
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 class ServiceUtilImpl(
     private val context: Context,
@@ -80,17 +79,23 @@ class ServiceUtilImpl(
     override fun scheduleNotifyMeNotification(hour: Int, minute: Int) {
         if (!sharedPref.isNotifyMeScheduledToday()) {
             try {
-                val intent = Intent(context, BroadcastReceiverNotification::class.java)
-                val title = context.getString(R.string.check_filtered_notifications)
-                val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
-                intent.putExtra(TITLE_EXTRA, title)
-                intent.putExtra(MESSAGE_EXTRA, message)
-
-                val pendingIntent = PendingIntent.getBroadcast(
+                val deepLinkUri =
+                    Uri.parse("app://${context.packageName}/${Routes.NOTIFICATION_FILTER}")
+                val pm = context.packageManager
+                val intent = pm.getLaunchIntentForPackage(context.packageName)?.apply {
+                    val title = context.getString(R.string.check_filtered_notifications)
+                    val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
+                    putExtra(TITLE_EXTRA, title)
+                    putExtra(MESSAGE_EXTRA, message)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    action = Intent.ACTION_VIEW
+                    data = deepLinkUri
+                }
+                val pendingIntent = PendingIntent.getActivity(
                     context,
-                    NOTIFICATION_ID,
+                    0,
                     intent,
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.MINUTE, minute)

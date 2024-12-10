@@ -35,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
@@ -49,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -64,10 +64,13 @@ import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.core_ui.use_cases.UiUseCases
 import ly.com.tahaben.core_ui.util.ComposeOverlayLifecycleOwner
 import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
+import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
+import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchActivity
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -89,6 +92,12 @@ class AccessibilityService : AccessibilityService() {
     @Inject
     lateinit var grayscaleUseCases: GrayscaleUseCases
 
+    @Inject
+    lateinit var uiUseCases: UiUseCases
+
+    @Inject
+    lateinit var timeLimitUseCases: TimeLimitUseCases
+
     override fun onCreate() {
         super.onCreate()
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
@@ -97,13 +106,27 @@ class AccessibilityService : AccessibilityService() {
         }
     }
 
+    private var lastLaunchedPackage = ""
+
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
-        Timber.d("event type: ${event.eventType}")
-        if (infiniteScrollUseCases.isServiceEnabled()) {
+        Timber.d("event type: ${AccessibilityEvent.eventTypeToString(event.eventType)} pn: ${event.packageName} fs? ${event.isFullScreen}")
+        Timber.d("event package name: ${event.packageName}")
+
+        if (infiniteScrollUseCases.isServiceEnabled() && event.packageName.toString() != packageName) {
             if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
                 if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(event.packageName.toString())) {
                     listenToScrollEvent(event)
+                }
+            }
+            if (timeLimitUseCases.isTimeLimiterEnabled() ){
+                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && event.packageName.toString() != lastLaunchedPackage){
+                    Timber.d("new app ${event.packageName}")
+                    lastLaunchedPackage = event.packageName.toString()
+                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(event.packageName.toString())){
+                        Timber.d("app in timelimit whitelist!! ${event.packageName}")
+                        showHoldUpOverlay()
+                    }
                 }
             }
         }
@@ -195,8 +218,8 @@ class AccessibilityService : AccessibilityService() {
         } else {
             WindowManager.LayoutParams.TYPE_PHONE
         }
-        val isDarkMode = infiniteScrollUseCases.isDarkModeEnabled()
-        val themeColors = infiniteScrollUseCases.getCurrentThemeColors()
+        val isDarkMode = uiUseCases.isDarkModeEnabled()
+        val themeColors = uiUseCases.getCurrentThemeColors()
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -236,7 +259,8 @@ class AccessibilityService : AccessibilityService() {
                     bottomSheetState = SheetState(
                         initialValue = SheetValue.Expanded,
                         skipHiddenState = false,
-                        skipPartiallyExpanded = true
+                        skipPartiallyExpanded = true,
+                        density = LocalDensity.current
                     )
                 )
                 val spacing = LocalSpacing.current
@@ -351,6 +375,15 @@ class AccessibilityService : AccessibilityService() {
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         windowManager.addView(composeView, params)
+    }
+
+    private fun showHoldUpOverlay(){
+        Timber.d("showing holdup overlay")
+
+        val intent = Intent(this.applicationContext, MindfulLaunchActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        startActivity(intent)
     }
 
     private fun grayscaleScreen() {

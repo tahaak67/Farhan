@@ -1,15 +1,17 @@
 package ly.com.tahaben.domain.preferences
 
+import kotlinx.coroutines.flow.Flow
+
 interface Preferences {
 
     fun loadShouldShowOnBoarding(): Boolean
     fun saveShouldShowOnBoarding(shouldShow: Boolean)
 
-    fun loadDarkModeOn(): String
-    fun saveDarkModeOn(darkMode: String)
+    suspend fun loadDarkModeOn(): String
+    suspend fun saveDarkModeOn(darkMode: String)
 
-    fun loadThemeColors(): String
-    fun saveThemeColors(themeColors: String)
+    suspend fun loadThemeColors(): String
+    suspend fun saveThemeColors(themeColors: String)
 
     fun loadMainSwitchState(): Boolean
     fun setMainSwitchState(switchState: Boolean)
@@ -19,6 +21,9 @@ interface Preferences {
 
     fun loadShouldCombineDb(): Boolean
     fun saveShouldCombineDb(shouldCombine: Boolean)
+
+    fun loadDarkModeStateAsFlow(): Flow<String>
+    fun loadThemeColorsAsFlow(): Flow<String>
 
     companion object {
         const val KEY_APP_SHOULD_SHOW_ON_BOARDING =

@@ -1,6 +1,5 @@
 package ly.com.tahaben.launcher_presentation.component
 
-//import ly.com.tahaben.core_ui.Black
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,13 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ly.com.tahaben.core.model.AppItem
 import ly.com.tahaben.core_ui.LocalSpacing
-
-//import ly.com.tahaben.core_ui.White
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -58,13 +57,13 @@ fun AppListItem(
                 text = app.name ?: "",
                 style = MaterialTheme.typography.body1.copy(
                     shadow = Shadow(
-//                        color = Black,
+                        color = Black,
                         offset = Offset(4f, 4f),
                         blurRadius = 8f
                     )
                 ),
                 overflow = TextOverflow.Ellipsis,
-//                color = White
+                color = White
             )
             Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
         }

@@ -4,7 +4,7 @@ import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.domain.preferences.Preferences
 
 class SaveThemeColorsPreference(private val preferences: Preferences) {
-    operator fun invoke(themeColors: ThemeColors) {
+    operator suspend fun invoke(themeColors: ThemeColors) {
         when (themeColors) {
             ThemeColors.Vibrant -> preferences.saveThemeColors(ThemeColors.Vibrant.name)
             ThemeColors.Classic -> preferences.saveThemeColors(ThemeColors.Classic.name)

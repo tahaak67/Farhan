@@ -2,6 +2,7 @@ package ly.com.tahaben.onboarding_data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,9 +20,10 @@ object OnBoardingModule {
     @Singleton
     fun provideInfiniteScrollPreferences(
         sharedPreferences: SharedPreferences,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        dataStore: DataStore<androidx.datastore.preferences.core.Preferences>
     ): Preferences {
-        return DefaultPreferences(sharedPreferences, context)
+        return DefaultPreferences(sharedPreferences, context, dataStore)
     }
 }
 
