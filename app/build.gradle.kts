@@ -2,8 +2,8 @@ plugins {
     id("com.android.application")
     kotlin("android")
     alias(libs.plugins.hiltAndroidGradle)
-    id("kotlin-kapt")
     alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -68,7 +68,7 @@ dependencies {
     implementation(libs.androidx.datastore)
 
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.timber)
     debugImplementation(libs.leakCanary)
@@ -102,7 +102,7 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.accompanist.ui.controller)
 
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
 
@@ -126,7 +126,7 @@ dependencies {
 
 
     androidTestImplementation(libs.hilt.testing)
-    kaptAndroidTest(libs.dagger.hilt.compiler)
+    kspAndroidTest(libs.dagger.hilt.compiler)
     androidTestImplementation(libs.test.runner)
 
     // Dependency required for API desugaring.
