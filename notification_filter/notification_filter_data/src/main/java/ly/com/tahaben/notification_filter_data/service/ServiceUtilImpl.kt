@@ -13,7 +13,9 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
+import ly.com.tahaben.core.util.BroadcastReceiverNotification
 import ly.com.tahaben.core.util.MESSAGE_EXTRA
+import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.TITLE_EXTRA
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.util.ServiceUtil
@@ -81,21 +83,19 @@ class ServiceUtilImpl(
             try {
                 val deepLinkUri =
                     Uri.parse("app://${context.packageName}/${Routes.NOTIFICATION_FILTER}")
-                val pm = context.packageManager
-                val intent = pm.getLaunchIntentForPackage(context.packageName)?.apply {
+
+                val intent = Intent(context, BroadcastReceiverNotification::class.java).apply {
                     val title = context.getString(R.string.check_filtered_notifications)
                     val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
                     putExtra(TITLE_EXTRA, title)
                     putExtra(MESSAGE_EXTRA, message)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    action = Intent.ACTION_VIEW
                     data = deepLinkUri
                 }
-                val pendingIntent = PendingIntent.getActivity(
+                val pendingIntent = PendingIntent.getBroadcast(
                     context,
-                    0,
+                    NOTIFICATION_ID,
                     intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 val calendar = Calendar.getInstance()
                 calendar.set(Calendar.MINUTE, minute)
