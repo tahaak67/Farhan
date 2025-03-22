@@ -19,8 +19,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,12 +40,13 @@ fun LauncherSettingsScreen(
     onNavigateUp: () -> Unit,
     onNavigateToTimeLimiter: () -> Unit,
     viewModel: LauncherSettingsViewModel = hiltViewModel(),
-    onNavigateToMindfulLaunch: () -> Unit
+    onNavigateToDelayedLaunch: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val state = viewModel.state
     val launcherEnabled = remember { mutableStateOf(state.isLauncherEnabled) }
+    var screenLockDetectorEnabled by remember { mutableStateOf(false) }
 
 
     OnLifecycleEvent { _, event ->
@@ -115,17 +118,5 @@ fun LauncherSettingsScreen(
             Text(text = stringResource(R.string.app_time_limiter))
         }
         Spacer(modifier = Modifier.height(spacing.spaceMedium))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
-                .clickable {
-                    onNavigateToMindfulLaunch()
-                },
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(text = stringResource(R.string.mindful_launch))
-        }
     }
 }

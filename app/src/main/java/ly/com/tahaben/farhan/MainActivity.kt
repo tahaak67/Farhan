@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
@@ -42,9 +43,9 @@ import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_presentation.settings.LauncherSettingsScreen
 import ly.com.tahaben.launcher_presentation.time_limiter.TimeLimiterSettingsScreen
 import ly.com.tahaben.launcher_presentation.time_limiter.TimeLimiterWhitelistScreen
-import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchScreen
-import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchViewModel
-import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchWhiteListScreen
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchScreen
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchViewModel
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchWhiteListScreen
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
@@ -158,6 +159,9 @@ class MainActivity : ComponentActivity() {
                                 mainScreenViewModel.uiEvent.collectAsState(
                                     initial = UiEvent.HideSnackBar
                                 ).value
+                            val delayedLaunchEnabled = runBlocking {
+                                launcherPref.isDelayedLaunchEnabled().first()
+                            }
                             MainScreen(
                                 tip = tip,
                                 isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
@@ -167,6 +171,7 @@ class MainActivity : ComponentActivity() {
                                 isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
+                                isDelayedLaunchEnabled = delayedLaunchEnabled,
                                 navController = navController,
                                 onEvent = { event ->
                                     when (event) {
@@ -334,7 +339,7 @@ class MainActivity : ComponentActivity() {
                             LauncherSettingsScreen(
                                 onNavigateUp = { navController.navigateUp() },
                                 onNavigateToTimeLimiter = { navController.navigate(Routes.TimeLimiter_SETTINGS) },
-                                onNavigateToMindfulLaunch = { navController.navigate(Routes.MINDFUL_LAUNCH_SETTINGS)}
+                                onNavigateToDelayedLaunch = { navController.navigate(Routes.DELAYED_LAUNCH_SETTINGS)}
                             )
                         }
                         composable(Routes.TimeLimiter_SETTINGS) {
@@ -347,18 +352,18 @@ class MainActivity : ComponentActivity() {
                                 snackbarHostState = snackbarHostState,
                                 onNavigateUp = { navController.navigateUp() })
                         }
-                        composable(Routes.MINDFUL_LAUNCH_SETTINGS) {
-                            val viewModel: MindfulLaunchViewModel = hiltViewModel()
-                            MindfulLaunchScreen(
+                        composable(Routes.DELAYED_LAUNCH_SETTINGS) {
+                            val viewModel: DelayedLaunchViewModel = hiltViewModel()
+                            DelayedLaunchScreen(
                                 onNavigateUp = { navController.navigateUp() },
-                                onNavigateToWhitelist = { navController.navigate(Routes.MINDFUL_LAUNCH_WHITELIST) },
+                                onNavigateToWhitelist = { navController.navigate(Routes.DELAYED_LAUNCH_WHITELIST) },
                                 onEvent = viewModel::onEvent,
                                 state = viewModel.state.collectAsStateWithLifecycle().value
                             )
                         }
-                        composable(Routes.MINDFUL_LAUNCH_WHITELIST) {
-                            val viewModel: MindfulLaunchViewModel = hiltViewModel()
-                            MindfulLaunchWhiteListScreen(
+                        composable(Routes.DELAYED_LAUNCH_WHITELIST) {
+                            val viewModel: DelayedLaunchViewModel = hiltViewModel()
+                            DelayedLaunchWhiteListScreen(
                                 onNavigateUp = { navController.navigateUp() },
                                 onEvent = viewModel::onEvent,
                                 state = viewModel.state.collectAsStateWithLifecycle().value

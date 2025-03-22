@@ -71,7 +71,7 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.timber)
-    debugImplementation(libs.leakCanary)
+//    debugImplementation(libs.leakCanary)
 
     implementation(project(Modules.core))
     implementation(project(Modules.coreUi))

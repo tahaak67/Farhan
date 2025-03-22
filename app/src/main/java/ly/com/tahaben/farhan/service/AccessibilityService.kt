@@ -60,6 +60,11 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -69,6 +74,7 @@ import ly.com.tahaben.core_ui.util.ComposeOverlayLifecycleOwner
 import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
+import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
 import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchActivity
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
@@ -98,11 +104,33 @@ class AccessibilityService : AccessibilityService() {
     @Inject
     lateinit var timeLimitUseCases: TimeLimitUseCases
 
+    @Inject
+    lateinit var launcherPref: Preference
+
+    private var isDelayedLaunchEnabled = false
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var delayedPackages = emptySet<String>()
+
     override fun onCreate() {
         super.onCreate()
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
             Timber.d("packageName: $it")
             softInputPackages.add(it.packageName)
+        }
+        scope.launch {
+            launch {
+                launcherPref.isDelayedLaunchEnabled().collectLatest { enabled ->
+                    Timber.d("isDelayedLaunchEnabled: $enabled")
+                    isDelayedLaunchEnabled = enabled
+                }
+            }
+            launch {
+                launcherPref.getAppsInDLWhiteListAsFlow().collectLatest { newSet ->
+                    Timber.d("new delayed packages: $newSet")
+                    delayedPackages = newSet
+                }
+            }
         }
     }
 
@@ -119,13 +147,12 @@ class AccessibilityService : AccessibilityService() {
                     listenToScrollEvent(event)
                 }
             }
-            if (timeLimitUseCases.isTimeLimiterEnabled() ){
-                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && event.packageName.toString() != lastLaunchedPackage){
+            if (timeLimitUseCases.isTimeLimiterEnabled()) {
+                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && event.packageName.toString() != lastLaunchedPackage) {
                     Timber.d("new app ${event.packageName}")
-                    lastLaunchedPackage = event.packageName.toString()
-                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(event.packageName.toString())){
+                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(event.packageName.toString())) {
                         Timber.d("app in timelimit whitelist!! ${event.packageName}")
-                        showHoldUpOverlay()
+                        // showDelayedLaunchOverlay()
                     }
                 }
             }
@@ -148,6 +175,24 @@ class AccessibilityService : AccessibilityService() {
                     Timber.d("package ${event.packageName} not in whitelist")
                     unGrayscaleScreen()
                 }
+            }
+        }
+        Timber.d("isDelayed launch on?? $isDelayedLaunchEnabled")
+        if (isDelayedLaunchEnabled) {
+            Timber.d("last launched package $lastLaunchedPackage")
+            if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+                event.isFullScreen &&
+                event.packageName.toString() != lastLaunchedPackage &&
+                event.packageName.toString() != packageName
+            ) {
+                Timber.d("new app ${event.packageName}")
+
+                if (delayedPackages.contains(event.packageName.toString())) {
+                    Timber.d("app in delayed launch whitelist!! ${event.packageName}")
+                    showDelayedLaunchOverlay()
+                }
+
+                lastLaunchedPackage = event.packageName.toString()
             }
         }
     }
@@ -236,13 +281,16 @@ class AccessibilityService : AccessibilityService() {
             val dismissEnabled by remember {
                 derivedStateOf { currentCountDown <= 0 }
             }
-            val timer = object : CountDownTimer(countDownSeconds.seconds.inWholeMilliseconds, 1.seconds.inWholeMilliseconds) {
+            val timer = object : CountDownTimer(
+                countDownSeconds.seconds.inWholeMilliseconds,
+                1.seconds.inWholeMilliseconds
+            ) {
                 override fun onTick(p0: Long) {
                     currentCountDown -= 1
                     Timber.d("tick: $currentCountDown")
                 }
 
-                override fun onFinish()  {
+                override fun onFinish() {
                     currentCountDown = 0
                     Timber.d("on finished")
                 }
@@ -301,10 +349,13 @@ class AccessibilityService : AccessibilityService() {
                                 )
                             }
                             Row(Modifier.fillMaxWidth()) {
-                                Text(modifier = Modifier.weight(0.8f),text = dialogMsg)
+                                Text(modifier = Modifier.weight(0.8f), text = dialogMsg)
                                 Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                                Crossfade(modifier = Modifier.weight(0.2f),targetState = dismissEnabled) { isEnabled ->
-                                    if (!isEnabled){
+                                Crossfade(
+                                    modifier = Modifier.weight(0.2f),
+                                    targetState = dismissEnabled
+                                ) { isEnabled ->
+                                    if (!isEnabled) {
                                         AnimatedContent(targetState = currentCountDown) {
                                             Text(text = it.toString(), fontStyle = FontStyle.Italic)
                                         }
@@ -377,8 +428,8 @@ class AccessibilityService : AccessibilityService() {
         windowManager.addView(composeView, params)
     }
 
-    private fun showHoldUpOverlay(){
-        Timber.d("showing holdup overlay")
+    private fun showDelayedLaunchOverlay() {
+        Timber.d("showing delayed launch overlay")
 
         val intent = Intent(this.applicationContext, MindfulLaunchActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -435,6 +486,7 @@ class AccessibilityService : AccessibilityService() {
     override fun onDestroy() {
         recentScrollViews.clear()
         softInputPackages.clear()
+        scope.cancel()
         super.onDestroy()
     }
 }

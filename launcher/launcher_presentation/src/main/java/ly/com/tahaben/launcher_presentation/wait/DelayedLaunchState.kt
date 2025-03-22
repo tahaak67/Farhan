@@ -2,7 +2,7 @@ package ly.com.tahaben.launcher_presentation.wait
 
 import ly.com.tahaben.core.model.AppItem
 
-data class MindfulLaunchState(
+data class DelayedLaunchState(
     val isMindfulLaunchEnabled: Boolean = false,
     val whiteListedApps: List<String> = emptyList(),
     val searchQuery: String = "",

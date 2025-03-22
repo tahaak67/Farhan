@@ -35,8 +35,8 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun HoldOnOverlay(modifier: Modifier = Modifier, isDelayRunning: Boolean, openApp: () -> Unit, dismissOverlay: () -> Unit) {
-    val animDuration = 3000
+fun DelayedLaunchOverlay(modifier: Modifier = Modifier, isDelayRunning: Boolean, openApp: () -> Unit, dismissOverlay: () -> Unit) {
+    val animDuration = 1000
     val animatedBoxHeight = remember { androidx.compose.animation.core.Animatable(0f) }
     val config = LocalConfiguration.current
     var isFirstHeadlineVisible by remember { mutableStateOf(false) }
@@ -46,8 +46,8 @@ fun HoldOnOverlay(modifier: Modifier = Modifier, isDelayRunning: Boolean, openAp
     val scope = rememberCoroutineScope()
     LaunchedEffect(isDelayRunning) {
         if (isDelayRunning) {
-            animatedBoxHeight.animateTo(config.screenHeightDp.toFloat(), animationSpec = tween(animDuration))
             isFirstHeadlineVisible = true
+            animatedBoxHeight.animateTo(config.screenHeightDp.toFloat(), animationSpec = tween(animDuration))
             delay(animDuration.milliseconds)
             isFirstHeadlineVisible = false
             delay(animDuration.milliseconds)

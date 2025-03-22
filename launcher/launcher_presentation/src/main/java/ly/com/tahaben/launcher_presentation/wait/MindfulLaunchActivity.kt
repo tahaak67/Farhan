@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import ly.com.tahaben.core.model.UIModeAppearance
-import ly.com.tahaben.core_ui.components.HoldOnOverlay
+import ly.com.tahaben.core_ui.components.DelayedLaunchOverlay
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
 
@@ -35,7 +35,7 @@ class MindfulLaunchActivity : ComponentActivity() {
                 darkMode = isDarkMode,
                 colorStyle = mainState.themeColors
             ) {
-                HoldOnOverlay(
+                DelayedLaunchOverlay(
                     modifier = Modifier,
                     isDelayRunning = true,
                     openApp = {

@@ -76,6 +76,7 @@ fun MainScreen(
     isInfiniteScrollBlockerEnabled: Boolean,
     isNotificationFilterEnabled: Boolean,
     isLauncherEnabled: Boolean,
+    isDelayedLaunchEnabled: Boolean,
     navController: NavHostController,
     onEvent: (MainScreenEvent) -> Unit,
     state: MainScreenState,
@@ -342,6 +343,24 @@ fun MainScreen(
                         }
                     )
                     MainScreenCard(
+                        text = stringResource(R.string.delayed_launch),
+                        status = if (isDelayedLaunchEnabled) stringResource(id = R.string.enabled) else stringResource(
+                            id = R.string.disabled
+                        ),
+                        iconId = R.drawable.sharp_timelapse_24,
+                        onClick = { navController.navigate(Routes.DELAYED_LAUNCH_SETTINGS) },
+                        mainSwitchEnabled = state.isMainSwitchEnabled,
+                        showSnackBar = {
+                            onEvent(
+                                MainScreenEvent.ShowSnackBar(
+                                    UiText.StringResource(
+                                        R.string.please_turn_on_main_switch
+                                    )
+                                )
+                            )
+                        }
+                    )
+                    /*MainScreenCard(
                         text = stringResource(R.string.launcher),
                         status = if (isLauncherEnabled) stringResource(id = R.string.enabled) else stringResource(
                             id = R.string.disabled
@@ -357,7 +376,7 @@ fun MainScreen(
                                     )
                                 )
                             )
-                        })
+                        })*/
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 /*Row(

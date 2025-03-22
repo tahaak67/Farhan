@@ -1,5 +1,7 @@
 package ly.com.tahaben.launcher_domain.preferences
 
+import kotlinx.coroutines.flow.Flow
+
 interface Preference {
     fun isLauncherEnabled(): Boolean
     fun setLauncherEnabled(isEnabled: Boolean)
@@ -14,8 +16,9 @@ interface Preference {
     suspend fun removePackageFromMLWhiteList(packageName: String)
     suspend fun isPackageInMLWhiteList(packageName: String): Boolean
     suspend fun getAppsInMLWhiteList(): List<String>
-    suspend fun isMindfulLaunchEnabled(): Boolean
-    suspend fun setMindfulLaunchEnabled(isEnabled: Boolean)
+    suspend fun getAppsInDLWhiteListAsFlow(): Flow<Set<String>>
+    suspend fun isDelayedLaunchEnabled(): Flow<Boolean>
+    suspend fun setDelayedLaunchEnabled(isEnabled: Boolean)
 
 
     companion object {

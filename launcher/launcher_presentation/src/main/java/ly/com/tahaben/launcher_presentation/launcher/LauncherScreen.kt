@@ -74,7 +74,7 @@ import ly.com.tahaben.core.util.HomeWatcher
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
-import ly.com.tahaben.core_ui.components.HoldOnOverlay
+import ly.com.tahaben.core_ui.components.DelayedLaunchOverlay
 import ly.com.tahaben.launcher_presentation.component.AppListItem
 import ly.com.tahaben.launcher_presentation.component.SearchTextFieldLauncher
 import timber.log.Timber
@@ -388,7 +388,7 @@ fun LauncherScreen(
         }
     }
     var innerBoxHeight by remember { mutableStateOf(0.dp) }
-    HoldOnOverlay(
+    DelayedLaunchOverlay(
         isDelayRunning = state.isDelayRunning,
         openApp = {
             viewModel.disableOverlay()

@@ -2,12 +2,12 @@ package ly.com.tahaben.usage_overview_presentation.widget
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -350,9 +350,9 @@ object UsageWidget : GlanceAppWidget() {
 private fun openFarhanAndNavigateToUsageScreen(context: Context, date: String) {
     Timber.d("openFarhanAndNavigateToUsageScreen: $date")
     val deepLinkUri =
-        Uri.parse("app://${context.packageName}/${Routes.USAGE}/$date")
+        "app://${context.packageName}/${Routes.USAGE}/$date".toUri()
     val pm = context.packageManager
-    val showUsageIntent = pm.getLaunchIntentForPackage(context.packageName)?.apply {
+    val showUsageIntent = Intent(context, Class.forName("ly.com.tahaben.farhan.MainActivity")).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK
         action = Intent.ACTION_VIEW
         data = deepLinkUri

@@ -12,7 +12,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import ly.com.tahaben.core.R
-import ly.com.tahaben.core.navigation.Routes
 import ly.com.tahaben.core.util.BroadcastReceiverNotification
 import ly.com.tahaben.core.util.MESSAGE_EXTRA
 import ly.com.tahaben.core.util.NOTIFICATION_ID
@@ -81,15 +80,12 @@ class ServiceUtilImpl(
     override fun scheduleNotifyMeNotification(hour: Int, minute: Int) {
         if (!sharedPref.isNotifyMeScheduledToday()) {
             try {
-                val deepLinkUri =
-                    Uri.parse("app://${context.packageName}/${Routes.NOTIFICATION_FILTER}")
 
                 val intent = Intent(context, BroadcastReceiverNotification::class.java).apply {
                     val title = context.getString(R.string.check_filtered_notifications)
                     val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
                     putExtra(TITLE_EXTRA, title)
                     putExtra(MESSAGE_EXTRA, message)
-                    data = deepLinkUri
                 }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,

@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,9 +23,11 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,10 +52,10 @@ import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MindfulLaunchWhiteListScreen(
+fun DelayedLaunchWhiteListScreen(
     onNavigateUp: () -> Unit,
     onEvent: (MindfulLaunchEvent) -> Unit,
-    state: MindfulLaunchState
+    state: DelayedLaunchState
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -75,14 +76,20 @@ fun MindfulLaunchWhiteListScreen(
                         Text(text = stringResource(id = R.string.white_lited_apps))
                     }
                 },
-//            backgroundColor = White,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 navigationIcon = {
-                    IconButton(onClick = onNavigateUp) {
-                        Icon(
-                            modifier = Modifier,
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back)
-                        )
+                    AnimatedVisibility(
+                        visible = !displaySearchField,
+                        enter = fadeIn(animationSpec = tween(1000)),
+                        exit = fadeOut(animationSpec = tween(1))
+                    )  {
+                        IconButton(onClick = onNavigateUp) {
+                            Icon(
+                                modifier = Modifier,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(id = R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -133,11 +140,18 @@ fun MindfulLaunchWhiteListScreen(
                         onDismissRequest = { mDisplayMenu = false }
                     ) {
                         DropdownMenuItem(onClick = {
-
+                            onEvent(
+                                MindfulLaunchEvent.OnShowSystemAppsChange(
+                                    !state.isShowSystemApps
+                                )
+                            )
                         }, text = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            Text(
+                                text = stringResource(R.string.show_system_apps),
+                                textAlign = TextAlign.Center
+                            )
+                        },
+                            trailingIcon = {
                                 Checkbox(
                                     checked = state.isShowSystemApps,
                                     onCheckedChange = { checked ->
@@ -149,12 +163,7 @@ fun MindfulLaunchWhiteListScreen(
                                     },
                                     //colors = CheckboxDefaults.colors(MaterialTheme.colorScheme.primary)
                                 )
-                                Text(
-                                    text = stringResource(R.string.show_system_apps),
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        })
+                            })
                         DropdownMenuItem(
                             text = {
                                 Text(
@@ -231,6 +240,6 @@ fun MindfulLaunchWhiteListScreen(
 @Composable
 private fun MindfulLaunchScreenPreview() {
     FarhanTheme(isSystemInDarkTheme(), ThemeColors.Classic) {
-        MindfulLaunchWhiteListScreen(onNavigateUp = {}, onEvent = {}, state = MindfulLaunchState())
+        DelayedLaunchWhiteListScreen(onNavigateUp = {}, onEvent = {}, state = DelayedLaunchState())
     }
 }

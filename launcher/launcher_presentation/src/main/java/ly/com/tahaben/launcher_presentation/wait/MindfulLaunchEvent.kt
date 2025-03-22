@@ -8,4 +8,5 @@ sealed interface MindfulLaunchEvent {
     data class OnShowWhiteListOnlyChange(val showWhiteListOnly: Boolean): MindfulLaunchEvent
     data class OnAddToWhiteList(val packageName: String): MindfulLaunchEvent
     data class OnRemoveFromWhiteList(val packageName: String): MindfulLaunchEvent
+    data object ScreenShown: MindfulLaunchEvent
 }

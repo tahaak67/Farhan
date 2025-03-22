@@ -14,8 +14,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ly.com.tahaben.core.service.AccessibilityServiceUtils
 import ly.com.tahaben.farhan.db.DatabaseCombineHelper
 import ly.com.tahaben.farhan.db.FarhanDatabase
+import ly.com.tahaben.farhan.service.AccessibilityServiceUtilsImpl
 import ly.com.tahaben.launcher_data.repository.AvailableActivitiesRepoImpl
 import ly.com.tahaben.launcher_data.repository.TimeLimitRepositoryImpl
 import ly.com.tahaben.launcher_domain.repository.AvailableActivitiesRepository
@@ -127,4 +129,14 @@ object AppModule {
     ): TimeLimitRepository {
         return TimeLimitRepositoryImpl(db.timeLimitDao, context)
     }
+
+
+        @Provides
+        @Singleton
+        fun provideAccessibilityUtils(
+            @ApplicationContext context: Context,
+            sharedPref: ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
+        ): AccessibilityServiceUtils {
+            return AccessibilityServiceUtilsImpl(context, sharedPref)
+        }
 }

@@ -6,7 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -14,27 +15,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.core.data.repository.InstalledAppsRepository
 import ly.com.tahaben.core.model.AppItem
+import ly.com.tahaben.core.service.AccessibilityServiceUtils
 import ly.com.tahaben.launcher_domain.preferences.Preference
-import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class MindfulLaunchViewModel @Inject constructor(
-    private val useCases: TimeLimitUseCases,
+class DelayedLaunchViewModel @Inject constructor(
+    private val accessibilityUtils: AccessibilityServiceUtils,
     private val preference: Preference,
     private val installedAppsRepository: InstalledAppsRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(MindfulLaunchState())
-    val state: StateFlow<MindfulLaunchState> = _state
+    private var _state = MutableStateFlow(DelayedLaunchState())
+    val state = _state.asStateFlow()
         .onStart {
-            checkIfAccessibilityEnabled()
+//            checkIfAccessibilityEnabled()
             getInstalledApps()
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = MindfulLaunchState()
+            initialValue = DelayedLaunchState()
         )
 
     /*private var _settingsState = MutableStateFlow(MindfulLaunchState())
@@ -47,6 +49,15 @@ class MindfulLaunchViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = MindfulLaunchState()
         )*/
+    init {
+        viewModelScope.launch {
+            preference.isDelayedLaunchEnabled().collectLatest { isEnabled ->
+                _state.update {
+                    it.copy(isMindfulLaunchEnabled = isEnabled)
+                }
+            }
+        }
+    }
 
     fun onEvent(event: MindfulLaunchEvent) {
         when (event) {
@@ -60,23 +71,29 @@ class MindfulLaunchViewModel @Inject constructor(
                         searchQuery = event.query
                     )
                 }
+                executeSearch()
             }
 
             is MindfulLaunchEvent.OnShowSystemAppsChange -> {
                 _state.update {
                     it.copy(isShowSystemApps = event.showSystemApps)
                 }
+                filterSystemApps()
             }
 
             is MindfulLaunchEvent.OnShowWhiteListOnlyChange -> {
                 _state.update {
                     it.copy(isShowWhiteListOnly = event.showWhiteListOnly)
                 }
+                filterWhitelistOnly()
             }
 
             is MindfulLaunchEvent.OnMindfulLaunchEnabled -> {
                 if (event.enabled) {
                     checkIfAccessibilityEnabled()
+                }
+                viewModelScope.launch {
+                    preference.setDelayedLaunchEnabled(event.enabled)
                 }
                 _state.update {
                     it.copy(isMindfulLaunchEnabled = event.enabled)
@@ -92,13 +109,16 @@ class MindfulLaunchViewModel @Inject constructor(
                     preference.removePackageFromMLWhiteList(event.packageName)
                 }
             }
+            MindfulLaunchEvent.ScreenShown -> {
+                checkIfAccessibilityEnabled()
+            }
         }
     }
 
     fun checkIfAccessibilityEnabled() {
         _state.update {
             it.copy(
-                isAccessibilityPermissionGranted = useCases.isAccessibilityPermissionGranted()
+                isAccessibilityPermissionGranted = accessibilityUtils.checkIfAccessibilityPermissionGranted()
             )
         }
     }
@@ -111,6 +131,7 @@ class MindfulLaunchViewModel @Inject constructor(
                 )
             }
             val exceptions = preference.getAppsInMLWhiteList()
+            Timber.d("exceptions size ${exceptions.size}")
             withContext(Dispatchers.IO) {
                 val apps = installedAppsRepository.getInstalledApps()
                     .sortedBy { it.name }
@@ -118,19 +139,30 @@ class MindfulLaunchViewModel @Inject constructor(
                     it.isException =
                         preference.isPackageInMLWhiteList(it.packageName)
                 }
+                Timber.d("got apps size ${apps.size}")
                 val notInstalledPackages =
                     exceptions.filterNot { packageName -> packageName in apps.map { it.packageName } }
                 val notInstalledApps = notInstalledPackages.map {
                     AppItem(name = it, packageName = it, isException = true)
                 }
                 val allApps = apps + notInstalledApps
+                Timber.d("got all apps size ${allApps.size}")
                 _state.update { currentState ->
                     currentState.copy(
                         isLoading = false,
                         appsList = allApps
                     )
                 }
+                Timber.d("done")
             }
+            /*_state.update { currentState ->
+                currentState.copy(
+                    isLoading = false,
+                    appsList = listOf(
+                        AppItem("test","test",isException = true)
+                    )
+                )
+            }*/
             filterSystemApps()
         }
     }
