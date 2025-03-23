@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="145dp"
     android:layout_height="120dp"
@@ -20,16 +19,13 @@
             android:layout_marginTop="8dp"
             android:text="@string/usage_for_today"
             android:textColor="#FF251A00"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="14sp"/>
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginTop="0dp"
             android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView3"
             android:tint="#FF251A00"
             android:src="@drawable/baseline_refresh_24"/>
     </LinearLayout>
@@ -46,9 +42,7 @@
             android:layout_marginTop="0dp"
             android:text="4"
             android:textColor="#FF4A672D"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            android:textSize="24sp" />
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
@@ -56,9 +50,7 @@
             android:layout_marginStart="2dp"
             android:text="@string/hours"
             android:textColor="#FF4A672D"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/textView2" />
+            android:textSize="24sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -71,9 +63,7 @@
             android:layout_marginTop="0dp"
             android:text="17"
             android:textColor="#FF4A672D"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            android:textSize="24sp" />
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
@@ -81,8 +71,6 @@
             android:layout_marginStart="2dp"
             android:text="@string/minutes"
             android:textColor="#FF4A672D"
-            android:textSize="24sp"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toTopOf="@+id/textView3" />
+            android:textSize="24sp" />
     </LinearLayout>
 </LinearLayout>
