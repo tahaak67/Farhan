@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertCountEquals
@@ -16,7 +17,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -140,7 +140,7 @@ class UsageOverviewE2E {
         )
         composeRule.activity.setContent {
             val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
-            val mainState = mainScreenViewModel.mainScreenState.collectAsStateWithLifecycle().value
+            val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
             val snackbarHostState = remember {
                 SnackbarHostState()
             }
@@ -171,8 +171,8 @@ class UsageOverviewE2E {
                         }
                         composable(Routes.MAIN) {
                             val mainScreenUiEvent =
-                                mainScreenViewModel.uiEvent.collectAsStateWithLifecycle(
-                                    initialValue = UiEvent.HideSnackBar
+                                mainScreenViewModel.uiEvent.collectAsState(
+                                    initial = UiEvent.HideSnackBar
                                 ).value
                             MainScreen(
                                 tip = "A random tip for the test :)",
@@ -211,8 +211,8 @@ class UsageOverviewE2E {
         val decimalFormatPercentage = DecimalFormat("#,###.0")
         val decimalFormat = DecimalFormat.getInstance()
         val productivityPercentageString = decimalFormatPercentage.format(100.0)
-        val appItemUsageString = UiText.MixedString(46, R.string.minutes).asString(context)
-        val totalUsageMinutesString = decimalFormat.format(46)
+        val appItemUsageString = UiText.MixedString(28, R.string.minutes).asString(context)
+        val totalUsageMinutesString = decimalFormat.format(28)
 
         composeRule
             .onNodeWithText(context.getString(R.string.usage))

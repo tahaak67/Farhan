@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -12,7 +13,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,20 +23,32 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.navigation.Args
 import ly.com.tahaben.core.navigation.Routes
-import ly.com.tahaben.core.util.NOTIFICATION_ID
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.domain.preferences.Preferences
+import ly.com.tahaben.farhan.db.DatabaseCombineHelper
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.infinite_scroll_blocker_presentation.InfiniteScrollingBlockerScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.exceptions.InfiniteScrollExceptionsScreen
 import ly.com.tahaben.infinite_scroll_blocker_presentation.onboarding.InfiniteScrollOnBoardingScreen
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_presentation.settings.LauncherSettingsScreen
+import ly.com.tahaben.launcher_presentation.time_limiter.TimeLimiterSettingsScreen
+import ly.com.tahaben.launcher_presentation.time_limiter.TimeLimiterWhitelistScreen
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchScreen
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchViewModel
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchWhiteListScreen
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import ly.com.tahaben.notification_filter_presentation.NotificationFilterScreen
 import ly.com.tahaben.notification_filter_presentation.onboarding.NotificationFilterOnBoardingScreen
@@ -43,6 +58,7 @@ import ly.com.tahaben.onboarding_presentaion.OnBoardingScreen
 import ly.com.tahaben.onboarding_presentaion.SelectAppearanceScreen
 import ly.com.tahaben.onboarding_presentaion.about.AboutScreen
 import ly.com.tahaben.onboarding_presentaion.main.MainScreen
+import ly.com.tahaben.onboarding_presentaion.main.MainScreenEvent
 import ly.com.tahaben.onboarding_presentaion.main.MainScreenViewModel
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import ly.com.tahaben.screen_grayscale_presentation.GrayscaleScreen
@@ -73,13 +89,27 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var launcherPref: Preference
 
+    @Inject
+    lateinit var databaseCombineHelper: DatabaseCombineHelper
+    val mainScreenViewModel by viewModels<MainScreenViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                mainScreenViewModel.isLoading.value
+            }
+        }
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
-        val shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
+        var shouldShowSelectThemeScreen: Boolean
+        runBlocking {
+            shouldShowSelectThemeScreen = (onBoardingPref.loadThemeColors() == "Unknown")
+        }
         val tip = getTip()
+        val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         setContent {
-            val mainScreenViewModel= hiltViewModel<MainScreenViewModel>()
+
             val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
             val isDarkMode = when (mainState.uiMode) {
                 UIModeAppearance.DARK_MODE -> true
@@ -102,13 +132,7 @@ class MainActivity : ComponentActivity() {
                     it.calculateBottomPadding()
                     NavHost(
                         navController = navController,
-                        startDestination = if (intent.getIntExtra(
-                                "navigate",
-                                -1
-                            ) == NOTIFICATION_ID
-                        ) {
-                            Routes.NOTIFICATION_FILTER
-                        } else if (shouldShowOnBoarding) {
+                        startDestination = if (shouldShowOnBoarding) {
                             Routes.WELCOME
                         } else if (shouldShowSelectThemeScreen) {
                             Routes.SELECT_THEME
@@ -145,6 +169,9 @@ class MainActivity : ComponentActivity() {
                                 mainScreenViewModel.uiEvent.collectAsState(
                                     initial = UiEvent.HideSnackBar
                                 ).value
+                            val delayedLaunchEnabled = runBlocking {
+                                launcherPref.isDelayedLaunchEnabled().first()
+                            }
                             MainScreen(
                                 tip = tip,
                                 isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
@@ -154,8 +181,29 @@ class MainActivity : ComponentActivity() {
                                 isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
+                                isDelayedLaunchEnabled = delayedLaunchEnabled,
                                 navController = navController,
-                                onEvent = mainScreenViewModel::onEvent,
+                                onEvent = { event ->
+                                    when (event) {
+                                        MainScreenEvent.OnCombineDbAgreeClick -> {
+                                            mainScreenViewModel.onEvent(event)
+                                            coroutineScope.launch {
+                                                val result =
+                                                    databaseCombineHelper.combineDatabases()
+                                                mainScreenViewModel.onEvent(MainScreenEvent.OnDismissCombineDbDialog)
+                                                if (result) {
+                                                    snackbarHostState.showSnackbar(getString(R.string.db_migration_sucsessful))
+                                                } else {
+                                                    snackbarHostState.showSnackbar(getString(R.string.db_migration_fail))
+                                                    finish()
+                                                }
+                                            }
+                                        }
+
+                                        MainScreenEvent.OnExitApp -> finish()
+                                        else -> mainScreenViewModel.onEvent(event)
+                                    }
+                                },
                                 state = mainState,
                                 snackbarHostState = snackbarHostState,
                                 uiEvent = mainScreenUiEvent
@@ -236,7 +284,13 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        composable(Routes.NOTIFICATION_FILTER) {
+                        composable(Routes.NOTIFICATION_FILTER, deepLinks = listOf(
+                            navDeepLink {
+                                uriPattern =
+                                    "app://$packageName/${Routes.NOTIFICATION_FILTER}"
+                                action = Intent.ACTION_VIEW
+                            }
+                        )) {
                             if (notificationFilterUseCases.loadShouldShowOnBoarding()) {
                                 NotificationFilterOnBoardingScreen(
                                     onNextClick = {
@@ -293,7 +347,36 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.LAUNCHER_SETTINGS) {
                             LauncherSettingsScreen(
-                                onNavigateUp = { navController.navigateUp() }
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToTimeLimiter = { navController.navigate(Routes.TimeLimiter_SETTINGS) },
+                                onNavigateToDelayedLaunch = { navController.navigate(Routes.DELAYED_LAUNCH_SETTINGS)}
+                            )
+                        }
+                        composable(Routes.TimeLimiter_SETTINGS) {
+                            TimeLimiterSettingsScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToWhitelist = { navController.navigate(Routes.TimeLimiter_WHITELIST_SETTINGS) })
+                        }
+                        composable(Routes.TimeLimiter_WHITELIST_SETTINGS) {
+                            TimeLimiterWhitelistScreen(
+                                snackbarHostState = snackbarHostState,
+                                onNavigateUp = { navController.navigateUp() })
+                        }
+                        composable(Routes.DELAYED_LAUNCH_SETTINGS) {
+                            val viewModel: DelayedLaunchViewModel = hiltViewModel()
+                            DelayedLaunchScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                onNavigateToWhitelist = { navController.navigate(Routes.DELAYED_LAUNCH_WHITELIST) },
+                                onEvent = viewModel::onEvent,
+                                state = viewModel.state.collectAsStateWithLifecycle().value
+                            )
+                        }
+                        composable(Routes.DELAYED_LAUNCH_WHITELIST) {
+                            val viewModel: DelayedLaunchViewModel = hiltViewModel()
+                            DelayedLaunchWhiteListScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                onEvent = viewModel::onEvent,
+                                state = viewModel.state.collectAsStateWithLifecycle().value
                             )
                         }
                     }

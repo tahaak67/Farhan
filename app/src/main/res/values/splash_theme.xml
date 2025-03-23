@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="splash_theme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/yellow</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/farhan_splash_icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.Farhan</item>
+    </style>
+
+</resources>

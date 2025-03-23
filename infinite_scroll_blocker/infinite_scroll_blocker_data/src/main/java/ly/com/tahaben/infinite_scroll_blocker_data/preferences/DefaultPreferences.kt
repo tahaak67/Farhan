@@ -5,7 +5,6 @@ package ly.com.tahaben.infinite_scroll_blocker_data.preferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
 import timber.log.Timber
@@ -99,21 +98,6 @@ class DefaultPreferences(
         sharedPref.edit()
             .putInt(Preferences.KEY_INFINITE_SCROLL_TIME_OUT, minutes)
             .apply()
-    }
-
-    override fun loadDarkModeOn(): String {
-        return sharedPref.getString(
-            Preferences.KEY_APP_DARK_MODE_ON,
-            UIModeAppearance.FOLLOW_SYSTEM.name
-        )
-            ?: UIModeAppearance.FOLLOW_SYSTEM.name
-    }
-
-    override fun loadThemeColors(): String {
-        return sharedPref.getString(
-            Preferences.KEY_APP_THEME_COLORS,
-            "Unknown"
-        ) ?: "Unknown"
     }
 
     /** @return The count down in seconds or -1 if count down is off*/

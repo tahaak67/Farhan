@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="ly.com.tahaben.launcher_presentation">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ly.com.tahaben.launcher_presentation">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
+    <application>
+        <activity
+            android:name=".wait.MindfulLaunchActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:label="@string/title_activity_hold_up"
+            android:theme="@style/Theme.Farhan" />
+    </application>
 
 </manifest>

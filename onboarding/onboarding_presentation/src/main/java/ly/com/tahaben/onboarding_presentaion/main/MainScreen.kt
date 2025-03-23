@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -24,11 +26,14 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -47,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.navigation.Routes
@@ -70,6 +76,7 @@ fun MainScreen(
     isInfiniteScrollBlockerEnabled: Boolean,
     isNotificationFilterEnabled: Boolean,
     isLauncherEnabled: Boolean,
+    isDelayedLaunchEnabled: Boolean,
     navController: NavHostController,
     onEvent: (MainScreenEvent) -> Unit,
     state: MainScreenState,
@@ -335,6 +342,41 @@ fun MainScreen(
                             )
                         }
                     )
+                    MainScreenCard(
+                        text = stringResource(R.string.delayed_launch),
+                        status = if (isDelayedLaunchEnabled) stringResource(id = R.string.enabled) else stringResource(
+                            id = R.string.disabled
+                        ),
+                        iconId = R.drawable.sharp_timelapse_24,
+                        onClick = { navController.navigate(Routes.DELAYED_LAUNCH_SETTINGS) },
+                        mainSwitchEnabled = state.isMainSwitchEnabled,
+                        showSnackBar = {
+                            onEvent(
+                                MainScreenEvent.ShowSnackBar(
+                                    UiText.StringResource(
+                                        R.string.please_turn_on_main_switch
+                                    )
+                                )
+                            )
+                        }
+                    )
+                    /*MainScreenCard(
+                        text = stringResource(R.string.launcher),
+                        status = if (isLauncherEnabled) stringResource(id = R.string.enabled) else stringResource(
+                            id = R.string.disabled
+                        ),
+                        iconId = null,
+                        onClick = { navController.navigate(Routes.LAUNCHER_SETTINGS) },
+                        mainSwitchEnabled = state.isMainSwitchEnabled,
+                        showSnackBar = {
+                            onEvent(
+                                MainScreenEvent.ShowSnackBar(
+                                    UiText.StringResource(
+                                        R.string.please_turn_on_main_switch
+                                    )
+                                )
+                            )
+                        })*/
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 /*Row(
@@ -358,5 +400,49 @@ fun MainScreen(
     }
     if (state.isThemeColorsDialogVisible) {
         ThemeColorsDialog(onEvent = onEvent, state = state)
+    }
+    if (state.isCombineDbDialogVisible) {
+        Dialog(
+            onDismissRequest = {}
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                shape = RoundedCornerShape(28.dp),
+                tonalElevation = AlertDialogDefaults.TonalElevation,
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    if (state.isCombiningDb) {
+                        Text(stringResource(R.string.please_wait))
+                        LinearProgressIndicator()
+                    } else {
+                        Text(
+                            stringResource(R.string.db_combine_dialog_title),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Text(
+                            stringResource(R.string.db_combine_dialog_text),
+                            style = MaterialTheme.typography.bodySmall)
+                        Row(modifier = Modifier) {
+                            TextButton(onClick = {
+                                onEvent(MainScreenEvent.OnCombineDbAgreeClick)
+                            }) {
+                                Text(stringResource(R.string.start_migrating))
+                            }
+                            TextButton(onClick = {
+                                onEvent(MainScreenEvent.OnExitApp)
+                            }) {
+                                Text(stringResource(R.string.close_app))
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }

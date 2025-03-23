@@ -6,4 +6,6 @@ data class AppItem(
     var category: String? = null,
     var isException: Boolean = false,
     var isSystemApp: Boolean = false,
+    val activityName: String = "",
+    val userSerial: Long = 0L
 )

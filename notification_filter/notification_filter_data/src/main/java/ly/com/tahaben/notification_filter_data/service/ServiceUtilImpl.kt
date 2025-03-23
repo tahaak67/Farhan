@@ -19,7 +19,7 @@ import ly.com.tahaben.core.util.TITLE_EXTRA
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.util.ServiceUtil
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 class ServiceUtilImpl(
     private val context: Context,
@@ -80,12 +80,13 @@ class ServiceUtilImpl(
     override fun scheduleNotifyMeNotification(hour: Int, minute: Int) {
         if (!sharedPref.isNotifyMeScheduledToday()) {
             try {
-                val intent = Intent(context, BroadcastReceiverNotification::class.java)
-                val title = context.getString(R.string.check_filtered_notifications)
-                val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
-                intent.putExtra(TITLE_EXTRA, title)
-                intent.putExtra(MESSAGE_EXTRA, message)
 
+                val intent = Intent(context, BroadcastReceiverNotification::class.java).apply {
+                    val title = context.getString(R.string.check_filtered_notifications)
+                    val message = context.getString(R.string.you_have_unchecked_filtered_notifications)
+                    putExtra(TITLE_EXTRA, title)
+                    putExtra(MESSAGE_EXTRA, message)
+                }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     NOTIFICATION_ID,

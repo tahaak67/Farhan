@@ -35,7 +35,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
@@ -49,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -60,14 +60,23 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
+import ly.com.tahaben.core_ui.use_cases.UiUseCases
 import ly.com.tahaben.core_ui.util.ComposeOverlayLifecycleOwner
 import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
+import ly.com.tahaben.launcher_domain.preferences.Preference
+import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
+import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchActivity
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -89,21 +98,62 @@ class AccessibilityService : AccessibilityService() {
     @Inject
     lateinit var grayscaleUseCases: GrayscaleUseCases
 
+    @Inject
+    lateinit var uiUseCases: UiUseCases
+
+    @Inject
+    lateinit var timeLimitUseCases: TimeLimitUseCases
+
+    @Inject
+    lateinit var launcherPref: Preference
+
+    private var isDelayedLaunchEnabled = false
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var delayedPackages = emptySet<String>()
+
     override fun onCreate() {
         super.onCreate()
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
             Timber.d("packageName: $it")
             softInputPackages.add(it.packageName)
         }
+        scope.launch {
+            launch {
+                launcherPref.isDelayedLaunchEnabled().collectLatest { enabled ->
+                    Timber.d("isDelayedLaunchEnabled: $enabled")
+                    isDelayedLaunchEnabled = enabled
+                }
+            }
+            launch {
+                launcherPref.getAppsInDLWhiteListAsFlow().collectLatest { newSet ->
+                    Timber.d("new delayed packages: $newSet")
+                    delayedPackages = newSet
+                }
+            }
+        }
     }
+
+    private var lastLaunchedPackage = ""
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
-        Timber.d("event type: ${event.eventType}")
-        if (infiniteScrollUseCases.isServiceEnabled()) {
+        Timber.d("event type: ${AccessibilityEvent.eventTypeToString(event.eventType)} pn: ${event.packageName} fs? ${event.isFullScreen}")
+        Timber.d("event package name: ${event.packageName}")
+
+        if (infiniteScrollUseCases.isServiceEnabled() && event.packageName.toString() != packageName) {
             if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
                 if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(event.packageName.toString())) {
                     listenToScrollEvent(event)
+                }
+            }
+            if (timeLimitUseCases.isTimeLimiterEnabled()) {
+                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && event.packageName.toString() != lastLaunchedPackage) {
+                    Timber.d("new app ${event.packageName}")
+                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(event.packageName.toString())) {
+                        Timber.d("app in timelimit whitelist!! ${event.packageName}")
+                        // showDelayedLaunchOverlay()
+                    }
                 }
             }
         }
@@ -125,6 +175,24 @@ class AccessibilityService : AccessibilityService() {
                     Timber.d("package ${event.packageName} not in whitelist")
                     unGrayscaleScreen()
                 }
+            }
+        }
+        Timber.d("isDelayed launch on?? $isDelayedLaunchEnabled")
+        if (isDelayedLaunchEnabled) {
+            Timber.d("last launched package $lastLaunchedPackage")
+            if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+                event.isFullScreen &&
+                event.packageName.toString() != lastLaunchedPackage &&
+                event.packageName.toString() != packageName
+            ) {
+                Timber.d("new app ${event.packageName}")
+
+                if (delayedPackages.contains(event.packageName.toString())) {
+                    Timber.d("app in delayed launch whitelist!! ${event.packageName}")
+                    showDelayedLaunchOverlay()
+                }
+
+                lastLaunchedPackage = event.packageName.toString()
             }
         }
     }
@@ -195,8 +263,8 @@ class AccessibilityService : AccessibilityService() {
         } else {
             WindowManager.LayoutParams.TYPE_PHONE
         }
-        val isDarkMode = infiniteScrollUseCases.isDarkModeEnabled()
-        val themeColors = infiniteScrollUseCases.getCurrentThemeColors()
+        val isDarkMode = uiUseCases.isDarkModeEnabled()
+        val themeColors = uiUseCases.getCurrentThemeColors()
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -213,13 +281,16 @@ class AccessibilityService : AccessibilityService() {
             val dismissEnabled by remember {
                 derivedStateOf { currentCountDown <= 0 }
             }
-            val timer = object : CountDownTimer(countDownSeconds.seconds.inWholeMilliseconds, 1.seconds.inWholeMilliseconds) {
+            val timer = object : CountDownTimer(
+                countDownSeconds.seconds.inWholeMilliseconds,
+                1.seconds.inWholeMilliseconds
+            ) {
                 override fun onTick(p0: Long) {
                     currentCountDown -= 1
                     Timber.d("tick: $currentCountDown")
                 }
 
-                override fun onFinish()  {
+                override fun onFinish() {
                     currentCountDown = 0
                     Timber.d("on finished")
                 }
@@ -236,7 +307,8 @@ class AccessibilityService : AccessibilityService() {
                     bottomSheetState = SheetState(
                         initialValue = SheetValue.Expanded,
                         skipHiddenState = false,
-                        skipPartiallyExpanded = true
+                        skipPartiallyExpanded = true,
+                        density = LocalDensity.current
                     )
                 )
                 val spacing = LocalSpacing.current
@@ -277,10 +349,13 @@ class AccessibilityService : AccessibilityService() {
                                 )
                             }
                             Row(Modifier.fillMaxWidth()) {
-                                Text(modifier = Modifier.weight(0.8f),text = dialogMsg)
+                                Text(modifier = Modifier.weight(0.8f), text = dialogMsg)
                                 Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                                Crossfade(modifier = Modifier.weight(0.2f),targetState = dismissEnabled) { isEnabled ->
-                                    if (!isEnabled){
+                                Crossfade(
+                                    modifier = Modifier.weight(0.2f),
+                                    targetState = dismissEnabled
+                                ) { isEnabled ->
+                                    if (!isEnabled) {
                                         AnimatedContent(targetState = currentCountDown) {
                                             Text(text = it.toString(), fontStyle = FontStyle.Italic)
                                         }
@@ -353,6 +428,15 @@ class AccessibilityService : AccessibilityService() {
         windowManager.addView(composeView, params)
     }
 
+    private fun showDelayedLaunchOverlay() {
+        Timber.d("showing delayed launch overlay")
+
+        val intent = Intent(this.applicationContext, MindfulLaunchActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        startActivity(intent)
+    }
+
     private fun grayscaleScreen() {
         if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
             != PackageManager.PERMISSION_GRANTED
@@ -402,6 +486,7 @@ class AccessibilityService : AccessibilityService() {
     override fun onDestroy() {
         recentScrollViews.clear()
         softInputPackages.clear()
+        scope.cancel()
         super.onDestroy()
     }
 }

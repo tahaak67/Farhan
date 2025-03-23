@@ -8,5 +8,6 @@ data class MainScreenUseCases(
     val isMainSwitchEnabled: IsMainSwitchState,
     val setMainSwitchState: SetMainSwitchState,
     val loadShouldShowcaseAppearanceMenu: LoadShouldShowcaseAppearanceMenu,
-    val saveShouldShowcaseAppearanceMenu: SaveShouldShowcaseAppearanceMenu
+    val saveShouldShowcaseAppearanceMenu: SaveShouldShowcaseAppearanceMenu,
+    val loadShouldShowCombineDbDialog: LoadShouldShowCombineDbDialog
 )
