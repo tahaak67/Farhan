@@ -21,6 +21,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        vectorDrawables.generatedDensities?.clear()
     }
 
     buildTypes {
@@ -40,7 +41,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
+    androidResources {
+        noCompress += "ttf"
+        noCompress += ".ttf"
+    }
     packaging {
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
@@ -66,6 +70,7 @@ dependencies {
     implementation(libs.androidx.material.extended)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)

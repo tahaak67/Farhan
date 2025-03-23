@@ -4,6 +4,13 @@ plugins {
 }
 android {
     namespace = "ly.com.tahaben.core"
+    defaultConfig {
+        vectorDrawables.generatedDensities?.clear()
+    }
+    androidResources {
+        noCompress += "ttf"
+        noCompress += ".ttf"
+    }
 }
 apply {
     from("$rootDir/base-module.gradle")

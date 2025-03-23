@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -24,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -88,9 +91,16 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var databaseCombineHelper: DatabaseCombineHelper
+    val mainScreenViewModel by viewModels<MainScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                mainScreenViewModel.isLoading.value
+            }
+        }
         val shouldShowOnBoarding = onBoardingPref.loadShouldShowOnBoarding()
         var shouldShowSelectThemeScreen: Boolean
         runBlocking {
@@ -99,7 +109,7 @@ class MainActivity : ComponentActivity() {
         val tip = getTip()
         val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         setContent {
-            val mainScreenViewModel = hiltViewModel<MainScreenViewModel>()
+
             val mainState = mainScreenViewModel.mainScreenState.collectAsState().value
             val isDarkMode = when (mainState.uiMode) {
                 UIModeAppearance.DARK_MODE -> true

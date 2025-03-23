@@ -265,5 +265,7 @@
     <string name="db_migration_sucsessful">تم نقل البيانات بنجاح! :D</string>
     <string name="db_migration_fail">خطأ في نقل البيانات :(</string>
     <string name="close_app">اغلق التطبيق</string>
+    <string name="delayed_launch">التشغيل المُؤخر</string>
+    <string name="reason_know_what_app_launched">معرفة ما التطبيق الذي تم تشغيله</string>
 
 </resources>

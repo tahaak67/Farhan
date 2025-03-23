@@ -7,7 +7,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,34 +30,49 @@ class MainScreenViewModel @Inject constructor(
     val mainScreenState: StateFlow<MainScreenState> get() = _mainScreenState
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
 
     init {
-        getUiAppearanceSettings()
-        getThemeColorsSettings()
+        viewModelScope.launch {
+            loadUiPreferencesOnce()
+            _isLoading.value = false
+        }
+        viewModelScope.launch {
+            getThemeColorsSettings()
+            getUiAppearanceSettings()
+        }
         getMainSwitchState()
     }
 
-    private fun getUiAppearanceSettings() {
-        viewModelScope.launch {
-            useCases.getDarkModePreference().collectLatest { uiMode ->
-                _mainScreenState.update {
-                    it.copy(
-                        uiMode = uiMode
-                    )
-                }
+    private suspend fun loadUiPreferencesOnce() {
+        val uiMode = useCases.getDarkModePreference().first()
+        val themeColors = useCases.getThemeColorsPreference().first()
+        _mainScreenState.update {
+            it.copy(
+                uiMode = uiMode,
+                themeColors = themeColors ?: ThemeColors.Classic
+            )
+        }
+    }
+
+    private suspend fun getUiAppearanceSettings() {
+        useCases.getDarkModePreference().collectLatest { uiMode ->
+            _mainScreenState.update {
+                it.copy(
+                    uiMode = uiMode
+                )
             }
         }
     }
 
-    private fun getThemeColorsSettings() {
-        viewModelScope.launch {
-            useCases.getThemeColorsPreference().collectLatest { themeColors ->
-                if (themeColors != null) {
-                    _mainScreenState.update {
-                        it.copy(
-                            themeColors = themeColors
-                        )
-                    }
+    private suspend fun getThemeColorsSettings() {
+        useCases.getThemeColorsPreference().collectLatest { themeColors ->
+            if (themeColors != null) {
+                _mainScreenState.update {
+                    it.copy(
+                        themeColors = themeColors
+                    )
                 }
             }
         }
@@ -182,11 +199,13 @@ class MainScreenViewModel @Inject constructor(
                     it.copy(isCombiningDb = true)
                 }
             }
+
             MainScreenEvent.OnDismissCombineDbDialog -> {
                 _mainScreenState.update {
                     it.copy(isCombineDbDialogVisible = false)
                 }
             }
+
             MainScreenEvent.OnExitApp -> Unit
         }
     }
@@ -204,19 +223,21 @@ class MainScreenViewModel @Inject constructor(
     }
 
     /**
-    * Forces light more regardless of user settings, can be useful in case of using showcase layout where background needs
-    * to be bright to show the tutorial.
-    * @param on weather or not light mode should be forced, pass false to fall back to user settings.
-    * */
+     * Forces light more regardless of user settings, can be useful in case of using showcase layout where background needs
+     * to be bright to show the tutorial.
+     * @param on weather or not light mode should be forced, pass false to fall back to user settings.
+     * */
     fun forceLightMode(on: Boolean) {
-        if (on){
+        if (on) {
             _mainScreenState.update {
                 it.copy(
                     uiMode = UIModeAppearance.LIGHT_MODE
                 )
             }
         } else {
-            getUiAppearanceSettings()
+            viewModelScope.launch {
+                getUiAppearanceSettings()
+            }
         }
     }
 }
