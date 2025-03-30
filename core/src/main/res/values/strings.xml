@@ -318,4 +318,9 @@
         <item>@string/bananas_are_yellow</item>
         <item>@string/look_around_you</item>
     </array>
+    <string name="contact_channels">Contact:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">Blog</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">Donate</string>
 </resources>

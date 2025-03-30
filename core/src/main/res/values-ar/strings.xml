@@ -276,5 +276,10 @@
     <string name="you_attempted_to_launch_this_app_times">لقد حاولت تشغيل %s عدد %d من المرات خلال ال٢٤ ساعة الماضية</string>
     <string name="delay_message">رسالة</string>
     <string name="delay_message_sub">اختر رسالة لعرضها اثناء التأخير</string>
+    <string name="contact_channels">قنوات التواصل:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">المدونة</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">تبرع</string>
 
 </resources>
