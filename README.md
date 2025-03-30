@@ -53,7 +53,9 @@ Check your usage for every app & for different categories with a simple easy to 
 ## Contributing
 
 Help by translating (click the image below)!
+
 [![Translation status](https://hosted.weblate.org/widget/farhan/287x66-black.png)](https://hosted.weblate.org/engage/farhan/)
+
 Pull requests are welcome :)
 
 - If you have any questions or you’re not sure about something please reach out and I’ll try to
