@@ -265,5 +265,21 @@
     <string name="db_migration_sucsessful">تم نقل البيانات بنجاح! :D</string>
     <string name="db_migration_fail">خطأ في نقل البيانات :(</string>
     <string name="close_app">اغلق التطبيق</string>
+    <string name="delayed_launch">التشغيل المُؤخر</string>
+    <string name="reason_know_what_app_launched">معرفة ما التطبيق الذي تم تشغيله</string>
+    <string name="delay_in_seconds">التأخير بالثواني</string>
+    <string name="continue_to_app">استمر الى التطبيق</string>
+    <string name="leave">غادر</string>
+    <string name="take_deep_breath">خذ نفساً عميقاً</string>
+    <string name="bananas_are_yellow">الموز اصفر!</string>
+    <string name="look_around_you">انظر حولك</string>
+    <string name="you_attempted_to_launch_this_app_times">لقد حاولت تشغيل %s عدد %d من المرات خلال ال٢٤ ساعة الماضية</string>
+    <string name="delay_message">رسالة</string>
+    <string name="delay_message_sub">اختر رسالة لعرضها اثناء التأخير</string>
+    <string name="contact_channels">قنوات التواصل:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">المدونة</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">تبرع</string>
 
 </resources>

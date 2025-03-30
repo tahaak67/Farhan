@@ -1,0 +1,2 @@
+- Breaking changes!: the app will attempt to upgrade how any previously stored farhan data is saved this is well tested by me but i can't give any guarantees unfortunately since the app is still in beta(this does not affect new installs). please leave any feedback you have by opening a github issue or contact me on Linkedin.
+- Delayed launch is here :D!. choose what apps you want to delay the launch for and customize the delay duration and the delay message to be displayed.

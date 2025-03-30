@@ -6,7 +6,7 @@ interface Preferences {
     fun saveShouldShowOnBoarding(shouldShow: Boolean)
     fun loadShouldShowcase(): Boolean
     fun saveShouldShowcase(shouldShow: Boolean)
-    fun isServiceEnabled(): Boolean
+    suspend fun isServiceEnabled(): Boolean
     fun setServiceState(isEnabled: Boolean)
     fun savePackageToNotificationExceptions(packageName: String)
     fun removePackageFromNotificationExceptions(packageName: String)

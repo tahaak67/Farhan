@@ -2,6 +2,7 @@ package ly.com.tahaben.notification_filter_data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,7 +30,7 @@ object NotificationFilterDataModule {
 
     @Provides
     @Singleton
-    fun providePreferences(sharedPreferences: SharedPreferences): Preferences {
-        return DefaultPreferences(sharedPreferences)
+    fun providePreferences(sharedPreferences: SharedPreferences, dataStore: DataStore<androidx.datastore.preferences.core.Preferences>): Preferences {
+        return DefaultPreferences(sharedPreferences, dataStore)
     }
 }

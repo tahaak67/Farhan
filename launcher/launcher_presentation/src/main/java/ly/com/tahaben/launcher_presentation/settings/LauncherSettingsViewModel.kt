@@ -5,13 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ly.com.tahaben.launcher_domain.preferences.Preference
-import ly.com.tahaben.launcher_domain.use_case.LauncherUseCases
+import ly.com.tahaben.launcher_domain.use_case.launcher.LauncherUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class LauncherSettingsViewModel @Inject constructor(
-    private val preference: Preference,
     private val launcherUseCases: LauncherUseCases
 ) : ViewModel() {
 
@@ -26,17 +24,13 @@ class LauncherSettingsViewModel @Inject constructor(
 
     fun checkLauncherStats() {
         state = state.copy(
-            isLauncherEnabled = preference.isLauncherEnabled()
+            isLauncherEnabled = launcherUseCases.checkIfCurrentLauncher(),
         )
     }
 
-    fun setLauncherEnabled(isEnabled: Boolean) {
-        preference.setLauncherEnabled(isEnabled)
+    fun openLauncherSettings() {
         launcherUseCases.openDefaultLauncherSettings()
         launcherUseCases.setBlackWallpaper()
-        state = state.copy(
-            isLauncherEnabled = isEnabled
-        )
     }
 
     private fun checkDefaultLauncher() {

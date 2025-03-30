@@ -15,7 +15,7 @@ class AccessibilityServiceUtilsImpl(
     private val sharedPref: Preferences
 ) : AccessibilityServiceUtils {
 
-    override fun checkIfServiceEnabled(): Boolean {
+    override suspend fun checkIfServiceEnabled(): Boolean {
         return sharedPref.isGrayscaleEnabled()
     }
 

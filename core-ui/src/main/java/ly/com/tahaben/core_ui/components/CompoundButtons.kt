@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -53,7 +56,7 @@ fun CheckboxRow(modifier: Modifier = Modifier, string: String, selected: Boolean
 
 @Composable
 fun SwitchRow(modifier: Modifier = Modifier, string: String, selected: Boolean, verticalAlignment: Alignment.Vertical = Alignment.Top, horizontalArrangement: Arrangement.Horizontal = Arrangement.Start, onCheckedChange: (Boolean) -> Unit) {
-    Row(
+   /* Row(
         modifier = modifier.toggleable(
             value = selected,
             role = Role.Switch,
@@ -64,7 +67,18 @@ fun SwitchRow(modifier: Modifier = Modifier, string: String, selected: Boolean, 
     ) {
         Text(modifier = Modifier.weight(1f),text = string)
         Switch(checked = selected, onCheckedChange = null)
-    }
+    }*/
+    ListItem(
+        modifier = modifier.toggleable(
+            value = selected,
+            role = Role.Switch,
+            onValueChange = { onCheckedChange(it) }
+        ),
+//        leadingContent = { Text(modifier = Modifier, text = string) },
+        trailingContent = {Switch(checked = selected, onCheckedChange = null)},
+        headlineContent = {Text(modifier = Modifier, text = string)},
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+    )
 }
 
 @Composable

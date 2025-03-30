@@ -301,4 +301,26 @@
     <string name="db_migration_sucsessful">Migration successful :D</string>
     <string name="db_migration_fail">Migration Error :(</string>
     <string name="close_app">Close App</string>
+    <string name="delayed_launch">Delayed launch</string>
+    <string name="reason_know_what_app_launched">Know when and what app you launch</string>
+    <string name="delay_in_seconds">Delay in seconds</string>
+    <string name="continue_to_app">Continue to app</string>
+    <string name="leave">Leave</string>
+    <string name="take_deep_breath">Take a deep breath!</string>
+    <string name="bananas_are_yellow">Bananas are yellow!</string>
+    <string name="look_around_you">Look around you</string>
+    <string name="you_attempted_to_launch_this_app_times">You attempted to launch %s app %d times within the last 24 hours</string>
+    <string name="delay_message">Message</string>
+    <string name="delay_message_sub">Choose a message to show during the delay</string>
+
+    <array name="delayed_launch_messages">
+        <item>@string/take_deep_breath</item>
+        <item>@string/bananas_are_yellow</item>
+        <item>@string/look_around_you</item>
+    </array>
+    <string name="contact_channels">Contact:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">Blog</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">Donate</string>
 </resources>

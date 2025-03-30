@@ -11,4 +11,5 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.onboardingDomain))
+    implementation(libs.androidx.datastore)
 }

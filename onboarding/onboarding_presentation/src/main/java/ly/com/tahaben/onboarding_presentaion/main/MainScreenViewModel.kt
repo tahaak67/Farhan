@@ -7,47 +7,73 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.model.ThemeColors
 import ly.com.tahaben.core.model.UIModeAppearance
 import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.domain.preferences.Preferences
 import ly.com.tahaben.domain.use_case.MainScreenUseCases
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val useCases: MainScreenUseCases
+    private val useCases: MainScreenUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _mainScreenState = MutableStateFlow(MainScreenState())
     val mainScreenState: StateFlow<MainScreenState> get() = _mainScreenState
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
 
     init {
-        getUiAppearanceSettings()
-        getThemeColorsSettings()
+        viewModelScope.launch {
+            loadUiPreferencesOnce()
+            _isLoading.value = false
+        }
+        viewModelScope.launch {
+            getThemeColorsSettings()
+            getUiAppearanceSettings()
+        }
         getMainSwitchState()
     }
 
-    private fun getUiAppearanceSettings() {
-        val uiMode = useCases.getDarkModePreference()
+    private suspend fun loadUiPreferencesOnce() {
+        val uiMode = useCases.getDarkModePreference().first()
+        val themeColors = useCases.getThemeColorsPreference().first()
         _mainScreenState.update {
             it.copy(
-                uiMode = uiMode
+                uiMode = uiMode,
+                themeColors = themeColors ?: ThemeColors.Classic
             )
         }
     }
 
-    private fun getThemeColorsSettings() {
-        val themeColors = useCases.getThemeColorsPreference()
-        if (themeColors != null) {
+    private suspend fun getUiAppearanceSettings() {
+        useCases.getDarkModePreference().collectLatest { uiMode ->
             _mainScreenState.update {
                 it.copy(
-                    themeColors = themeColors
+                    uiMode = uiMode
                 )
+            }
+        }
+    }
+
+    private suspend fun getThemeColorsSettings() {
+        useCases.getThemeColorsPreference().collectLatest { themeColors ->
+            if (themeColors != null) {
+                _mainScreenState.update {
+                    it.copy(
+                        themeColors = themeColors
+                    )
+                }
             }
         }
     }
@@ -64,11 +90,15 @@ class MainScreenViewModel @Inject constructor(
     }
 
     private fun saveUiAppearanceSettings(uiModeAppearance: UIModeAppearance) {
-        useCases.saveDarkModePreference(uiModeAppearance)
+        viewModelScope.launch {
+            useCases.saveDarkModePreference(uiModeAppearance)
+        }
     }
 
     private fun saveThemeColorsSettings(themeColors: ThemeColors) {
-        useCases.saveThemeColorsPreference(themeColors)
+        viewModelScope.launch {
+            useCases.saveThemeColorsPreference(themeColors)
+        }
     }
 
     fun onEvent(event: MainScreenEvent) {
@@ -101,11 +131,6 @@ class MainScreenViewModel @Inject constructor(
 
             is MainScreenEvent.SaveMainSwitchState -> {
                 saveMainSwitchState(event.isEnabled)
-                _mainScreenState.update { state ->
-                    state.copy(
-                        isMainSwitchEnabled = event.isEnabled
-                    )
-                }
             }
 
             is MainScreenEvent.ShowSnackBar -> {
@@ -169,41 +194,51 @@ class MainScreenViewModel @Inject constructor(
                     it.copy(isCombiningDb = true)
                 }
             }
+
             MainScreenEvent.OnDismissCombineDbDialog -> {
                 _mainScreenState.update {
                     it.copy(isCombineDbDialogVisible = false)
                 }
             }
+
             MainScreenEvent.OnExitApp -> Unit
         }
     }
 
     fun getMainSwitchState() {
-        _mainScreenState.update { state ->
-            state.copy(
-                isMainSwitchEnabled = useCases.isMainSwitchEnabled()
-            )
+        viewModelScope.launch {
+            useCases.isMainSwitchEnabled().collectLatest { isEnabled ->
+                _mainScreenState.update { state ->
+                    state.copy(
+                        isMainSwitchEnabled = isEnabled
+                    )
+                }
+            }
         }
     }
 
     private fun saveMainSwitchState(isEnabled: Boolean) {
-        useCases.setMainSwitchState(isEnabled)
+        viewModelScope.launch {
+            useCases.setMainSwitchState(isEnabled)
+        }
     }
 
     /**
-    * Forces light more regardless of user settings, can be useful in case of using showcase layout where background needs
-    * to be bright to show the tutorial.
-    * @param on weather or not light mode should be forced, pass false to fall back to user settings.
-    * */
+     * Forces light more regardless of user settings, can be useful in case of using showcase layout where background needs
+     * to be bright to show the tutorial.
+     * @param on weather or not light mode should be forced, pass false to fall back to user settings.
+     * */
     fun forceLightMode(on: Boolean) {
-        if (on){
+        if (on) {
             _mainScreenState.update {
                 it.copy(
                     uiMode = UIModeAppearance.LIGHT_MODE
                 )
             }
         } else {
-            getUiAppearanceSettings()
+            viewModelScope.launch {
+                getUiAppearanceSettings()
+            }
         }
     }
 }

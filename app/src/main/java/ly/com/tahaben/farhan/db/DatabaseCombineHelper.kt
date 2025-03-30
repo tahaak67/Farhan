@@ -8,7 +8,7 @@ import timber.log.Timber
 
 /* Created by Taha https://github.com/tahaak67/ at 15/9/2024 */
 
-// TODO: Remove on v 1.0
+
 class DatabaseCombineHelper(
     private val context: Context,
     private val farhanDatabase: FarhanDatabase,

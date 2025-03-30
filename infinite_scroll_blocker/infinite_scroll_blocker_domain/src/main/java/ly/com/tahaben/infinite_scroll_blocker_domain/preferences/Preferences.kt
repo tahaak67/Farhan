@@ -4,7 +4,7 @@ interface Preferences {
 
     fun loadShouldShowOnBoarding(): Boolean
     fun saveShouldShowOnBoarding(shouldShow: Boolean)
-    fun isServiceEnabled(): Boolean
+    suspend fun isServiceEnabled(): Boolean
     fun setServiceState(isEnabled: Boolean)
     fun savePackageToInfiniteScrollExceptions(packageName: String)
     fun removePackageFromInInfiniteScrollExceptions(packageName: String)
@@ -12,8 +12,7 @@ interface Preferences {
     fun getInInfiniteScrollExceptionsList(): Set<String>
     fun getInfiniteScrollTimeOut(): Int
     fun setInfiniteScrollTimeOut(minutes: Int)
-    fun loadDarkModeOn(): String
-    fun loadThemeColors(): String
+
     fun getCountDownSeconds(): Int
     fun setCountDownSeconds(seconds: Int)
 
@@ -32,8 +31,6 @@ interface Preferences {
         const val KEY_INFINITE_SCROLL_TIME_OUT = "infinite_scroll_time_out"
         const val KEY_INFINITE_SCROLL_SHOULD_SHOW_ON_BOARDING =
             "infinite_scroll_should_show_on_boarding"
-        const val KEY_APP_DARK_MODE_ON = "app_dark_mode_on"
-        const val KEY_APP_THEME_COLORS = "app_theme_colors"
         const val KEY_COUNT_DOWN_TIME = "count_down_time"
         const val KEY_CUSTOM_MESSAGE = "custom_message"
         const val KEY_MESSAGES_ARRAY = "message_array"

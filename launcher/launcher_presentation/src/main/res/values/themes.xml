@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.Farhan" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#A91DFF</item>
+        <item name="android:statusBarColor">#000000</item>
     </style>
 </resources>
