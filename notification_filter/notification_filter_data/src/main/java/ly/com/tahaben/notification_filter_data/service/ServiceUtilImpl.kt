@@ -40,7 +40,7 @@ class ServiceUtilImpl(
         ).contains(notificationListenerName)
     }
 
-    override fun isNotificationServiceEnabled(): Boolean {
+    override suspend fun isNotificationServiceEnabled(): Boolean {
         return sharedPref.isServiceEnabled()
     }
 

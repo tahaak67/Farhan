@@ -6,7 +6,7 @@ class IsServiceEnabled(
     private val accessibilityUtil: AccessibilityServiceUtils
 ) {
 
-    operator fun invoke(): Boolean {
+    suspend operator fun invoke(): Boolean {
         return accessibilityUtil.checkIfServiceEnabled()
     }
 }

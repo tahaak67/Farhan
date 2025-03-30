@@ -54,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -82,7 +83,7 @@ fun NotificationFilterSettingsScreen(
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
-    val state = viewModel.state
+    val state = viewModel._state.collectAsStateWithLifecycle().value
     val dialogQueue = state.visiblePermissionDialogQueue
     val scope = rememberCoroutineScope()
     var checkKey by remember {

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import ly.com.tahaben.launcher_data.local.db.LaunchAttemptCleanupWorker
+import ly.com.tahaben.launcher_domain.repository.LaunchAttemptsRepository
 import ly.com.tahaben.usage_overview_data.local.CacheWorker
 import ly.com.tahaben.usage_overview_data.local.ReportsWorker
 import ly.com.tahaben.usage_overview_domain.preferences.Preferences
@@ -17,7 +19,8 @@ import ly.com.tahaben.usage_overview_presentation.widget.WidgetWorker
 class DefaultWorkerFactory constructor(
     private val usageRepository: UsageRepository,
     private val usageOverviewUseCases: UsageOverviewUseCases,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val launchAttemptsRepository: LaunchAttemptsRepository
 ) : WorkerFactory() {
 
     override fun createWorker(
@@ -36,7 +39,9 @@ class DefaultWorkerFactory constructor(
             WidgetWorker::class.java.name -> {
                 WidgetWorker(appContext, workerParameters, usageOverviewUseCases, preferences)
             }
-
+            LaunchAttemptCleanupWorker::class.java.name -> {
+                LaunchAttemptCleanupWorker(appContext, workerParameters, launchAttemptsRepository)
+            }
             else -> null
         }
     }

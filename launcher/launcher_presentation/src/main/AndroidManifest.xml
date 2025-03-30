@@ -6,7 +6,7 @@
 
     <application>
         <activity
-            android:name=".wait.MindfulLaunchActivity"
+            android:name=".wait.DelayedLaunchActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:label="@string/title_activity_hold_up"

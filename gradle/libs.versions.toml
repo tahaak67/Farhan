@@ -152,3 +152,4 @@ kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = 
 kotlinGradle = { id = "org.jetbrains.kotlin", version.ref = "kotlin" }
 hiltAndroidGradle = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+room = { id = "androidx.room", version.ref = "room" }

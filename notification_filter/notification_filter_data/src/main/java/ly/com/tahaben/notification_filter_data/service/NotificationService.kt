@@ -4,8 +4,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.os.Parcel
-import android.os.UserHandle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +34,8 @@ class NotificationService : NotificationListenerService() {
 
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
-        if (notificationFilterUseCases.checkIfNotificationServiceIsEnabled()) {
+        val isNotificationFilterEnabled = runBlocking { notificationFilterUseCases.checkIfNotificationServiceIsEnabled() }
+        if (isNotificationFilterEnabled) {
             Timber.d("notification Posted")
             val notification = sbn?.notification
             val appPackageName = sbn?.packageName ?: ""
@@ -90,7 +89,7 @@ class NotificationService : NotificationListenerService() {
         Timber.d("notification removed")
         val notification = sbn?.notification
         val extras = notification?.extras
-        val title = extras?.getString(Notification.EXTRA_TITLE)?.toString()
+        val title = extras?.getString(Notification.EXTRA_TITLE)
         val text = extras?.getCharSequence(Notification.EXTRA_TEXT)?.toString()
         val progress = extras?.getInt(Notification.EXTRA_PROGRESS)
         val progressMax = extras?.getInt(Notification.EXTRA_PROGRESS_MAX)

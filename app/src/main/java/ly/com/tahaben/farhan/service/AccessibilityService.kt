@@ -66,6 +66,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
@@ -76,7 +77,7 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
-import ly.com.tahaben.launcher_presentation.wait.MindfulLaunchActivity
+import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchActivity
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -135,13 +136,14 @@ class AccessibilityService : AccessibilityService() {
     }
 
     private var lastLaunchedPackage = ""
+    private var lastLaunchedTimeMillis = 0L
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
         Timber.d("event type: ${AccessibilityEvent.eventTypeToString(event.eventType)} pn: ${event.packageName} fs? ${event.isFullScreen}")
         Timber.d("event package name: ${event.packageName}")
-
-        if (infiniteScrollUseCases.isServiceEnabled() && event.packageName.toString() != packageName) {
+        val infiniteScrollBlockEnabled = runBlocking { infiniteScrollUseCases.isServiceEnabled() }
+        if (infiniteScrollBlockEnabled && event.packageName.toString() != packageName) {
             if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
                 if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(event.packageName.toString())) {
                     listenToScrollEvent(event)
@@ -157,7 +159,8 @@ class AccessibilityService : AccessibilityService() {
                 }
             }
         }
-        if (grayscaleUseCases.isGrayscaleEnabled()) {
+        val grayscaleEnabled = runBlocking { grayscaleUseCases.isGrayscaleEnabled() }
+        if (grayscaleEnabled) {
             Timber.d("grayscale enabled")
             Timber.d("event type ${event.eventType}")
 
@@ -180,19 +183,23 @@ class AccessibilityService : AccessibilityService() {
         Timber.d("isDelayed launch on?? $isDelayedLaunchEnabled")
         if (isDelayedLaunchEnabled) {
             Timber.d("last launched package $lastLaunchedPackage")
-            if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+            val differenceInSeconds = (System.currentTimeMillis() - lastLaunchedTimeMillis).milliseconds.inWholeSeconds
+            if (
                 event.isFullScreen &&
                 event.packageName.toString() != lastLaunchedPackage &&
-                event.packageName.toString() != packageName
+                event.packageName.toString() != packageName &&
+                !softInputPackages.contains(event.packageName.toString()) &&
+                differenceInSeconds > 5
             ) {
                 Timber.d("new app ${event.packageName}")
 
                 if (delayedPackages.contains(event.packageName.toString())) {
                     Timber.d("app in delayed launch whitelist!! ${event.packageName}")
-                    showDelayedLaunchOverlay()
+                    showDelayedLaunchOverlay(event.packageName.toString())
                 }
 
                 lastLaunchedPackage = event.packageName.toString()
+                lastLaunchedTimeMillis = System.currentTimeMillis()
             }
         }
     }
@@ -428,11 +435,12 @@ class AccessibilityService : AccessibilityService() {
         windowManager.addView(composeView, params)
     }
 
-    private fun showDelayedLaunchOverlay() {
+    private fun showDelayedLaunchOverlay(packageName: String) {
         Timber.d("showing delayed launch overlay")
 
-        val intent = Intent(this.applicationContext, MindfulLaunchActivity::class.java).apply {
+        val intent = Intent(this.applicationContext, DelayedLaunchActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra(DelayedLaunchActivity.PACKAGE_NAME, packageName)
         }
         startActivity(intent)
     }

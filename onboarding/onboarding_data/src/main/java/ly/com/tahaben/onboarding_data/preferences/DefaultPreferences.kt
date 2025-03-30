@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +24,7 @@ class DefaultPreferences(
     // data store keys
     private val uiAppearanceKey = stringPreferencesKey(Preferences.KEY_APP_DARK_MODE_ON)
     private val themeColorsKey = stringPreferencesKey(Preferences.KEY_APP_THEME_COLORS)
+    private val mainSwitchKey = booleanPreferencesKey(GlobalKey.Pref_KEY_APP_MAIN_SWITCH)
 
     override fun loadShouldShowOnBoarding(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_APP_SHOULD_SHOW_ON_BOARDING, true)
@@ -46,14 +48,14 @@ class DefaultPreferences(
 
     }
 
-    override fun loadMainSwitchState(): Boolean {
-        return sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
+    override suspend fun loadMainSwitchState(): Flow<Boolean> {
+        return dataStore.data.map { it[mainSwitchKey] ?: true }
     }
 
-    override fun setMainSwitchState(switchState: Boolean) {
-        sharedPref.edit()
-            .putBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, switchState)
-            .apply()
+    override suspend fun setMainSwitchState(switchState: Boolean) {
+        dataStore.edit { data ->
+            data[mainSwitchKey] = switchState
+        }
     }
 
     override suspend fun loadThemeColors(): String {

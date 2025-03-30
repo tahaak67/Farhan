@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.LocalSpacing
@@ -59,7 +60,7 @@ fun GrayscaleScreen(
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
-    val state = viewModel.state
+    val state = viewModel.state.collectAsStateWithLifecycle().value
     val isServiceChecked = remember { mutableStateOf(state.isServiceEnabled) }
     isServiceChecked.value = state.isServiceEnabled
     val openHowAccessibilityDialog = remember { mutableStateOf(false) }

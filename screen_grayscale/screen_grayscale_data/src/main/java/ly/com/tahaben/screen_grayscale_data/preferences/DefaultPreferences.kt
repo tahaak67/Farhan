@@ -4,13 +4,19 @@ package ly.com.tahaben.screen_grayscale_data.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.screen_grayscale_domain.preferences.Preferences
 import timber.log.Timber
 
 class DefaultPreferences(
-    private val sharedPref: SharedPreferences
+    private val sharedPref: SharedPreferences,
+    private val dataStore: DataStore<androidx.datastore.preferences.core.Preferences>
 ) : Preferences {
+    private val mainSwitchKey = booleanPreferencesKey(GlobalKey.Pref_KEY_APP_MAIN_SWITCH)
 
     @SuppressLint("ApplySharedPref")
     override fun saveShouldShowOnBoarding(shouldShow: Boolean) {
@@ -25,9 +31,9 @@ class DefaultPreferences(
         return sharedPref.getBoolean(Preferences.KEY_GRAYSCALE_SHOULD_SHOW_ON_BOARDING, true)
     }
 
-    override fun isGrayscaleEnabled(): Boolean {
+    override suspend fun isGrayscaleEnabled(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_GRAYSCALE_SERVICE_STATS, false) &&
-                sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
+                dataStore.data.map { data -> data[mainSwitchKey] ?:  true }.first()
     }
 
     override fun setServiceState(isEnabled: Boolean) {

@@ -13,7 +13,7 @@ import android.provider.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ly.com.tahaben.core.model.AppItem
-import ly.com.tahaben.launcher_data.local.AppsDao
+import ly.com.tahaben.launcher_data.local.db.AppsDao
 import ly.com.tahaben.launcher_data.mapper.toAppEntity
 import ly.com.tahaben.launcher_data.mapper.toAppItem
 import ly.com.tahaben.launcher_domain.repository.AvailableActivitiesRepository
