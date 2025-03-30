@@ -4,8 +4,11 @@ plugins {
     alias(libs.plugins.hiltAndroidGradle)
     alias(libs.plugins.compose.compiler)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.room)
 }
-
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 android {
     namespace = "ly.com.tahaben.farhan"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

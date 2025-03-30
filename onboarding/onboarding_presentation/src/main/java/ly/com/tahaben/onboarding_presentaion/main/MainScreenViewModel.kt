@@ -131,11 +131,6 @@ class MainScreenViewModel @Inject constructor(
 
             is MainScreenEvent.SaveMainSwitchState -> {
                 saveMainSwitchState(event.isEnabled)
-                _mainScreenState.update { state ->
-                    state.copy(
-                        isMainSwitchEnabled = event.isEnabled
-                    )
-                }
             }
 
             is MainScreenEvent.ShowSnackBar -> {
@@ -211,15 +206,21 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun getMainSwitchState() {
-        _mainScreenState.update { state ->
-            state.copy(
-                isMainSwitchEnabled = useCases.isMainSwitchEnabled()
-            )
+        viewModelScope.launch {
+            useCases.isMainSwitchEnabled().collectLatest { isEnabled ->
+                _mainScreenState.update { state ->
+                    state.copy(
+                        isMainSwitchEnabled = isEnabled
+                    )
+                }
+            }
         }
     }
 
     private fun saveMainSwitchState(isEnabled: Boolean) {
-        useCases.setMainSwitchState(isEnabled)
+        viewModelScope.launch {
+            useCases.setMainSwitchState(isEnabled)
+        }
     }
 
     /**

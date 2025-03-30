@@ -6,7 +6,7 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.core.content.ContextCompat
-import ly.com.tahaben.launcher_data.local.TimeLimitDao
+import ly.com.tahaben.launcher_data.local.db.TimeLimitDao
 import ly.com.tahaben.launcher_data.mapper.toTimeLimit
 import ly.com.tahaben.launcher_data.mapper.toTimeLimitEntity
 import ly.com.tahaben.launcher_data.service.TimeLimitService

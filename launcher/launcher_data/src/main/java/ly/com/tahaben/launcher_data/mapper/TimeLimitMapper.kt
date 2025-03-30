@@ -1,6 +1,6 @@
 package ly.com.tahaben.launcher_data.mapper
 
-import ly.com.tahaben.launcher_data.local.TimeLimitEntity
+import ly.com.tahaben.launcher_data.local.db.TimeLimitEntity
 import ly.com.tahaben.launcher_domain.model.TimeLimit
 
 /**

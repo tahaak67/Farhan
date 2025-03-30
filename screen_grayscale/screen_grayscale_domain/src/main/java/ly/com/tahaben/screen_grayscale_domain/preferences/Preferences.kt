@@ -4,7 +4,7 @@ interface Preferences {
 
     fun loadShouldShowOnBoarding(): Boolean
     fun saveShouldShowOnBoarding(shouldShow: Boolean)
-    fun isGrayscaleEnabled(): Boolean
+    suspend fun isGrayscaleEnabled(): Boolean
     fun setServiceState(isEnabled: Boolean)
     fun savePackageToInfiniteScrollExceptions(packageName: String)
     fun removePackageFromInInfiniteScrollExceptions(packageName: String)

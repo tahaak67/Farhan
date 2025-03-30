@@ -2,6 +2,7 @@ package ly.com.tahaben.screen_grayscale_data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
 import com.scottyab.rootbeer.RootBeer
 import dagger.Module
 import dagger.Provides
@@ -22,8 +23,8 @@ object InfiniteScrollBlockerPresentationModule {
 
     @Provides
     @Singleton
-    fun provideInfiniteScrollPreferences(sharedPreferences: SharedPreferences): Preferences {
-        return DefaultPreferences(sharedPreferences)
+    fun provideInfiniteScrollPreferences(sharedPreferences: SharedPreferences, dataStore: DataStore<androidx.datastore.preferences.core.Preferences>): Preferences {
+        return DefaultPreferences(sharedPreferences, dataStore)
     }
 
     @Provides

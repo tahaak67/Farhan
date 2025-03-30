@@ -26,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -172,13 +171,16 @@ class MainActivity : ComponentActivity() {
                             val delayedLaunchEnabled = runBlocking {
                                 launcherPref.isDelayedLaunchEnabled().first()
                             }
+                            val notificationFilterEnabled = runBlocking { notificationFilterUseCases.checkIfNotificationServiceIsEnabled() }
+                            val infiniteScrollBlockEnabled = runBlocking { infiniteScrollUseCases.isServiceEnabled() }
+                            val grayscaleEnabled = runBlocking { grayscaleUseCases.isGrayscaleEnabled() }
                             MainScreen(
                                 tip = tip,
-                                isGrayscaleEnabled = grayscaleUseCases.isGrayscaleEnabled() &&
+                                isGrayscaleEnabled = grayscaleEnabled &&
                                         grayscaleUseCases.isAccessibilityPermissionGranted(),
-                                isInfiniteScrollBlockerEnabled = infiniteScrollUseCases.isServiceEnabled() &&
+                                isInfiniteScrollBlockerEnabled =  infiniteScrollBlockEnabled &&
                                         infiniteScrollUseCases.isAccessibilityPermissionGranted(),
-                                isNotificationFilterEnabled = notificationFilterUseCases.checkIfNotificationServiceIsEnabled() &&
+                                isNotificationFilterEnabled = notificationFilterEnabled &&
                                         notificationFilterUseCases.checkIfNotificationAccessIsGranted(),
                                 isLauncherEnabled = launcherPref.isLauncherEnabled(),
                                 isDelayedLaunchEnabled = delayedLaunchEnabled,
@@ -376,7 +378,7 @@ class MainActivity : ComponentActivity() {
                             DelayedLaunchWhiteListScreen(
                                 onNavigateUp = { navController.navigateUp() },
                                 onEvent = viewModel::onEvent,
-                                state = viewModel.state.collectAsStateWithLifecycle().value
+                                state = viewModel.whiteListState.collectAsStateWithLifecycle().value
                             )
                         }
                     }
