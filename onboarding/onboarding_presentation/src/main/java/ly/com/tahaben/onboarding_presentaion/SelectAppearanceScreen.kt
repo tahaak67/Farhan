@@ -207,6 +207,7 @@ fun SelectAppearanceScreen(
             modifier = Modifier.fillMaxWidth(),
             onClick = onOkClick
         ) {
+            onEvent(MainScreenEvent.SaveThemeColorsMode(state.themeColors))
             Text(text = stringResource(id = R.string.ok))
         }
     }
