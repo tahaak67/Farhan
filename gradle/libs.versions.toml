@@ -1,10 +1,11 @@
 [versions]
 # Build versions
+acraVersion = "5.12.0"
 android-compileSdk = "35"
 android-minSdk = "23"
 android-targetSdk = "35"
-app-versionCode = "9"
-app-versionName = "0.2.4"
+app-versionCode = "10"
+app-versionName = "0.2.5"
 
 # Dependencies
 coreSplashscreen = "1.0.1"
@@ -49,6 +50,7 @@ uiAndroid = "1.7.8"
 datastore = "1.1.3"
 
 [libraries]
+acra-core = { module = "ch.acra:acra-core", version.ref = "acraVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }

@@ -5,36 +5,42 @@
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
-
-    <!-- To get the list of installed apps on Android >= 11-->
+        tools:ignore="ProtectedPermissions" /> <!-- To get the list of installed apps on Android >= 11 -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-
-    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" tools:node="remove"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".FarhanApplication"
         android:allowBackup="true"
+        android:appCategory="productivity"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_farhan_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_farhan_icon_round"
         android:supportsRtl="true"
-        android:appCategory="productivity"
         android:theme="@style/Theme.Farhan"
         tools:targetApi="31">
+        <activity
+            android:name=".CrashDetailsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_crash_details"
+            android:theme="@style/Theme.Farhan" />
+
         <receiver
             android:name="ly.com.tahaben.core.util.BroadcastReceiverNotification"
             android:enabled="true" />
@@ -45,13 +51,14 @@
             android:theme="@style/splash_theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="ly.com.tahaben.launcher_presentation.launcher.LauncherActivity"
-            android:exported="true"
             android:enabled="true"
+            android:exported="true"
             android:theme="@style/Theme.FarhanLauncher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,9 +70,9 @@
 
         <service
             android:name="ly.com.tahaben.notification_filter_data.service.NotificationService"
+            android:exported="false"
             android:label="@string/notification_service_name"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-            android:exported="false">
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
@@ -80,9 +87,9 @@
         <service
             android:name=".service.AccessibilityService"
             android:description="@string/accessibility_service_description"
+            android:exported="false"
             android:label="@string/accessibility_service_name"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -97,6 +104,7 @@
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
+
             <!-- If you are using androidx.startup to initialize other components -->
             <meta-data
                 android:name="androidx.work.WorkManagerInitializer"
@@ -104,35 +112,37 @@
                 tools:node="remove" />
         </provider>
 
-        <receiver android:name="ly.com.tahaben.usage_overview_presentation.widget.WidgetBroadcast"
+        <receiver
+            android:name="ly.com.tahaben.usage_overview_presentation.widget.WidgetBroadcast"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/counter_widget_info" />
         </receiver>
 
+        <activity
+            android:name=".widget.WidgetConfigActivity"
+            android:exported="false"
+            android:label="@string/title_activity_widget_config"
+            android:theme="@style/Theme.Farhan">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
 
-            <activity
-                android:name="ly.com.tahaben.farhan.widget.WidgetConfigActivity"
-                android:exported="false"
-                android:label="@string/title_activity_widget_config"
-                android:theme="@style/Theme.Farhan" >
-                <intent-filter>
-                    <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-                </intent-filter>
-            </activity>
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
-        <service android:name="ly.com.tahaben.launcher_data.service.TimeLimitService"
+        <service
+            android:name="ly.com.tahaben.launcher_data.service.TimeLimitService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="specialUse"/>
-
+            android:foregroundServiceType="specialUse" />
     </application>
 
 </manifest>

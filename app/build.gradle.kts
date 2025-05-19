@@ -56,6 +56,10 @@ android {
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
     }
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+    }
 }
 
 dependencies {
@@ -76,6 +80,10 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.dagger.hilt)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.timber)
@@ -139,4 +147,11 @@ dependencies {
 
     // Dependency required for API desugaring.
     coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
+
+    // Crash reporting
+    implementation(libs.acra.core)
+    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
+    implementation("com.google.auto.service:auto-service:1.1.1")
+
+    api("com.google.guava:guava:33.4.6-android")
 }

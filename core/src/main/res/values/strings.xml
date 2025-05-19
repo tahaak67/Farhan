@@ -323,4 +323,16 @@
     <string name="blog">Blog</string>
     <string name="youtube">Youtube</string>
     <string name="donate">Donate</string>
+    <string name="close">Close</string>
+    <string name="create_github_issue">Create GitHub issue</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="open_github_msg">This will open GitHub in your browser with pre-filled crash details.</string>
+    <string name="open_github">Open GitHub</string>
+    <string name="continuee">Continue</string>
+    <string name="confirm_issue_not_exist_msg">Kindly before reporting an issue confirm that it does not already exist.</string>
+    <string name="ignore_this_screen_unkown">If you don\'t know what this screen is, you can ignore it and tap on the Close button at the bottom</string>
+    <string name="crash_reports_channel_id" translatable="false">CRASH_REPORTS_CHANNEL</string>
+    <string name="crash_reports_channel">Crash reports</string>
+    <string name="crash_reports_channel_description" >Notifications for app crash reports</string>
 </resources>
