@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -444,5 +445,12 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun TestCrashButton() {
+    Button(onClick = { throw RuntimeException("Test crash") }) {
+        Text("Simulate Crash")
     }
 }

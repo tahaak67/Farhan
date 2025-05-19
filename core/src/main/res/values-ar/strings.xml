@@ -281,5 +281,14 @@
     <string name="blog">المدونة</string>
     <string name="youtube">Youtube</string>
     <string name="donate">تبرع</string>
+    <string name="close">اغلق</string>
+    <string name="create_github_issue">بلغ عن المشكلة في GitHub</string>
+    <string name="copy_to_clipboard">نسخ الى الحافظة</string>
+    <string name="copied_to_clipboard">تم النسخ الى الحافظة</string>
+    <string name="open_github_msg">سيتم فتح GitHub في متصفحك وملئ بعض الحقول بشكل تلقائي</string>
+    <string name="open_github">فتح GitHub</string>
+    <string name="continuee">استمرار</string>
+    <string name="confirm_issue_not_exist_msg">لطفاً قبل التبليغ ان اي مشكلة تأكد من انه لم يتم التبليغ عنها من قبل</string>
+    <string name="ignore_this_screen_unkown">اذا كنت لا تفهم ما هي هذه الشاشة يمكنك تجاهلها والضغط على زر اغلاق في الأسفل</string>
 
 </resources>
