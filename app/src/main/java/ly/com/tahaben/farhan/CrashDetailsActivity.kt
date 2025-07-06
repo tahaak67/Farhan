@@ -8,23 +8,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -84,6 +70,7 @@ fun CrashDetailsScreen(
     finishActivity: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    var isCheckIssueExistChecked by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
@@ -107,7 +94,6 @@ fun CrashDetailsScreen(
             readOnly = true,
             textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface)
         )
-
         Button(
             onClick = { showDialog = true },
             modifier = Modifier.fillMaxWidth()
@@ -134,14 +120,26 @@ fun CrashDetailsScreen(
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = { Text(stringResource(R.string.open_github)) },
-                text = { Text(stringResource(R.string.open_github_msg)) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.open_github_msg))
+                        Row {
+                            Checkbox(
+                                checked = isCheckIssueExistChecked,
+                                onCheckedChange = { isCheckIssueExistChecked = it })
+                            Text(stringResource(R.string.verify_no_existing_issue_checkbox_message))
+                        }
+
+                    }
+                },
                 confirmButton = {
                     TextButton(
                         onClick = {
                             openGitHubIssue(crashLog, context)
                             showDialog = false
                             finishActivity()
-                        }
+                        },
+                        enabled = isCheckIssueExistChecked
                     ) {
                         Text(stringResource(R.string.continuee))
                     }
@@ -159,9 +157,36 @@ fun CrashDetailsScreen(
 }
 
 private fun openGitHubIssue(crashLog: String, context: Context) {
+
+    val crashSignature = extractCrashSignature(crashLog)
+
+    val issueBody = """
+**⚠️ IMPORTANT: Please search existing issues before creating a new one**
+Tip: to check the boxes below put an 'x' between the brackets (e.g. [x])
+        - [ ] I have searched for similar crashes and confirmed this is not a duplicate
+        - [ ] This crash is reproducible
+        - [ ] I can provide steps to reproduce (if applicable)
+       
+**Steps to Reproduce (if known):**
+        1. 
+        2. 
+        3. 
+        
+**Additional Context:**
+        Write any other context about the crash here.
+
+```
+   $crashLog
+```
+
+    """
+
     val url = "https://github.com/tahaak67/Farhan/issues/new" +
-            "?title=App+Crash+Report" +
-            "&body=${Uri.encode("```\n$crashLog\n```")}"
+            "?title=${Uri.encode("Crash: $crashSignature")}" +
+            "&body=${Uri.encode(issueBody)}" +
+            "&labels=${Uri.encode("crash")}"
+
+
 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         data = url.toUri()
@@ -182,4 +207,16 @@ fun GreetingPreview() {
             )
         }
     }
+}
+
+private fun extractCrashSignature(crashLog: String): String {
+    // Extract the key parts of the crash (exception type, method name, line number)
+    val lines = crashLog.split('\n')
+    val exceptionLine = lines.find { it.contains("Exception") || it.contains("Error") }
+    val locationLine = lines.find { it.contains("at ly.com.tahaben") }
+
+    return listOfNotNull(
+        exceptionLine?.substringBefore(':')?.trim(),
+        locationLine?.substringAfter("at ")?.substringBefore('(')?.trim()
+    ).joinToString(" ")
 }

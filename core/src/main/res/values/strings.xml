@@ -335,4 +335,7 @@
     <string name="crash_reports_channel_id" translatable="false">CRASH_REPORTS_CHANNEL</string>
     <string name="crash_reports_channel">Crash reports</string>
     <string name="crash_reports_channel_description" >Notifications for app crash reports</string>
+    <string name="verify_no_existing_issue_checkbox_message">I confirm that i have checked if the issue already exists
+        and have not found any open issues with the same error
+    </string>
 </resources>
