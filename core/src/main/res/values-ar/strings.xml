@@ -290,5 +290,8 @@
     <string name="continuee">استمرار</string>
     <string name="confirm_issue_not_exist_msg">لطفاً قبل التبليغ ان اي مشكلة تأكد من انه لم يتم التبليغ عنها من قبل</string>
     <string name="ignore_this_screen_unkown">اذا كنت لا تفهم ما هي هذه الشاشة يمكنك تجاهلها والضغط على زر اغلاق في الأسفل</string>
+    <string name="verify_no_existing_issue_checkbox_message">لقد تفقدت ان كانت المشكلة تم التبيغ عنها بالفغل ولم اجد اي
+        مشكلة بنفس التفاصيل مفتوحة حالياً على GitHub
+    </string>
 
 </resources>
