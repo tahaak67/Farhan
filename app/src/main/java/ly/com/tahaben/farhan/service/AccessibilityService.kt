@@ -18,31 +18,9 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -53,20 +31,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.setViewTreeLifecycleOwner
-import androidx.lifecycle.setViewTreeViewModelStoreOwner
+import androidx.lifecycle.*
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
@@ -141,19 +110,26 @@ class AccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
         Timber.d("event type: ${AccessibilityEvent.eventTypeToString(event.eventType)} pn: ${event.packageName} fs? ${event.isFullScreen}")
-        Timber.d("event package name: ${event.packageName}")
+
+        val packageName = event.packageName?.toString()
+        if (packageName == null) {
+            Timber.d("packageName is null, skipping event processing")
+            return
+        }
+
+
         val infiniteScrollBlockEnabled = runBlocking { infiniteScrollUseCases.isServiceEnabled() }
-        if (infiniteScrollBlockEnabled && event.packageName.toString() != packageName) {
+        if (infiniteScrollBlockEnabled && packageName != this.packageName) {
             if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
-                if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(event.packageName.toString())) {
+                if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(packageName)) {
                     listenToScrollEvent(event)
                 }
             }
             if (timeLimitUseCases.isTimeLimiterEnabled()) {
-                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && event.packageName.toString() != lastLaunchedPackage) {
-                    Timber.d("new app ${event.packageName}")
-                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(event.packageName.toString())) {
-                        Timber.d("app in timelimit whitelist!! ${event.packageName}")
+                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && packageName != lastLaunchedPackage) {
+                    Timber.d("new app $packageName")
+                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(packageName)) {
+                        Timber.d("app in timelimit whitelist!! $packageName")
                         // showDelayedLaunchOverlay()
                     }
                 }
@@ -166,16 +142,14 @@ class AccessibilityService : AccessibilityService() {
 
             //the statement below helps us determine if we need to skip this event or not
             if (event.isFullScreen || event.contentChangeTypes == AccessibilityEvent.CONTENT_CHANGE_TYPE_UNDEFINED
-                || !softInputPackages.contains(event.packageName)
+                || !softInputPackages.contains(packageName)
             ) {
-                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(
-                        event.packageName?.toString() ?: return
-                    )
+                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(packageName)
                 ) {
-                    Timber.d("package ${event.packageName} in whitelist")
+                    Timber.d("package $packageName in whitelist")
                     grayscaleScreen()
                 } else if (event.isFullScreen) {
-                    Timber.d("package ${event.packageName} not in whitelist")
+                    Timber.d("package $packageName not in whitelist")
                     unGrayscaleScreen()
                 }
             }
@@ -186,19 +160,19 @@ class AccessibilityService : AccessibilityService() {
             val differenceInSeconds = (System.currentTimeMillis() - lastLaunchedTimeMillis).milliseconds.inWholeSeconds
             if (
                 event.isFullScreen &&
-                event.packageName.toString() != lastLaunchedPackage &&
-                event.packageName.toString() != packageName &&
-                !softInputPackages.contains(event.packageName.toString()) &&
+                packageName != lastLaunchedPackage &&
+                packageName != this.packageName &&
+                !softInputPackages.contains(packageName) &&
                 differenceInSeconds > 5
             ) {
-                Timber.d("new app ${event.packageName}")
+                Timber.d("new app ${packageName}")
 
-                if (delayedPackages.contains(event.packageName.toString())) {
-                    Timber.d("app in delayed launch whitelist!! ${event.packageName}")
-                    showDelayedLaunchOverlay(event.packageName.toString())
+                if (delayedPackages.contains(packageName)) {
+                    Timber.d("app in delayed launch whitelist!! $packageName")
+                    showDelayedLaunchOverlay(packageName)
                 }
 
-                lastLaunchedPackage = event.packageName.toString()
+                lastLaunchedPackage = packageName
                 lastLaunchedTimeMillis = System.currentTimeMillis()
             }
         }
