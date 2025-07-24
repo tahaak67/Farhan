@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usage">Kullanım</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="grayscale">Gri tonlama</string>
+    <string name="infinite_scrolling">Sonsuz kaydırma engelleyici</string>
+    <string name="hello">Merhaba</string>
+    <string name="one_hour">1S</string>
+    <string name="two_hours">2S</string>
+    <string name="minutes">d</string>
+    <string name="minute">Dakika</string>
+    <string name="hours">s</string>
+    <string name="previous_day">Önceki gün</string>
+    <string name="next_day">Sonraki gün</string>
+    <string name="daily_limit">Günlük sınır</string>
+    <string name="social">sosyal</string>
+    <string name="productivity">verimlilik</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    <string name="tomorrow">Yarın</string>
+    <string name="no_results">Sonuç bulunamadı</string>
+    <string name="category_maps">Haritalar</string>
+    <string name="category_social">Sosyal</string>
+    <string name="category_productivity">Verimlilik</string>
+    <string name="category_game">Oyun</string>
+    <string name="category_video">Video</string>
+    <string name="category_news">Haberler</string>
+    <string name="category_other">Diğer</string>
+    <string name="total_usage">Toplam kullanım:</string>
+    <string name="package_not_found_error">Bilinmeyen hata: Uygulamanın yüklü olduğundan emin misiniz?</string>
+    <string name="search">Ara</string>
+    <string name="close_search">Aramayı kapat</string>
+    <string name="open_search_field">Arama alanını aç</string>
+    <string name="notify_me_channel_id" translatable="false">notify_me</string>
+    <string name="notify_me_channel">Beni bilgilendir</string>
+    <string name="notify_me_channel_description">Filtrelenmiş bildirimlerinizi istediğiniz saatte kontrol etmeniz için bir hatırlatıcı.</string>
+    <string name="check_filtered_notifications">Filtrelenmiş bildirimlerinizi kontrol edin</string>
+    <string name="you_have_unchecked_filtered_notifications">Kontrol etmediğiniz filtrelenmiş bildirimleriniz var</string>
+    <string name="back">Geri</string>
+    <string name="notifications_filter_settings">Bildirim filtresi ayarları</string>
+    <string name="clear_all">Tümünü Temizle</string>
+    <string name="tap_to_set_new_time">Yeni bir zaman ayarlamak için dokunun</string>
+    <string name="notify_me">Beni Bilgilendir</string>
+    <string name="notify_me_description">Filtrelenmiş bildirimleri kontrol etmem için beni her gün bilgilendir</string>
+    <string name="exceptions">İstisnalar</string>
+    <string name="notifications_filter">Bildirim Filtresi</string>
+    <string name="percent" translatable="false">%</string>
+    <string name="infinite_scroll_blocker_settings">Sonsuz Kaydırma Engelleyici Ayarları</string>
+    <string name="infinite_scroll_blocker">Sonsuz Kaydırma Engelleyici</string>
+    <string name="hey">Selam, ben Farhan!</string>
+    <string name="infinite_scroll_dialog_message">Görünüşe göre sonsuz bir kaydırmaya takılıp kaldınız.</string>
+    <string name="take_me_out_of_here">BENİ BURADAN ÇIKAR</string>
+    <string name="continue_scrolling">Kaydırmaya devam et…</string>
+    <string name="exclude_this_app_press_and_hold">Bu uygulamayı hariç tut (Basılı tutun)</string>
+    <string name="app_excluded">Uygulama hariç tutuldu</string>
+    <string name="enable_grayscale_for_white_listed_apps">Beyaz listedeki uygulamalar için Gri Tonlamayı etkinleştir</string>
+    <string name="white_lited_apps">Beyaz listedeki uygulamalar</string>
+    <string name="grayscale_onboarding_message">Uygulamaların zamanınız ve dikkatiniz için rekabet etme yollarından biri de renklerdir. Farhan, gri tonlama kullanarak seçili uygulamaları başlattığınızda renkleri devre dışı bırakarak sizi etkilemelerini ortadan kaldırabilir!</string>
+    <string name="on_boarding_image_description">Tanıtım görseli</string>
+    <string name="next">İleri</string>
+    <string name="enabled">Etkin</string>
+    <string name="disabled">Devre dışı</string>
+    <string name="accessibility_service_name">Farhan Erişilebilirlik servisi</string>
+    <string name="accessibility_service_description">Bu hizmet, sonsuz kaydırma engelleyici veya ekran gri tonlama gibi işlevlerin çalışması için gereklidir</string>
+    <string name="usage_permission_msg">Kullanım izni verilmemiş :(</string>
+    <string name="usage_permission_sub_msg">Farhan\'ın kullanım bilgilerinizi gösterebilmesi için kullanım erişimine ihtiyacı var</string>
+    <string name="grant_access">Erişim ver</string>
+    <string name="how">Nasıl?</string>
+    <string name="how_to_enable_permission">İzin nasıl etkinleştirilir</string>
+    <string name="ok">Tamam</string>
+    <string name="show_system_apps">Sistem uygulamalarını göster</string>
+    <string name="appear_on_top_permission_not_granted">Üstte görünme izni verilmemiş :(</string>
+    <string name="appear_on_top_permission_needed_message">Farhan\'ın sonsuz kaydırmayı kırmanıza yardımcı olması için üstte görünme iznine ihtiyacı var</string>
+    <string name="remind_me_to_stop_scrolling_after">Şu süreden sonra durmamı hatırlat</string>
+    <string name="dismiss">Kapat</string>
+    <string name="confirm">Onayla</string>
+    <string name="accessibility_permission_not_granted">Erişilebilirlik Servisi çalışmıyor :(</string>
+    <string name="accessibility_permission_needed_message">Farhan\'ın erişilebilirlik servisine şunlar için ihtiyacı var:</string>
+    <string name="one_more_thing">Bir şey daha!</string>
+    <string name="infinite_scroll_onboarding_message">Sonsuz kaydırma, ne kadar kaydırırsanız kaydırın size sürekli yeni içerik sunarak zamanınız üzerindeki kontrolünüzü azaltmak için uygulamalar tarafından kullanılan bir tekniktir. Farhan, sonsuz bir kaydırmaya takıldığınızı tespit etmeye çalışabilir ve o uygulamadan çıkmanızı hatırlatabilir!</string>
+    <string name="notification_filter_onboarding_message">Bildirimler bir alarm gibidir, ancak ne zaman geleceğini bilmeden sizi herhangi bir anda rahatsız edebilirler. Farhan, bildirimleri filtreleyerek bu dikkat dağınıklığını ortadan kaldırabilir, böylece dikkatiniz dağılmaz. Bildirim almak istediğiniz önemli uygulamaları hariç tutabilirsiniz, geri kalanı filtrelenir ve istediğiniz zaman uygulamaya gelip onları görebilirsiniz!</string>
+    <string name="notification_permission_not_granted">Bildirim izni verilmemiş :(</string>
+    <string name="notification_filter_needed_message">Farhan\'ın Bildirim filtresinin çalışması için bildirim erişimine ihtiyacı var</string>
+    <string name="no_notifications">Bildirim yok</string>
+    <string name="delete_icon">Silme Simgesi</string>
+    <string name="tip_icon_description">İpucu simgesi</string>
+    <string name="get_started">Başlayın</string>
+    <string name="skip_now">Şimdi Atla</string>
+    <string name="no_internet_permission">İnternet İzni Yok!</string>
+    <string name="no_internet_permission_desc">Farhan internete hiçbir şekilde bağlanmaz, hatta internet izni bile yoktur, bu yüzden verileriniz telefonunuzda kalır</string>
+    <string name="open_source">Açık Kaynak</string>
+    <string name="open_source_desc">Herkes, GitHub\'daki kaynak kodunu görüntüleyerek Farhan\'ın nasıl çalıştığını görebilir</string>
+    <string name="use_farhan_be_farhan">Farhan\'ı kullan, Farhan ol!</string>
+    <string name="use_farhan_be_farhan_desc">Bırakın telefonunuz sizin için çalışsın, siz onun için değil!</string>
+    <string name="about_app">Uygulama hakkında</string>
+    <string name="about_app_content">Farhan, zamanınızı ve dikkatinizi çalmak için kullanılan uygulama manipülasyon stratejilerinin etkisini azaltmanıza yardımcı olacak farklı araçlar sunan açık kaynaklı bir android projesidir, böylece telefonunuzu kullanabilirsiniz ama tersi olmaz!</string>
+    <string name="developer">Geliştirici:</string>
+    <string name="taha_name_dev">Taha Ben Ashur (Tahaak67)</string>
+    <string name="source_code">Kaynak kodu:</string>
+    <string name="soon">Yakında</string>
+    <string name="app_name">Farhan</string>
+    <string name="notification_service_name">Bildirim servisi</string>
+    <string name="drop_down_menu">Açılır menü</string>
+    <string name="secure_settings_permission_msg">Güvenli ayarlar izni verilmemiş :(</string>
+    <string name="secure_settings_permission_sub_msg">Farhan\'ın sizin için ekranı gri tonlamalı yapabilmesi için Güvenli ayarlar iznine ihtiyacı var</string>
+    <string name="device_root_detected_msg">Cihazınız rootlu görünüyor! İzni root ile vermek isterseniz aşağıdaki düğmeyi kullanın</string>
+    <string name="accessibility_permission_needed_grayscale_message">Farhan\'ın erişilebilirlik servisine şunlar için ihtiyacı var:</string>
+    <string name="no_device_root_detected_msg">Bu izni vermek için bir PC\'ye ihtiyacınız olacak, endişelenmeyin bunu sadece bir kez yapmanız gerekiyor ve sadece birkaç dakika sürüyor</string>
+    <string name="launcher_settings">Başlatıcı Ayarları</string>
+    <string name="launcher">Başlatıcı</string>
+    <string name="clear_text">Metni temizle</string>
+    <string name="set_default_launcher_title">Farhan\'ı başlatıcınız olarak ayarlayın</string>
+    <string name="set_default_launcher_text">Lütfen Farhan\'ı varsayılan başlatıcınız olarak ayarlamak için seçin</string>
+    <string name="set_other_default_launcher_text">Lütfen kullanmak istediğiniz diğer başlatıcıyı seçin</string>
+    <string name="dialer">Çevirici</string>
+    <string name="camera">Kamera</string>
+    <string name="reason_know_if_app_in_exceptions">Mevcut uygulamanın istisnalar listesinde olup olmadığını bilme</string>
+    <string name="reason_know_how_much_you_scroll">Ne kadar kaydırdığınızı ve ekranda kaç öğe olduğunu bilme.</string>
+    <string name="reason_display_warning_if_infinite_scroll_detected">Sonsuz kaydırma tespit edersek bir mesaj gösterme.</string>
+    <string name="reason_know_if_app_in_whitelist">Mevcut uygulamanın beyaz listede olup olmadığını bilme</string>
+
+    <string-array name="tips">
+        <item>@string/productivity_tip1</item>
+        <item>@string/notification_filter_exception_tip</item>
+        <item>@string/grayscale_whitelist_tip</item>
+        <item>@string/notification_filter_notifyme_tip</item>
+        <item>@string/beta_version_tip</item>
+    </string-array>
+    <string name="productivity_tip1">Çalışma saatlerinde verimliliği artırmak için telefonunuzu sessize alın ve gözden uzak bir yerde tutun (Örn: bir çekmecede)</string>
+    <string name="notification_filter_exception_tip">Bir uygulamadan gelen bildirimi kaçırmak istemiyor musunuz? O uygulamayı bildirim filtresinde hariç tuttuğunuzdan emin olun</string>
+    <string name="notification_filter_notifyme_tip">Bildirim filtresinde \"Beni bilgilendir\" özelliğini kullanın ve filtrelenmiş bildirimlerinizi günlük olarak kontrol etmek için bir zaman ayarlayın</string>
+    <string name="grayscale_whitelist_tip">Gri Tonlama açıkken, yalnızca beyaz listedeki uygulamalar gri tonlamalı olacaktır</string>
+    <string name="beta_version_tip">Bu, Farhan\'ın beta sürümüdür. Herhangi bir hatayı geliştiriciye bildirdiğinizden ve mümkünse ekran görüntüsü aldığınızdan emin olun</string>
+    <string name="notification_settings_shocase_tip">Bildirim filtresi ayarlarından istisnalar ekleyebilir veya bir hatırlatıcı ayarlayabilirsiniz</string>
+    <string name="version">Uygulama Sürümü</string>
+    <string name="notification_filter_showcase_greeting">Bildirim filtresine hoş geldiniz, filtrelenmiş bildirimleriniz burada görünecek!.</string>
+    <string name="agree">Kabul Et</string>
+    <string name="cancel">İptal</string>
+    <string name="if_you_choose_agree_msg">Kabul Et\'i seçtiğinizde cihazınızdaki erişilebilirlik ayarlarına yönlendirileceksiniz.</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="cant_open_link_error_link_copied">Tarayıcı bulunamadı, bağlantı panoya kopyalandı</string>
+    <string name="grant_secure_permission_manually_msg">Veya izni PC\'nizdeki ADB\'yi kullanarak manuel olarak verin, endişelenmeyin bunu sadece bir kez yapmanız gerekiyor ve sadece birkaç dakika sürüyor</string>
+    <string name="secure_permission_wroot_error">İzin verilmedi :(, manuel yöntemi deneyin.</string>
+    <string name="secure_permission_wroot_success">İzin Verildi!</string>
+    <string name="show_exceptions_only">Sadece istisnaları göster</string>
+    <string name="show_whitelist_only">Sadece beyaz listeyi göster</string>
+    <string name="range_null_error">Lütfen geçerli bir başlangıç ve bitiş tarihi seçin.</string>
+    <string name="delete_cache_for_day">Bu günün önbelleğini sil</string>
+    <string name="delete_cache_dialog_text">%s\'ın verilerini veritabanından silip yeniden yüklemek istediğinizden emin misiniz? Bu işlem geri alınamaz. \nLütfen veriler 6 günden eskiyse, Farhan\'ın kullanım verilerini tekrar alamayabileceğini unutmayın.</string>
+    <string name="delete_cache_dialog_title">%s\'ın verileri silinsin mi?</string>
+    <string name="usage_date_range_picker_title">Tarih Aralığı Seçin</string>
+    <string name="usage_date_range_picker_description">Bu zaman dilimindeki kullanım özetini görüntülemek için başlangıç ve bitiş tarihlerini seçin.</string>
+    <string name="fetch_usage_info_description">Farhan arka planda kullanım bilgisi alırken</string>
+    <string name="fetch_usage_info_id" translatable="false">FETCH_USAGE_INFO_CHANNEL</string>
+    <string name="fetch_usage_info">Kullanım bilgisi alma kanalı</string>
+    <string name="cache_worker_notification_title">Kullanım verileri önbelleğe alınıyor</string>
+    <string name="cache_worker_notification_text">Daha hızlı yükleme için %s verileri işleniyor</string>
+    <string name="usage_settings">Kullanım Ayarları</string>
+    <string name="cache_usage_data">Kullanım verilerini önbelleğe al</string>
+    <string name="auto_cache_usage_data">Kullanım verilerini otomatik önbelleğe al</string>
+    <string name="cache_usage_data_description">Aynı günü bir sonraki görüntülemenizde bekleme süresini azaltmak için kullanım verilerini önbelleğe alın</string>
+    <string name="auto_cache_usage_data_description">Her günün sonunda kullanım verilerini arka planda otomatik olarak alın</string>
+    <string name="grant_runtime_permission">İzin ver</string>
+    <string name="permission_required">İzin gerekli</string>
+    <string name="post_notification_permission_permanently_declined_description">Görünüşe göre bildirim iznini kalıcı olarak reddettiniz. İzni vermek için uygulama ayarlarına gidebilirsiniz.</string>
+    <string name="post_notification_permission_description">Farhan\'ın size bildirim gönderebilmesi için bildirim iznine ihtiyacı var.</string>
+    <string name="weekly">Haftalık</string>
+    <string name="monthly">Aylık</string>
+    <string name="yearly">Yıllık</string>
+    <string name="usage_reports_off">Kullanım raporları kapalı, etkinleştirmek için tıklayın</string>
+    <string name="periodic_usage_reports">Önbelleğe alınmış verilere dayalı periyodik kullanım raporları alın (Deneysel)</string>
+    <string name="select_a_day">Bir gün seçin</string>
+    <string name="select_a_range">Bir aralık seçin</string>
+    <string name="weekly_usage_report_msg_more_min">Geçen hafta telefonunuzu %dm daha fazla kullandınız.</string>
+    <string name="weekly_usage_report_msg_more_hrs">Geçen hafta telefonunuzu %ds daha fazla kullandınız.</string>
+    <string name="weekly_usage_report_msg_more_hrs_min">Geçen hafta telefonunuzu %ds ve %dd daha fazla kullandınız.</string>
+    <string name="weekly_usage_report_msg_less_min">Geçen hafta telefonunuzu %dm daha az kullandınız.</string>
+    <string name="weekly_usage_report_msg_less_hrs">Geçen hafta telefonunuzu %ds daha az kullandınız.</string>
+    <string name="weekly_usage_report_msg_less_hrs_min">Geçen hafta telefonunuzu %ds ve %dd daha az kullandınız.</string>
+    <string name="weekly_usage_report_same_time">Geçen hafta telefonunuzu aynı süre kullandınız.</string>
+    <string name="monthly_usage_report_msg_more_min">Geçen ay telefonunuzu %dm daha fazla kullandınız.</string>
+    <string name="monthly_usage_report_msg_more_hrs">Geçen ay telefonunuzu %ds daha fazla kullandınız.</string>
+    <string name="monthly_usage_report_msg_more_hrs_min">Geçen ay telefonunuzu %ds ve %dd daha fazla kullandınız.</string>
+    <string name="monthly_usage_report_msg_less_min">Geçen ay telefonunuzu %dm daha az kullandınız.</string>
+    <string name="monthly_usage_report_msg_less_hrs">Geçen ay telefonunuzu %ds daha az kullandınız.</string>
+    <string name="monthly_usage_report_msg_less_hrs_min">Geçen ay telefonunuzu %ds ve %dd daha az kullandınız.</string>
+    <string name="monthly_usage_report_same_time">Geçen ay telefonunuzu aynı süre kullandınız.</string>
+    <string name="weekly_report_notification_title">Haftalık rapor!</string>
+    <string name="monthly_report_notification_title">Aylık rapor!</string>
+    <string name="appearance">Görünüm</string>
+    <string name="dark">Koyu tema</string>
+    <string name="light">Açık</string>
+    <string name="follow_system">Sistemi takip et</string>
+    <string name="clock_icon">Saat simgesi</string>
+    <string name="applications">Uygulamalar</string>
+    <string name="please_turn_on_main_switch">Ana anahtar devre dışı. Lütfen ana anahtarı açın.</string>
+    <string name="main_switch_is_on">Ana anahtar açık</string>
+    <string name="main_switch_is_off">Ana anahtar kapalı</string>
+    <string name="tap_to_pause_all_farhan_features">Tüm Farhan özelliklerini duraklatmak için dokunun</string>
+    <string name="tap_to_resume_all_farhan_features">Tüm Farhan özelliklerini devam ettirmek için dokunun</string>
+    <string name="play_arrow">Oynat Oku</string>
+    <string name="pause">Duraklat</string>
+    <string name="theme_colors_for">%1$s tema renkleri</string>
+    <string name="theme_colors">Tema renkleri</string>
+    <string name="select_theme_colors">Tema renklerini seçin</string>
+    <string name="you_can_change_this_later_from_the_main_screen_menu">Bunu daha sonra ana ekran menüsünden değiştirebilirsiniz</string>
+    <string name="classic">Klasik</string>
+    <string name="vibrant">Canlı</string>
+    <string name="dynamic">Dinamik</string>
+    <string name="dynamic_colors_description">Dinamik renkler oluşturmak için duvar kağıdınızı kullanır</string>
+    <string name="vibrant_colors_description">Klasik renklere canlı bir dokunuş</string>
+    <string name="classic_colors_description">Farhan\'ın eski güzel renkleri</string>
+    <string name="farhan_icon">Farhan simgesi</string>
+    <string name="exact_alarm_permission_description">Farhan\'ın size seçtiğiniz saatte bir hatırlatma göndermesine izin vermek için lütfen bir sonraki sayfada hatırlatıcı iznini etkinleştirin</string>
+    <string name="notify_me_permissions_needed_not_granted">Farhan, \"Beni bilgilendir\" özelliğinin düzgün çalışması için bazı izinleri eksik</string>
+    <string name="seconds">sn</string>
+    <string name="count_down_after_limit_isb">Sınıra ulaşıldıktan sonra geri sayım</string>
+    <string name="count_down_after_limit_sub">Kaydırma sınırına ulaşıldıktan sonra uyarı iletişim kutusunun birkaç saniye kapatılmasını önleyin</string>
+    <string name="msg_isb_timout">Mesaj</string>
+    <string name="msg_isb_timout_sub">Kaydırma sınırına ulaşıldıktan sonra gösterilecek bir mesaj seçin.</string>
+    <string name="msg_random">Rastgele mesaj</string>
+    <string name="selected_msg">Seçilen mesaj: %s</string>
+
+    <string name="time_up_gentle_nudge">Selam! Bir mola vermek iyi hissettiriyor mu?</string>
+    <string name="time_up_direct">Zaman ne çabuk geçiyor! Sınırınıza ulaştınız. Başka bir şeye geçmeye hazır mısınız?</string>
+    <string name="time_up_wellbeing">Nefes alma zamanı! Gözlerinizi ve zihninizi dinlendirmeye ne dersiniz?</string>
+    <string name="time_up_playful">Bip bop! Süre doldu. Endişelenmeyin, geri dönmeye hazır olduğunuzda telefonunuz burada olacak.</string>
+    <string name="time_up_choices">Sürenize ulaştınız. Mola vermek mi, yoksa biraz daha devam etmek mi istersiniz?</string>
+    <string name="time_up_encouragement">Bir süredir sonsuz kaydırma yapıyorsunuz. Belki bacaklarınızı esnetmek veya bir şeyler atıştırmak için iyi bir an?</string>
+    <string name="time_up_question">Hala eğleniyor musun? Sadece bir kontrol edeyim dedim!</string>
+    <string name="time_up_reminder">Ara sıra mola vermeyi unutmayın. Sağlığınız önemli!</string>
+    <string name="add_icon">Ekleme simgesi</string>
+    <string name="reset_messages">Varsayılan mesajları geri yükle (Basılı tutun)</string>
+    <string name="save">Kaydet</string>
+    <string name="msg_dialog_text">Sınıra ulaşıldığında gösterilecek bir mesaj seçin ve Kaydet\'e basın.\n veya her seferinde rastgele bir mesaj göstermek için Rastgele mesaj seçin.</string>
+    <string name="msg_dialog_edit_mode">Listeye mesaj ekleyin veya listeden mesaj silin.</string>
+    <string name="back_to_select_msg">Mesaj seçimine geri dön</string>
+    <string name="exclude_this_app">Bu uygulamayı hariç tut</string>
+    <string name="app_info">Uygulama bilgisi</string>
+    <string name="notification_filter_warning_title">Bir Saniye!</string>
+    <string name="notification_filter_warning_message">Bildirim filtresini açmak, çoğu uygulamanın size doğrudan bildirim gönderemeyeceği anlamına gelir. Kaçırdıklarınızı görmek için Farhan\'ı açmanız gerekecek.\n\nEndişelenmeyin, önemli bir şeyi kaçırmamak için istisnalar listesine önemli uygulamaları (mesajlaşma veya alarmlar gibi) ekleyebilirsiniz.\n\nFiltrelenmiş bildirimlerinizi kontrol etmek için günlük bir hatırlatıcı ister misiniz? Bunu \"Beni bilgilendir\" ile yapabilirsiniz!</string>
+    <string name="do_not_show_again">Tekrar gösterme</string>
+    <string name="i_understand">Anladım</string>
+    <string name="tell_me_more">Lütfen açıkla</string>
+    <string name="notification_filter_settings_greeting"><![CDATA[Merhaba! Bildirim filtresi ayarlarına hoş geldiniz.\nSize hızlı bir tur attırayım. Devam etmek için <b>herhangi bir yere dokunun</b>.]]></string>
+    <string name="notification_filter_settings_showcase_msg1"><![CDATA[Bu filtre anahtarıdır, anahtar açıkken bildirimler <b>filtrelenecektir</b>]]></string>
+    <string name="notification_filter_settings_showcase_msg2"><![CDATA[Buradan <b>istisnaları</b> açabilir ve bildirimlerini filtrelemek istemediğiniz uygulamaları ekleyebilirsiniz]]></string>
+    <string name="notification_filter_settings_showcase_msg3"><![CDATA[Diyelim ki <b>Signal</b> uygulamasında yeni bir mesaj aldığınızda bildirim almak istiyorsunuz]]></string>
+    <string name="notification_filter_settings_showcase_msg4"><![CDATA[<b>İstisnalar</b>\'ı açabilir, listeden Signal uygulamasını bulabilir ve yanındaki <b>anahtarı açabilirsiniz</b>, hepsi bu kadar!]]></string>
+    <string name="notification_filter_settings_showcase_msg5"><![CDATA[Gün boyunca bildirimlerle dikkatinizin dağılmaması güzel, ama bazen günlerce hangi bildirimleri aldığınızı görmek için Farhan\'ı kontrol etmeyi unutabilirsiniz! 🙁]]></string>
+    <string name="notification_filter_settings_showcase_msg6"><![CDATA[Endişelenmeyin 😀 Buradan <b>Beni bilgilendir</b>\'i kurabilirsiniz! Açık olduğunda, bildirimlerinizi kontrol etmeniz için <b>belirlediğiniz bir saatte</b> bilgilendirileceksiniz]]></string>
+
+    <string-array name="time_up_messages">
+        <item>@string/infinite_scroll_dialog_message</item>
+        <item>@string/time_up_gentle_nudge</item>
+        <item>@string/time_up_direct</item>
+        <item>@string/time_up_wellbeing</item>
+        <item>@string/time_up_playful</item>
+        <item>@string/time_up_choices</item>
+        <item>@string/time_up_encouragement</item>
+        <item>@string/time_up_question</item>
+        <item>@string/time_up_reminder</item>
+    </string-array>
+
+    <string name="usage_for_today">Bugünkü kullanım</string>
+    <string name="usage_for_yesterday">Dünkü kullanım</string>
+    <string name="place_widget">Widget yerleştir</string>
+    <string name="vertical">Dikey</string>
+    <string name="horizontal">Yatay</string>
+    <string name="widget_update_interval_text">Widget\'ı şu sıklıkla güncelle</string>
+    <string name="compare_with_yesterday">Dün ile karşılaştır</string>
+    <string name="text_size">Metin boyutu</string>
+    <string name="widget_update_notification">Widget\'lar güncelleniyor</string>
+    <string name="ignore_farhan_usage">Kullanım hesaplamaları yapılırken Farhan\'ı yoksay</string>
+    <string name="ignore_launcher_usage">Kullanım hesaplamaları yapılırken başlatıcı uygulamalarını (Örn: Ana ekran uygulaması) yoksay</string>
+    <string name="customize_your_widget">Widget\'ınızı özelleştirin</string>
+    <string name="today_usage_widget_description">Bugünün kullanım widget\'ı</string>
+    <string name="loading">Yükleniyor</string>
+    <string name="title_activity_widget_config">Widget yapılandırma ekranı</string>
+    <string name="time_is_up">Süre doldu!</string>
+    <string name="or_add_more_time">Veya daha fazla zaman ekle…</string>
+    <string name="one_min">1 dk</string>
+    <string name="three_min">3 dk</string>
+    <string name="five_min">5 dk</string>
+    <string name="will_remind_you_in_one_min">1 dakika sonra hatırlatılacak</string>
+    <string name="will_remind_you_in_three_min">3 dakika sonra hatırlatılacak</string>
+    <string name="will_remind_you_in_five_min">5 dakika sonra hatırlatılacak</string>
+    <string name="app_time_limiter">Uygulama Zaman Sınırlayıcı</string>
+    <string name="app_time_limiter_settings">Zaman Sınırlayıcı ayarları</string>
+    <string name="set_time_limite_dialog_text">%s üzerinde ne kadar zaman geçirmek istersiniz?</string>
+    <string name="ten_min">10 Dk</string>
+    <string name="fifteen_min">15 Dk</string>
+    <string name="time_limit_notification_channel">ZAMAN SINIRI KANALI</string>
+    <string name="time_limiter_notification_channel_name">Zaman Sınırlayıcı Servisi bildirim kanalı</string>
+    <string name="time_limiter_channel_description">Zaman Sınırlayıcı Servisi kanalı</string>
+    <string name="please_wait">Lütfen Bekleyin</string>
+    <string name="db_combine_dialog_title">Görünüşe göre eski bir sürümü güncellediniz!</string>
+    <string name="db_combine_dialog_text">Farhan\'ı geliştirmek için bazı güncellemeler yaptık! Her şeyin sorunsuz çalıştığından emin olmak için verilerinizi yeni bir sisteme taşımamız gerekiyor. Bu işlem birkaç dakika sürebilir ve bu sırada Farhan\'ı kullanamayacaksınız. Lütfen işlem tamamlanana kadar uygulamayı açık tutun.</string>
+    <string name="start_migrating">Taşımayı Başlat</string>
+    <string name="remind_me_later">Daha Sonra Hatırlat</string>
+    <string name="db_migration_sucsessful">Taşıma başarılı :D</string>
+    <string name="db_migration_fail">Taşıma Hatası :(</string>
+    <string name="close_app">Uygulamayı Kapat</string>
+    <string name="delayed_launch">Gecikmeli başlatma</string>
+    <string name="reason_know_what_app_launched">Ne zaman ve hangi uygulamayı başlattığınızı bilme</string>
+    <string name="delay_in_seconds">Saniye cinsinden gecikme</string>
+    <string name="continue_to_app">Uygulamaya devam et</string>
+    <string name="leave">Ayrıl</string>
+    <string name="take_deep_breath">Derin bir nefes al!</string>
+    <string name="bananas_are_yellow">Muzlar sarıdır!</string>
+    <string name="look_around_you">Etrafına bak</string>
+    <string name="you_attempted_to_launch_this_app_times">Son 24 saat içinde %s uygulamasını %d kez başlatmaya çalıştınız</string>
+    <string name="delay_message">Mesaj</string>
+    <string name="delay_message_sub">Gecikme sırasında gösterilecek bir mesaj seçin</string>
+
+    <array name="delayed_launch_messages">
+        <item>@string/take_deep_breath</item>
+        <item>@string/bananas_are_yellow</item>
+        <item>@string/look_around_you</item>
+    </array>
+    <string name="contact_channels">İletişim:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">Blog</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">Bağış Yap</string>
+    <string name="close">Kapat</string>
+    <string name="create_github_issue">GitHub\'da sorun bildir</string>
+    <string name="copy_to_clipboard">Panoya kopyala</string>
+    <string name="copied_to_clipboard">Panoya kopyalandı</string>
+    <string name="open_github_msg">Bu, tarayıcınızda önceden doldurulmuş çökme ayrıntılarıyla GitHub\'ı açacaktır.</string>
+    <string name="open_github">GitHub\'ı Aç</string>
+    <string name="continuee">Devam Et</string>
+    <string name="confirm_issue_not_exist_msg">Lütfen bir sorun bildirmeden önce zaten mevcut olmadığını onaylayın.</string>
+    <string name="ignore_this_screen_unkown">Bu ekranın ne olduğunu bilmiyorsanız, onu yok sayabilir ve alttaki Kapat düğmesine dokunabilirsiniz</string>
+    <string name="crash_reports_channel_id" translatable="false">CRASH_REPORTS_CHANNEL</string>
+    <string name="crash_reports_channel">Çökme raporları</string>
+    <string name="crash_reports_channel_description" >Uygulama çökme raporları için bildirimler</string>
+    <string name="verify_no_existing_issue_checkbox_message">Sorunun zaten mevcut olup olmadığını kontrol ettiğimi ve aynı hatayla ilgili açık bir sorun bulamadığımı onaylıyorum
+    </string>
+</resources>
