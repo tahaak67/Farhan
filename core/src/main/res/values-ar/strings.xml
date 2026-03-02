@@ -267,9 +267,6 @@
     <string name="close_app">اغلق التطبيق</string>
     <string name="delayed_launch">التشغيل المُؤخر</string>
     <string name="reason_know_what_app_launched">معرفة ما التطبيق الذي تم تشغيله</string>
-<<<<<<< weblate-farhan-default-en
-</resources>
-=======
     <string name="delay_in_seconds">التأخير بالثواني</string>
     <string name="continue_to_app">استمر الى التطبيق</string>
     <string name="leave">غادر</string>
@@ -298,4 +295,3 @@
     </string>
 
 </resources>
->>>>>>> develop
