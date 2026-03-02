@@ -54,8 +54,8 @@ import timber.log.Timber
 @Composable
 fun DelayedLaunchWhiteListScreen(
     onNavigateUp: () -> Unit,
-    onEvent: (MindfulLaunchEvent) -> Unit,
-    state: DelayedLaunchState
+    onEvent: (DelayedLaunchEvent) -> Unit,
+    state: DelayedLaunchWhiteListState
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -110,12 +110,12 @@ fun DelayedLaunchWhiteListScreen(
                         SearchTextField(
                             text = state.searchQuery,
                             onValueChange = {
-                                onEvent(MindfulLaunchEvent.OnSearchQueryChange(it))
+                                onEvent(DelayedLaunchEvent.OnSearchQueryChange(it))
                             },
                             shouldShowHint = isHintVisible,
                             onSearch = {
                                 keyboardController?.hide()
-                                onEvent(MindfulLaunchEvent.OnSearch)
+                                onEvent(DelayedLaunchEvent.OnSearch)
                             },
                             onFocusChanged = {
                                 if (it.isFocused){
@@ -141,7 +141,7 @@ fun DelayedLaunchWhiteListScreen(
                     ) {
                         DropdownMenuItem(onClick = {
                             onEvent(
-                                MindfulLaunchEvent.OnShowSystemAppsChange(
+                                DelayedLaunchEvent.OnShowSystemAppsChange(
                                     !state.isShowSystemApps
                                 )
                             )
@@ -156,7 +156,7 @@ fun DelayedLaunchWhiteListScreen(
                                     checked = state.isShowSystemApps,
                                     onCheckedChange = { checked ->
                                         onEvent(
-                                            MindfulLaunchEvent.OnShowSystemAppsChange(
+                                            DelayedLaunchEvent.OnShowSystemAppsChange(
                                                 checked
                                             )
                                         )
@@ -173,7 +173,7 @@ fun DelayedLaunchWhiteListScreen(
                             },
                             onClick = {
                                 onEvent(
-                                    MindfulLaunchEvent.OnShowWhiteListOnlyChange(
+                                    DelayedLaunchEvent.OnShowWhiteListOnlyChange(
                                         !state.isShowWhiteListOnly
                                     )
                                 )
@@ -183,7 +183,7 @@ fun DelayedLaunchWhiteListScreen(
                                     checked = state.isShowWhiteListOnly,
                                     onCheckedChange = { checked ->
                                         onEvent(
-                                            MindfulLaunchEvent.OnShowWhiteListOnlyChange(
+                                            DelayedLaunchEvent.OnShowWhiteListOnlyChange(
                                                 checked
                                             )
                                         )
@@ -221,9 +221,9 @@ fun DelayedLaunchWhiteListScreen(
                             onClick = { isChecked ->
                                 Timber.d("switched $isChecked")
                                 if (isChecked) {
-                                    onEvent(MindfulLaunchEvent.OnAddToWhiteList(app.packageName))
+                                    onEvent(DelayedLaunchEvent.OnAddToWhiteList(app.packageName))
                                 } else {
-                                    onEvent(MindfulLaunchEvent.OnRemoveFromWhiteList(app.packageName))
+                                    onEvent(DelayedLaunchEvent.OnRemoveFromWhiteList(app.packageName))
                                 }
                             }
                         )
@@ -231,6 +231,7 @@ fun DelayedLaunchWhiteListScreen(
                 }
             }
         }
+
     }
 }
 
@@ -238,8 +239,8 @@ fun DelayedLaunchWhiteListScreen(
 @Preview("arabic", locale = "ar")
 @PreviewLightDark
 @Composable
-private fun MindfulLaunchScreenPreview() {
+private fun DelayedLaunchScreenPreview() {
     FarhanTheme(isSystemInDarkTheme(), ThemeColors.Classic) {
-        DelayedLaunchWhiteListScreen(onNavigateUp = {}, onEvent = {}, state = DelayedLaunchState())
+        DelayedLaunchWhiteListScreen(onNavigateUp = {}, onEvent = {}, state = DelayedLaunchWhiteListState())
     }
 }

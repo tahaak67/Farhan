@@ -19,7 +19,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/usage_for_today"
             android:textColor="#FF251A00"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="16dp"
@@ -50,7 +50,7 @@
             android:layout_marginStart="2dp"
             android:text="@string/hours"
             android:textColor="#FF4A672D"
-            android:textSize="24sp" />
+            android:textSize="24sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"

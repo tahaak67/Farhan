@@ -1,4 +1,4 @@
-package ly.com.tahaben.launcher_data.local
+package ly.com.tahaben.launcher_data.local.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

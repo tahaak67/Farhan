@@ -1,11 +1,16 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     kotlin("android")
     alias(libs.plugins.hiltAndroidGradle)
     alias(libs.plugins.compose.compiler)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.room)
 }
-
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 android {
     namespace = "ly.com.tahaben.farhan"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -38,8 +43,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget("17")
+        }
     }
     androidResources {
         noCompress += "ttf"
@@ -52,6 +59,10 @@ android {
         resources.excludes.add("META-INF/licenses/ASM")
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
+    }
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
     }
 }
 
@@ -73,6 +84,10 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.dagger.hilt)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.timber)
@@ -136,4 +151,11 @@ dependencies {
 
     // Dependency required for API desugaring.
     coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
+
+    // Crash reporting
+    implementation(libs.acra.core)
+    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.2.0")
+    implementation("com.google.auto.service:auto-service:1.1.1")
+
+    api("com.google.guava:guava:33.4.6-android")
 }

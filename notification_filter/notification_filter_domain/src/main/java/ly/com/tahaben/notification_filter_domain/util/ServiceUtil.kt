@@ -4,7 +4,7 @@ import android.app.PendingIntent
 
 interface ServiceUtil {
 
-    fun isNotificationServiceEnabled(): Boolean
+    suspend fun isNotificationServiceEnabled(): Boolean
     fun isNotificationAccessPermissionGranted(): Boolean
     fun startNotificationListenerService()
     fun getNotificationIntent(notificationKey: String): PendingIntent?

@@ -18,9 +18,11 @@ import ly.com.tahaben.core.service.AccessibilityServiceUtils
 import ly.com.tahaben.farhan.db.DatabaseCombineHelper
 import ly.com.tahaben.farhan.db.FarhanDatabase
 import ly.com.tahaben.farhan.service.AccessibilityServiceUtilsImpl
+import ly.com.tahaben.launcher_data.local.db.LaunchAttemptDao
 import ly.com.tahaben.launcher_data.repository.AvailableActivitiesRepoImpl
 import ly.com.tahaben.launcher_data.repository.TimeLimitRepositoryImpl
 import ly.com.tahaben.launcher_domain.repository.AvailableActivitiesRepository
+import ly.com.tahaben.launcher_domain.repository.LaunchAttemptsRepository
 import ly.com.tahaben.launcher_domain.repository.TimeLimitRepository
 import ly.com.tahaben.notification_filter_data.repositoy.NotificationRepositoryImpl
 import ly.com.tahaben.notification_filter_domain.repository.NotificationRepository
@@ -58,12 +60,14 @@ object AppModule {
     fun provideCacheWorkerFactory(
         usageRepository: UsageRepository,
         usageOverviewUseCases: UsageOverviewUseCases,
-        preferences: Preferences
+        preferences: Preferences,
+        launchAttemptsRepository: LaunchAttemptsRepository
     ): ly.com.tahaben.farhan.work_manager.DefaultWorkerFactory {
         return ly.com.tahaben.farhan.work_manager.DefaultWorkerFactory(
             usageRepository,
             usageOverviewUseCases,
-            preferences
+            preferences,
+            launchAttemptsRepository
         )
     }
 
@@ -139,4 +143,10 @@ object AppModule {
         ): AccessibilityServiceUtils {
             return AccessibilityServiceUtilsImpl(context, sharedPref)
         }
+
+    @Provides
+    @Singleton
+    fun provideLaunchAttemptDao(db: FarhanDatabase): LaunchAttemptDao {
+      return db.launchAttemptDao
+    }
 }

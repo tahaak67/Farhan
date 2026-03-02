@@ -19,4 +19,5 @@ dependencies {
     "implementation"(libs.room.ktx)
     "implementation"(libs.room.runtime)
     "implementation"(libs.coroutines.core)
+    implementation(libs.androidx.work.manager)
 }

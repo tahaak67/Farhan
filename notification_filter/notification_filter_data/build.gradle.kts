@@ -16,4 +16,5 @@ dependencies {
     "kapt"(libs.room.compiler)
     "implementation"(libs.room.ktx)
     "implementation"(libs.room.runtime)
+    implementation(libs.androidx.datastore)
 }

@@ -389,7 +389,10 @@ fun LauncherScreen(
     }
     var innerBoxHeight by remember { mutableStateOf(0.dp) }
     DelayedLaunchOverlay(
-        isDelayRunning = state.isDelayRunning,
+        delayInSeconds = 0,
+        launchCount = 0,
+        appName = "",
+        delayMessage = "",
         openApp = {
             viewModel.disableOverlay()
             state.timeLimitedApp?.let { viewModel.launchActivityForApp(it) }

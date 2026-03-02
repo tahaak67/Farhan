@@ -12,4 +12,5 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.grayScaleDomain))
     "implementation"(libs.rootbeer)
+    implementation(libs.androidx.datastore)
 }

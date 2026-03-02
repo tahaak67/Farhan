@@ -39,10 +39,12 @@ class NotificationFilterViewModel @Inject constructor(
     }
 
     fun checkServiceStats() {
-        state = state.copy(
-            isServiceEnabled = notificationFilterUseCases
-                .checkIfNotificationServiceIsEnabled()
-        )
+        viewModelScope.launch {
+            state = state.copy(
+                isServiceEnabled = notificationFilterUseCases
+                    .checkIfNotificationServiceIsEnabled()
+            )
+        }
         checkIfNotificationAccessGranted()
     }
 

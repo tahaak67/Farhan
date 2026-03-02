@@ -13,8 +13,8 @@ interface Preferences {
     suspend fun loadThemeColors(): String
     suspend fun saveThemeColors(themeColors: String)
 
-    fun loadMainSwitchState(): Boolean
-    fun setMainSwitchState(switchState: Boolean)
+    suspend fun loadMainSwitchState(): Flow<Boolean>
+    suspend fun setMainSwitchState(switchState: Boolean)
 
     fun loadShouldShowcaseAppearanceMenu(): Boolean
     fun saveShouldShowcaseAppearanceMenu(shouldShowcase: Boolean)

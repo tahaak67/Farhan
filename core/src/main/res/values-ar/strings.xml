@@ -267,4 +267,35 @@
     <string name="close_app">اغلق التطبيق</string>
     <string name="delayed_launch">التشغيل المُؤخر</string>
     <string name="reason_know_what_app_launched">معرفة ما التطبيق الذي تم تشغيله</string>
+<<<<<<< weblate-farhan-default-en
 </resources>
+=======
+    <string name="delay_in_seconds">التأخير بالثواني</string>
+    <string name="continue_to_app">استمر الى التطبيق</string>
+    <string name="leave">غادر</string>
+    <string name="take_deep_breath">خذ نفساً عميقاً</string>
+    <string name="bananas_are_yellow">الموز اصفر!</string>
+    <string name="look_around_you">انظر حولك</string>
+    <string name="you_attempted_to_launch_this_app_times">لقد حاولت تشغيل %s عدد %d من المرات خلال ال٢٤ ساعة الماضية</string>
+    <string name="delay_message">رسالة</string>
+    <string name="delay_message_sub">اختر رسالة لعرضها اثناء التأخير</string>
+    <string name="contact_channels">قنوات التواصل:</string>
+    <string name="linkedin">Linkedin</string>
+    <string name="blog">المدونة</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">تبرع</string>
+    <string name="close">اغلق</string>
+    <string name="create_github_issue">بلغ عن المشكلة في GitHub</string>
+    <string name="copy_to_clipboard">نسخ الى الحافظة</string>
+    <string name="copied_to_clipboard">تم النسخ الى الحافظة</string>
+    <string name="open_github_msg">سيتم فتح GitHub في متصفحك وملئ بعض الحقول بشكل تلقائي</string>
+    <string name="open_github">فتح GitHub</string>
+    <string name="continuee">استمرار</string>
+    <string name="confirm_issue_not_exist_msg">لطفاً قبل التبليغ ان اي مشكلة تأكد من انه لم يتم التبليغ عنها من قبل</string>
+    <string name="ignore_this_screen_unkown">اذا كنت لا تفهم ما هي هذه الشاشة يمكنك تجاهلها والضغط على زر اغلاق في الأسفل</string>
+    <string name="verify_no_existing_issue_checkbox_message">لقد تفقدت ان كانت المشكلة تم التبيغ عنها بالفغل ولم اجد اي
+        مشكلة بنفس التفاصيل مفتوحة حالياً على GitHub
+    </string>
+
+</resources>
+>>>>>>> develop

@@ -5,14 +5,21 @@ package ly.com.tahaben.infinite_scroll_blocker_data.preferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import ly.com.tahaben.core.util.GlobalKey
 import ly.com.tahaben.infinite_scroll_blocker_domain.preferences.Preferences
 import timber.log.Timber
 
 class DefaultPreferences(
     private val sharedPref: SharedPreferences,
-    private val context: Context
+    private val context: Context,
+    private val dataStore: DataStore<androidx.datastore.preferences.core.Preferences>
 ) : Preferences {
+
+    private val mainSwitchKey = booleanPreferencesKey(GlobalKey.Pref_KEY_APP_MAIN_SWITCH)
 
     private val defaultMessages by lazy {
         context.resources.getStringArray(ly.com.tahaben.core.R.array.time_up_messages).toSet()
@@ -28,9 +35,9 @@ class DefaultPreferences(
             .commit()
     }
 
-    override fun isServiceEnabled(): Boolean {
+    override suspend fun isServiceEnabled(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_INFINITE_SCROLL_SERVICE_STATS, false) &&
-                sharedPref.getBoolean(GlobalKey.Pref_KEY_APP_MAIN_SWITCH, true)
+                dataStore.data.map { data -> data[mainSwitchKey] ?: true }.first()
     }
 
     override fun setServiceState(isEnabled: Boolean) {

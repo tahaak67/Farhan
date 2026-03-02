@@ -4,6 +4,16 @@ import ly.com.tahaben.core.model.AppItem
 
 data class DelayedLaunchState(
     val isMindfulLaunchEnabled: Boolean = false,
+    val isAccessibilityPermissionGranted: Boolean = true,
+    val isLoading: Boolean = false,
+    val delayDurationSeconds: Int = 0,
+    val selectedDelayedLaunchMessage: String = "",
+    val delayedLaunchMessages: Set<String> = emptySet()
+
+)
+
+data class DelayedLaunchWhiteListState(
+    val isMindfulLaunchEnabled: Boolean = false,
     val whiteListedApps: List<String> = emptyList(),
     val searchQuery: String = "",
     val isHintVisible: Boolean = false,

@@ -1,4 +1,4 @@
-package ly.com.tahaben.launcher_data.local
+package ly.com.tahaben.launcher_data.local.db
 
 import androidx.room.Dao
 import androidx.room.Delete

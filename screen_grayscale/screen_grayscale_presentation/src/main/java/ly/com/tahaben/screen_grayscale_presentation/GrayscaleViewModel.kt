@@ -1,13 +1,13 @@
 package ly.com.tahaben.screen_grayscale_presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.UiEvent
@@ -21,8 +21,9 @@ class GrayscaleViewModel @Inject constructor(
     private val grayscaleUseCases: GrayscaleUseCases
 ) : ViewModel() {
 
-    var state by mutableStateOf(GrayscaleState())
-        private set
+    private val _state = MutableStateFlow(GrayscaleState())
+    val state = _state.asStateFlow()
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -34,28 +35,36 @@ class GrayscaleViewModel @Inject constructor(
     }
 
     fun checkServiceStats() {
-        state = state.copy(
-            isServiceEnabled = grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted(),
-            isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted(),
-            isAccessibilityPermissionGranted = grayscaleUseCases.isAccessibilityPermissionGranted()
-        )
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isServiceEnabled = grayscaleUseCases.isGrayscaleEnabled() && grayscaleUseCases.isAccessibilityPermissionGranted(),
+                    isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted(),
+                    isAccessibilityPermissionGranted = grayscaleUseCases.isAccessibilityPermissionGranted()
+                )
+            }
+        }
     }
 
     private fun checkSecureSettingsPermissionStats() {
-        state = state.copy(
-            isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted()
-        )
-        Timber.d("secure permission: ${state.isSecureSettingsPermissionGranted}")
+        _state.update {
+            it.copy(
+                isSecureSettingsPermissionGranted = grayscaleUseCases.isSecureSettingsPermissionGranted()
+            )
+        }
+        Timber.d("secure permission: ${state.value.isSecureSettingsPermissionGranted}")
     }
 
     fun setServiceStats(isEnabled: Boolean) {
         grayscaleUseCases.setGrayscaleState(isEnabled)
-        if (!state.isAccessibilityPermissionGranted) {
+        if (!state.value.isAccessibilityPermissionGranted) {
             askForAccessibilityPermission()
         }
-        state = state.copy(
-            isServiceEnabled = isEnabled
-        )
+        _state.update {
+            it.copy(
+                isServiceEnabled = isEnabled
+            )
+        }
     }
 
     fun askForAccessibilityPermission() {
@@ -63,15 +72,17 @@ class GrayscaleViewModel @Inject constructor(
     }
 
     private fun checkAccessibilityPermissionStats() {
-        state = state.copy(
-            isAccessibilityPermissionGranted = grayscaleUseCases.isAccessibilityPermissionGranted()
-        )
-        Timber.d("state = ${state.isAccessibilityPermissionGranted}")
+        _state.update {
+            it.copy(
+                isAccessibilityPermissionGranted = grayscaleUseCases.isAccessibilityPermissionGranted()
+            )
+        }
+        Timber.d("state = ${state.value.isAccessibilityPermissionGranted}")
     }
 
     fun askForSecureSettingsPermissionWithRoot() {
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
+            _state.update { it.copy(isLoading = true) }
 
             if (grayscaleUseCases.askForSecureSettingsPermission()) {
                 _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.secure_permission_wroot_success)))
@@ -79,7 +90,7 @@ class GrayscaleViewModel @Inject constructor(
                 _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.secure_permission_wroot_error)))
 
             }
-            state = state.copy(isLoading = false)
+            _state.update { it.copy(isLoading = false) }
             checkSecureSettingsPermissionStats()
 
 
@@ -87,8 +98,8 @@ class GrayscaleViewModel @Inject constructor(
     }
 
     fun checkForRootAccess() {
-        state = state.copy(
-            isDeviceRooted = grayscaleUseCases.isDeviceRooted()
-        )
+        _state.update {
+            it.copy(isDeviceRooted = grayscaleUseCases.isDeviceRooted())
+        }
     }
 }
