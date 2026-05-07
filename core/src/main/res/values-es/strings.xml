@@ -271,10 +271,9 @@
 \n¿Quieres un recordatorio diario para comprobar tus notificaciones filtradas? ¡Puedes hacerlo con Notify!</string>
     <string name="notification_filter_settings_showcase_msg2"><![CDATA[Puedes abrir las <b>excepciones</b> desde aquí y añadir aplicaciones para las que no quieras filtrar las notificaciones]]></string>
     <string name="notification_filter_settings_showcase_msg3"><![CDATA[Supongamos que quieres tener una notificación cuando recibas un nuevo mensaje en la aplicación <b>Signal</b>]]></string>
-    <string name="notification_filter_settings_showcase_msg4"><![CDATA[[![CDATA[Puedes abrir <b>Excepción</b>, encontrar la aplicación Signal en la lista y <b>activar el interruptor</b> junto a ella y ¡ya está!]]]]><![CDATA[>]]></string>
+    <string name="notification_filter_settings_showcase_msg4"><![CDATA[Puedes abrir <b>Excepción</b>, encontrar la aplicación Signal en la lista y <b>activar el interruptor</b> junto a ella y ¡ya está!]]></string>
     <string name="notification_filter_settings_showcase_msg5"><![CDATA[¡Es bueno que no te distraigas con las notificaciones a lo largo del día, pero a veces puedes olvidarte de revisar Farhan para ver qué notificaciones tuviste durante días! 🙁]]></string>
-    <string name="notification_filter_settings_greeting">¡Hola! Bienvenido a la configuración del filtro de notificaciones.
-\nDéjeme guiarte por un recorrido rápido. <b>Pulse en cualquier lugar</b> para continuar.</string>
+    <string name="notification_filter_settings_greeting"><![CDATA[¡Hola! Bienvenido a la configuración del filtro de notificaciones.\nDéjeme guiarte por un recorrido rápido. <b>Pulse en cualquier lugar</b> para continuar.]]></string>
     <string name="notification_filter_settings_showcase_msg1"><![CDATA[Este es el interruptor del filtro, cuando el interruptor está activado las notificaciones <b>serán filtradas</b>]]></string>
     <string name="notification_filter_settings_showcase_msg6"><![CDATA[¡No te preocupes 😀 puedes configurar <b>Notifícame</b> desde aquí! , cuando se activa se le notificará en un <b>tiempo que estableciste</b> para venir a comprobar sus notificaciones]]></string>
     <string name="ignore_farhan_usage">Ignora a Farhan cuando hagas cálculos de uso</string>
@@ -304,4 +303,11 @@
     <string name="copy_to_clipboard">Copiar al portapapeles</string>
     <string name="copied_to_clipboard">Copiado al portapapeles</string>
     <string name="open_github_msg">Esto abrirá GitHub en tu navegador con los detalles del fallo ya rellenados.</string>
+    <string name="open_github">Abrir GitHub</string>
+    <string name="continuee">Continuar</string>
+    <string name="confirm_issue_not_exist_msg">Por favor, antes de informar de un problema, confirme que no existe ya.</string>
+    <string name="ignore_this_screen_unkown">Si no sabes qué es esta pantalla, puedes ignorarla y pulsar el botón Cerrar en la parte inferior</string>
+    <string name="crash_reports_channel">Informes de fallo</string>
+    <string name="crash_reports_channel_description">Notificaciones para informes de fallos de la aplicación</string>
+    <string name="verify_no_existing_issue_checkbox_message">Confirmo que he comprobado si el incidente ya existe y no he encontrado ningún incidente abierto con el mismo error</string>
 </resources>
