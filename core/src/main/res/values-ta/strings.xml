@@ -161,7 +161,7 @@
     <string name="grayscale_whitelist_tip">கிரேச்கேல் இயக்கத்தில் இருக்கும்போது, அனுமதிப்பட்டியல் பயன்பாடுகள் மட்டுமே கிரேச்கேல்கள் செய்யப்படும்</string>
     <string name="beta_version_tip">இது ஃபர்ஆனின் பீட்டா பதிப்பாகும், டெவலப்பருக்கு ஏதேனும் பிழைகள் புகாரளிக்கவும், முடிந்தால் திரை சாட்களை எடுக்கவும் உறுதிசெய்க</string>
     <string name="notification_settings_shocase_tip">நீங்கள் விதிவிலக்குகளைச் சேர்க்கலாம் அல்லது அறிவிப்பு வடிகட்டி அமைப்புகளிலிருந்து நினைவூட்டலை அமைக்கலாம்</string>
-    <string name="notification_filter_showcase_greeting">அறிவிப்புகள் வடிப்பானுக்கு வருக, உங்கள் வடிகட்டப்பட்ட அறிவிப்புகள் இங்கே தோன்றும்!</string>
+    <string name="notification_filter_showcase_greeting">அறிவிப்புகள் வடிப்பானுக்கு வருக, உங்கள் வடிகட்டப்பட்ட அறிவிப்புகள் இங்கே தோன்றும்!.</string>
     <string name="agree">ஒப்புக்கொள்கிறேன்</string>
     <string name="cancel">ரத்துசெய்</string>
     <string name="if_you_choose_agree_msg">நீங்கள் ஒப்புக்கொள்கிறீர்கள் போது, உங்கள் சாதனத்தில் அணுகல் அமைப்புகளுக்கு நீங்கள் செல்லப்படுவீர்கள்.</string>
