@@ -15,7 +15,7 @@ dependencies {
     "implementation"(project(Modules.launcherDomain))
     implementation(project(":core-ui"))
     implementation(libs.androidx.ui.android)
-    "kapt"(libs.room.compiler)
+    "ksp"(libs.room.compiler)
     "implementation"(libs.room.ktx)
     "implementation"(libs.room.runtime)
     "implementation"(libs.coroutines.core)

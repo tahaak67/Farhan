@@ -13,7 +13,7 @@ dependencies {
     "implementation"(project(Modules.usageOverviewDomain))
     "implementation"(libs.coroutines.core)
     "implementation"(libs.androidx.appcompat)
-    "kapt"(libs.room.compiler)
+    "ksp"(libs.room.compiler)
     "implementation"(libs.room.ktx)
     "implementation"(libs.room.ktx)
     "implementation"(libs.androidx.work.manager)

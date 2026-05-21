@@ -2,7 +2,7 @@ plugins {
     id("com.android.library")
 }
 android {
-    namespace = "ly.com.tahaben.launcher_domain"
+    namespace = "ly.com.tahaben.infinite_scroll_blocker_domain"
 }
 apply {
     from("$rootDir/base-module.gradle")

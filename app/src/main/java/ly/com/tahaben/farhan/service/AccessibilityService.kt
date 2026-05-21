@@ -1,7 +1,6 @@
 package ly.com.tahaben.farhan.service
 
 import android.accessibilityservice.AccessibilityService
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -84,7 +82,7 @@ class AccessibilityService : AccessibilityService() {
 
     override fun onCreate() {
         super.onCreate()
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList.forEach {
             Timber.d("packageName: $it")
             softInputPackages.add(it.packageName)
         }
@@ -284,13 +282,19 @@ class AccessibilityService : AccessibilityService() {
             }
             FarhanTheme(darkMode = isDarkMode.isCurrentlyDark(), colorStyle = themeColors) {
                 val scope = rememberCoroutineScope()
+//                val density = LocalDensity.current
+//                val positionalThreshold = 56.dp
+//                val velocityThreshold = 125.dp
                 val bottomSheetState = rememberBottomSheetScaffoldState(
-                    bottomSheetState = SheetState(
+                    bottomSheetState = rememberStandardBottomSheetState(
                         initialValue = SheetValue.Expanded,
                         skipHiddenState = false,
-                        skipPartiallyExpanded = true,
-                        density = LocalDensity.current
+//                        skipPartiallyExpanded = true,
                     )
+
+//                        positionalThreshold = { with(density) { positionalThreshold.toPx() } },
+//                        velocityThreshold = { with(density) { velocityThreshold.toPx() } },
+
                 )
                 val spacing = LocalSpacing.current
                 fun dismissOverlay() {

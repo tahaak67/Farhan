@@ -86,46 +86,51 @@ fun NotificationFilterScreen(
         },
         isDarkLayout = false
     ) {
-        Column {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.notifications))
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-                navigationIcon = {
-                    IconButton(onClick = onNavigateUp) {
-                        Icon(
-                            modifier = Modifier.mirror(),
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back)
-                        )
-                    }
-                },
-                actions = {
-                    if (state.isPermissionGranted) {
-                        IconButton(onClick = navigateToNotificationSettings) {
-                            Showcase(
-                                index = 1,
-                                message = ShowcaseMsg(
-                                    text = stringResource(R.string.notification_settings_shocase_tip),
-                                    textStyle = TextStyle(MaterialTheme.colorScheme.onSurface),
-                                    gravity = Gravity.Auto,
-                                    arrow = Arrow(curved = true),
-                                    msgBackground = MaterialTheme.colorScheme.surface,
-                                    roundedCorner = 15.dp
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Settings,
-                                    contentDescription = stringResource(id = R.string.notifications_filter_settings)
-                                )
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.notifications))
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateUp) {
+                            Icon(
+                                modifier = Modifier.mirror(),
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(id = R.string.back)
+                            )
+                        }
+                    },
+                    actions = {
+                        if (state.isPermissionGranted) {
+                            IconButton(onClick = navigateToNotificationSettings) {
+                                Showcase(
+                                    index = 1,
+                                    message = ShowcaseMsg(
+                                        text = stringResource(R.string.notification_settings_shocase_tip),
+                                        textStyle = TextStyle(MaterialTheme.colorScheme.onSurface),
+                                        gravity = Gravity.Auto,
+                                        arrow = Arrow(curved = true),
+                                        msgBackground = MaterialTheme.colorScheme.surface,
+                                        roundedCorner = 15.dp
+                                    )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Settings,
+                                        contentDescription = stringResource(id = R.string.notifications_filter_settings)
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
+        ) { paddingValues ->
+
             Column(
                 modifier = Modifier
+                    .padding(paddingValues)
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {

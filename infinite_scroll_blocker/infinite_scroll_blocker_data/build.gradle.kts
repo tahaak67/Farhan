@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.hiltAndroidGradle)
 }
 android {
-    namespace = "ly.com.tahaben.launcher_data"
+    namespace = "ly.com.tahaben.infinite_scroll_blocker_data"
 }
 apply {
     from("$rootDir/base-module.gradle")

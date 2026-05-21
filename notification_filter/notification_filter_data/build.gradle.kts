@@ -13,7 +13,7 @@ dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.notificationFilterDomain))
 
-    "kapt"(libs.room.compiler)
+    "ksp"(libs.room.compiler)
     "implementation"(libs.room.ktx)
     "implementation"(libs.room.runtime)
     implementation(libs.androidx.datastore)
