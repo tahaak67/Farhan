@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
@@ -180,26 +178,26 @@ fun NotificationFilterScreen(
                                     state.filteredNotifications,
                                     NotificationItem::id
                                 ) { notificationItem ->
-                                    val coroutineScope = rememberCoroutineScope()
                                     val dismissState = rememberSwipeToDismissBoxState(
                                         initialValue = SwipeToDismissBoxValue.Settled,
-                                        confirmValueChange = {
-                                            if (it == SwipeToDismissBoxValue.EndToStart) {
-                                                coroutineScope.launch {
-                                                    delay(100)
-                                                    viewModel.onEvent(
-                                                        NotificationFilterEvent.OnDismissNotification(
-                                                            notificationItem
-                                                        )
-                                                    )
-                                                }
-
-                                                true
-                                            }else{
-                                                false
-                                            }
-                                        }
+                                        // Require dragging ~half the row width before committing instead of
+                                        // the default flat 56.dp, which made accidental dismisses very easy.
+                                        positionalThreshold = { totalDistance -> totalDistance * 0.5f }
                                     )
+
+                                    // Trigger the dismiss only once the box has actually SETTLED at the
+                                    // EndToStart anchor — i.e. after the finger is lifted and the swipe-out
+                                    // animation completes. We deliberately do NOT use confirmValueChange for
+                                    // this: it's invoked mid-drag, and vetoing Settled there both blocks the
+                                    // snap-back and makes the release fling fall back to a stale value, which
+                                    // dismisses the row even after you drag it back to the start.
+                                    LaunchedEffect(dismissState.settledValue) {
+                                        if (dismissState.settledValue == SwipeToDismissBoxValue.EndToStart) {
+                                            viewModel.onEvent(
+                                                NotificationFilterEvent.OnDismissNotification(notificationItem)
+                                            )
+                                        }
+                                    }
 
                                     // Using CompositionLocalProvider to change the layout direction because of bug in SwipeToDismissBox
                                     // in RTL layouts
