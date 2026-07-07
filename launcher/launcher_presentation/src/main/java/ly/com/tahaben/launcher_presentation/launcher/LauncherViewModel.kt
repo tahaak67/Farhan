@@ -7,23 +7,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ly.com.tahaben.core.model.AppItem
 import ly.com.tahaben.core.util.SearchEvent
+import ly.com.tahaben.launcher_domain.model.LaunchAttempt
 import ly.com.tahaben.launcher_domain.model.TimeLimit
+import ly.com.tahaben.launcher_domain.preferences.Preference
+import ly.com.tahaben.launcher_domain.repository.LaunchAttemptsRepository
 import ly.com.tahaben.launcher_domain.use_case.launcher.LauncherUseCases
 import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class LauncherViewModel @Inject constructor(
     private val launcherUseCases: LauncherUseCases,
-    private val timeLimitUseCases: TimeLimitUseCases
+    private val timeLimitUseCases: TimeLimitUseCases,
+    private val preference: Preference,
+    private val launchAttemptsRepository: LaunchAttemptsRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(LauncherState())
@@ -32,9 +38,28 @@ class LauncherViewModel @Inject constructor(
 
     private var getInstalledActivitiesJob: Job? = null
     private var latestActivities = listOf<AppItem>()
+    private var selectedDelayMessage = ""
+    private var delayMessages = emptySet<String>()
 
     init {
         refreshApps()
+        viewModelScope.launch {
+            launch {
+                preference.getDelayedLaunchDuration().collectLatest { duration ->
+                    state = state.copy(delayDurationSeconds = duration)
+                }
+            }
+            launch {
+                preference.getDelayedLaunchMessage().collectLatest { message ->
+                    selectedDelayMessage = message
+                }
+            }
+            launch {
+                preference.getDelayedLaunchMessages().collectLatest { messages ->
+                    delayMessages = messages
+                }
+            }
+        }
     }
 
     fun refreshApps() {
@@ -112,8 +137,8 @@ class LauncherViewModel @Inject constructor(
 
     fun onAppClick(app: AppItem) {
         if (timeLimitUseCases.isPackageInTimeLimitWhiteList(app.packageName)) {
-//            showTimeLimitDialogFor(app)
-            delayLaunch(app)
+            showTimeLimitDialogFor(app)
+//            delayLaunch(app)
         } else {
             launchActivityForApp(app)
         }
@@ -168,18 +193,30 @@ class LauncherViewModel @Inject constructor(
         launcherUseCases.launchDefaultAlarmApp()
     }
 
-    fun delayLaunch(app: AppItem){
+    fun delayLaunch(app: AppItem) {
         viewModelScope.launch {
-            state = state.copy(isDelayRunning = true, timeLimitedApp = app)
-            delay(5.seconds)
-            state = state.copy(isConfirmOpenVisible = true)
-//            state = state.copy(isDelayRunning = false)
-//            launchActivityForApp(app)
+            launchAttemptsRepository.insert(
+                LaunchAttempt(
+                    id = 0,
+                    packageName = app.packageName,
+                    timestamp = System.currentTimeMillis()
+                )
+            )
+            val attemptCount = launchAttemptsRepository.getLaunchAttemptsForPackageAfter(
+                from = System.currentTimeMillis() - 24.hours.inWholeMilliseconds,
+                packageName = app.packageName
+            )
+            state = state.copy(
+                isDelayRunning = true,
+                timeLimitedApp = app,
+                delayMessage = selectedDelayMessage.ifEmpty { delayMessages.randomOrNull() ?: "" },
+                launchAttemptCount = attemptCount
+            )
         }
     }
-    fun disableOverlay(){
+
+    fun disableOverlay() {
         state = state.copy(
-            isConfirmOpenVisible = false,
             isDelayRunning = false
         )
     }

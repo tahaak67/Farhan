@@ -19,13 +19,17 @@ import android.os.SystemClock
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -277,6 +281,8 @@ class TimeLimitService : Service() {
     }
 
     private val windowManager get() = getSystemService(WINDOW_SERVICE) as WindowManager
+
+    @OptIn(ExperimentalMaterial3Api::class)
     private fun showTimeUpDialog(timeLimit: TimeLimit) {
         /*val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -370,59 +376,67 @@ class TimeLimitService : Service() {
                 }
 
                 val spacing = LocalSpacing.current
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    tonalElevation = AlertDialogDefaults.TonalElevation,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+                // The window is MATCH_PARENT so the composition root gets tight full-screen
+                // constraints; this Box loosens them so the dialog card can wrap its content,
+                // and doubles as the dialog scrim.
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(BottomSheetDefaults.ScrimColor),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(spacing.spaceMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium, Alignment.CenterVertically)
+                    Surface(
+                        modifier = Modifier.padding(spacing.spaceLarge),
+                        shape = MaterialTheme.shapes.extraLarge,
+                        tonalElevation = AlertDialogDefaults.TonalElevation,
+                        color = MaterialTheme.colorScheme.surface,
                     ) {
-                        Text(stringResource(R.string.time_is_up))
-                        Text(stringResource(R.string.or_add_more_time))
-                        Button(onClick = {
-                            dismiss()
-                            this@TimeLimitService.startActivity(
-                                Intent(Intent.ACTION_MAIN)
-                                    .addCategory(Intent.CATEGORY_HOME)
-                                    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                            )
-                        }) {
-                            Text(stringResource(R.string.take_me_out_of_here))
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)) {
+                        Column(
+                            modifier = Modifier.padding(spacing.spaceMedium),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
+                        ) {
+                            Text(stringResource(R.string.time_is_up))
                             Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 1.seconds.inWholeMilliseconds
-                                )
                                 dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.one_min)) }
-                            Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 3.seconds.inWholeMilliseconds
+                                this@TimeLimitService.startActivity(
+                                    Intent(Intent.ACTION_MAIN)
+                                        .addCategory(Intent.CATEGORY_HOME)
+                                        .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
                                 )
-                                dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.three_min)) }
-                            Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 5.seconds.inWholeMilliseconds
-                                )
-                                dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.five_min)) }
+                            }) {
+                                Text(stringResource(R.string.take_me_out_of_here))
+                            }
+                            Text(stringResource(R.string.or_add_more_time))
+                            Row(horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)) {
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 1.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_one_min)
+                                }) { Text(stringResource(R.string.one_min)) }
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 3.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_three_min)
+                                }) { Text(stringResource(R.string.three_min)) }
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 5.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_five_min)
+                                }) { Text(stringResource(R.string.five_min)) }
+                            }
                         }
                     }
                 }
-
             }
         }
         // Trick The ComposeView into thinking we are tracking lifecycle

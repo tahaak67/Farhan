@@ -3,6 +3,7 @@ package ly.com.tahaben.launcher_presentation.launcher
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +28,7 @@ class LauncherActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         homeWatcher = HomeWatcher(this)
         setContent {
             val mainScreenViewModel= hiltViewModel<MainScreenViewModel>()

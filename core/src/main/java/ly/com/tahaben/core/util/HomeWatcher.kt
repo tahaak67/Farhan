@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import timber.log.Timber
 
 class HomeWatcher(private val context: Context) {
@@ -14,12 +15,18 @@ class HomeWatcher(private val context: Context) {
 
     fun setOnHomePressedListener(listener: OnHomePressedListener) {
         this.listener = listener
-        receiver = InnerReceiver()
+        if (receiver == null) {
+            receiver = InnerReceiver()
+        }
     }
 
     fun startWatch() {
         receiver?.let {
-            context.registerReceiver(it, filter)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(it, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                context.registerReceiver(it, filter)
+            }
         }
     }
 

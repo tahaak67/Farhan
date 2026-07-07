@@ -30,7 +30,7 @@ class LauncherSettingsViewModel @Inject constructor(
 
     fun openLauncherSettings() {
         launcherUseCases.openDefaultLauncherSettings()
-        launcherUseCases.setBlackWallpaper()
+//        launcherUseCases.setBlackWallpaper() skip wallpaper settings for now and leave it up to the user
     }
 
     private fun checkDefaultLauncher() {

@@ -72,8 +72,7 @@ class TimeLimitRepositoryImpl(
             Timber.v("accessibilityEnabled = $accessibilityEnabled")
         } catch (e: Settings.SettingNotFoundException) {
             Timber.e(
-                "Error finding setting, default accessibility to not found: "
-                        + e.message
+                "Error finding setting, default accessibility to not found: %s", e.message
             )
         }
         val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')

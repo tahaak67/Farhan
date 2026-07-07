@@ -121,6 +121,8 @@
     <string name="set_default_launcher_title">Set Farhan as your launcher</string>
     <string name="set_default_launcher_text">Please select Farhan to set it as your default launcher</string>
     <string name="set_other_default_launcher_text">Please select the other launcher you want to use</string>
+    <string name="change_default_launcher">Change default launcher</string>
+    <string name="change_default_launcher_sub">Select Farhan in the system settings to use it as your launcher, or pick another launcher to switch back</string>
     <string name="dialer">Dialer</string>
     <string name="camera">Camera</string>
     <string name="reason_know_if_app_in_exceptions">Know if current app is in exceptions list or not</string>

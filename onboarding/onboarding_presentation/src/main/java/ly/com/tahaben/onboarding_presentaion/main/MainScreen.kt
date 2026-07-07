@@ -361,7 +361,7 @@ fun MainScreen(
                             )
                         }
                     )
-                    /*MainScreenCard(
+                    MainScreenCard(
                         text = stringResource(R.string.launcher),
                         status = if (isLauncherEnabled) stringResource(id = R.string.enabled) else stringResource(
                             id = R.string.disabled
@@ -377,7 +377,7 @@ fun MainScreen(
                                     )
                                 )
                             )
-                        })*/
+                        })
                 }
                 Spacer(modifier = Modifier.height(spacing.spaceMedium))
                 /*Row(
