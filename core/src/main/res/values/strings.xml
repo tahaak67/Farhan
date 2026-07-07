@@ -61,6 +61,9 @@
     <string name="app_excluded">App excluded</string>
     <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for whitelisted apps</string>
     <string name="white_lited_apps">Whitelisted apps</string>
+    <string name="grayscale_state_color">Color</string>
+    <string name="grayscale_state_leave_as_is">Keep as is</string>
+    <string name="grayscale_system_apps_hint">System apps (like the app switcher and share menu) keep the screen as is by default, so they don\'t flip the color filter while you are switching between apps.</string>
     <string name="grayscale_onboarding_message">One of the ways apps compete for your time and attention is through colors, using grayscale Farhan can disable colors for selected apps when you lunch them eliminating their effect on you!</string>
     <string name="on_boarding_image_description">Onboarding image</string>
     <string name="next">Next</string>

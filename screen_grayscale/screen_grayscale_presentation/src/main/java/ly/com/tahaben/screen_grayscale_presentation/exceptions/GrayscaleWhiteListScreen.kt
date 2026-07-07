@@ -49,9 +49,9 @@ import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent.NavigateUp
 import ly.com.tahaben.core.util.UiEvent.ShowSnackbar
 import ly.com.tahaben.core_ui.LocalSpacing
-import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
 import ly.com.tahaben.core_ui.mirror
+import ly.com.tahaben.screen_grayscale_presentation.components.GrayscaleAppListItem
 import timber.log.Timber
 
 
@@ -227,19 +227,28 @@ fun GrayscaleWhiteListScreen(
                         .fillMaxSize()
                         .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
                 ) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(
+                                horizontal = spacing.spaceExtraSmall,
+                                vertical = spacing.spaceSmall
+                            ),
+                            text = stringResource(id = R.string.grayscale_system_apps_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                     //Timber.d("app: list  $list")
-                    items(state.searchResults) { app ->
-                        Timber.d("app: $app")
-                        AppExceptionListItem(
-                            app = app,
-                            onClick = { isChecked ->
-                                Timber.d("switched $isChecked")
-                                if (isChecked) {
-                                    viewModel.addAppToWhiteList(app.packageName)
-
-                                } else {
-                                    viewModel.removeAppFromWhiteList(app.packageName)
-                                }
+                    items(state.searchResults) { grayscaleApp ->
+                        Timber.d("app: $grayscaleApp")
+                        GrayscaleAppListItem(
+                            grayscaleApp = grayscaleApp,
+                            onStateChange = { newState ->
+                                Timber.d("app ${grayscaleApp.app.packageName} set to $newState")
+                                viewModel.setAppGrayscaleState(
+                                    grayscaleApp.app.packageName,
+                                    newState
+                                )
                             }
                         )
                     }

@@ -5,4 +5,6 @@ import ly.com.tahaben.core.model.AppItem
 interface InstalledAppsRepository {
 
     suspend fun getInstalledApps(): List<AppItem>
+
+    fun isSystemApp(packageName: String): Boolean
 }

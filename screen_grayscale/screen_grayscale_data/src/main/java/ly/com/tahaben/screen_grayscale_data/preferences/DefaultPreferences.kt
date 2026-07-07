@@ -90,4 +90,50 @@ class DefaultPreferences(
         )
         return s
     }
+
+    override fun savePackageToGrayscaleAgnosticList(packageName: String) {
+        addPackageToSet(Preferences.KEY_GRAYSCALE_AGNOSTIC_LIST, packageName)
+    }
+
+    override fun removePackageFromGrayscaleAgnosticList(packageName: String) {
+        removePackageFromSet(Preferences.KEY_GRAYSCALE_AGNOSTIC_LIST, packageName)
+    }
+
+    override fun isPackageInGrayscaleAgnosticList(packageName: String): Boolean {
+        return sharedPref.getStringSet(Preferences.KEY_GRAYSCALE_AGNOSTIC_LIST, emptySet())
+            ?.contains(packageName) == true
+    }
+
+    override fun savePackageToGrayscaleColoredList(packageName: String) {
+        addPackageToSet(Preferences.KEY_GRAYSCALE_COLORED_LIST, packageName)
+    }
+
+    override fun removePackageFromGrayscaleColoredList(packageName: String) {
+        removePackageFromSet(Preferences.KEY_GRAYSCALE_COLORED_LIST, packageName)
+    }
+
+    override fun isPackageInGrayscaleColoredList(packageName: String): Boolean {
+        return sharedPref.getStringSet(Preferences.KEY_GRAYSCALE_COLORED_LIST, emptySet())
+            ?.contains(packageName) == true
+    }
+
+    private fun addPackageToSet(key: String, packageName: String) {
+        val newSet = sharedPref.getStringSet(key, emptySet())
+            ?.toMutableSet() ?: mutableSetOf()
+        newSet.add(packageName)
+        Timber.d("new $key set: $newSet")
+        sharedPref.edit()
+            .putStringSet(key, newSet)
+            .apply()
+    }
+
+    private fun removePackageFromSet(key: String, packageName: String) {
+        val newSet = sharedPref.getStringSet(key, emptySet())
+            ?.toMutableSet() ?: mutableSetOf()
+        newSet.remove(packageName)
+        Timber.d("new $key set: $newSet")
+        sharedPref.edit()
+            .putStringSet(key, newSet)
+            .apply()
+    }
 }

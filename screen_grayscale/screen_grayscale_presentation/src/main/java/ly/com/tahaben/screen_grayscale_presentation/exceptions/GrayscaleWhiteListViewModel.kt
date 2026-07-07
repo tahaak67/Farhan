@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
+import ly.com.tahaben.screen_grayscale_domain.model.GrayscaleAppState
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -40,10 +41,12 @@ class GrayscaleWhiteListViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 val apps = grayscaleUseCases.getInstalledAppsList()
                     .sortedBy { it.name }
-                apps.forEach {
-                    it.isException =
-                        grayscaleUseCases.isPackageInGrayscaleWhiteList(it.packageName)
-                }
+                    .map { app ->
+                        GrayscaleApp(
+                            app = app,
+                            grayscaleState = grayscaleUseCases.getAppGrayscaleState(app.packageName)
+                        )
+                    }
                 apps.forEach {
                     Timber.d("app: $it")
                 }
@@ -54,17 +57,6 @@ class GrayscaleWhiteListViewModel @Inject constructor(
             }
             filterSystemApps()
         }
-    }
-
-    private fun refreshAppsList() {
-        val apps = state.searchResults
-        apps.forEach {
-            it.isException =
-                grayscaleUseCases.isPackageInGrayscaleWhiteList(it.packageName)
-        }
-        state = state.copy(
-            searchResults = apps
-        )
     }
 
 
@@ -104,7 +96,7 @@ class GrayscaleWhiteListViewModel @Inject constructor(
 
     private fun executeSearch() {
         val l = state.installedApps.filter {
-            it.name?.contains(state.query, true) == true
+            it.app.name?.contains(state.query, true) == true
         }
         Timber.d("search query: ${state.query} \n l: $l")
         Timber.d("search list: ${state.searchResults} \n l: $l")
@@ -121,7 +113,7 @@ class GrayscaleWhiteListViewModel @Inject constructor(
                 state.installedApps
             } else {
                 state.installedApps.filter {
-                    !it.isSystemApp
+                    !it.app.isSystemApp
                 }
             }
         )
@@ -130,19 +122,26 @@ class GrayscaleWhiteListViewModel @Inject constructor(
         }
     }
 
-    fun removeAppFromWhiteList(packageName: String) {
-        grayscaleUseCases.removePackageFromGrayscaleWhiteList(packageName)
+    fun setAppGrayscaleState(packageName: String, grayscaleState: GrayscaleAppState) {
+        grayscaleUseCases.setAppGrayscaleState(packageName, grayscaleState)
+        state = state.copy(
+            installedApps = state.installedApps.withStateFor(packageName, grayscaleState),
+            searchResults = state.searchResults.withStateFor(packageName, grayscaleState)
+        )
     }
 
-    fun addAppToWhiteList(packageName: String) {
-        grayscaleUseCases.addPackageToGrayscaleWhiteList(packageName)
+    private fun List<GrayscaleApp>.withStateFor(
+        packageName: String,
+        grayscaleState: GrayscaleAppState
+    ): List<GrayscaleApp> = map {
+        if (it.app.packageName == packageName) it.copy(grayscaleState = grayscaleState) else it
     }
 
     private fun filterWhitelistOnly() {
         if (state.showWhitelistOnly) {
             state = state.copy(
                 searchResults = state.searchResults.filter {
-                    it.isException
+                    it.grayscaleState == GrayscaleAppState.GRAYSCALE
                 }
             )
         } else {

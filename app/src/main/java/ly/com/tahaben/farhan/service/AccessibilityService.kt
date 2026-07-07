@@ -76,6 +76,7 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchActivity
+import ly.com.tahaben.screen_grayscale_domain.model.GrayscaleAppState
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
 import javax.inject.Inject
@@ -186,13 +187,22 @@ class AccessibilityService : AccessibilityService() {
             if (event.isFullScreen || event.contentChangeTypes == AccessibilityEvent.CONTENT_CHANGE_TYPE_UNDEFINED
                 || !softInputPackages.contains(packageName)
             ) {
-                if (grayscaleUseCases.isPackageInGrayscaleWhiteList(packageName)
-                ) {
-                    Timber.d("package $packageName in whitelist")
-                    grayscaleScreen()
-                } else if (event.isFullScreen) {
-                    Timber.d("package $packageName not in whitelist")
-                    unGrayscaleScreen()
+                when (grayscaleUseCases.getAppGrayscaleState(packageName)) {
+                    GrayscaleAppState.GRAYSCALE -> {
+                        Timber.d("package $packageName in whitelist")
+                        grayscaleScreen()
+                    }
+
+                    GrayscaleAppState.COLOR -> {
+                        if (event.isFullScreen) {
+                            Timber.d("package $packageName not in whitelist")
+                            unGrayscaleScreen()
+                        }
+                    }
+
+                    GrayscaleAppState.LEAVE_AS_IS -> {
+                        Timber.d("package $packageName is grayscale-agnostic, leaving filter as is")
+                    }
                 }
             }
         }

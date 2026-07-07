@@ -3,14 +3,18 @@ package ly.com.tahaben.core.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import ly.com.tahaben.core.data.repository.InstalledAppsRepository
 import ly.com.tahaben.core.model.AppItem
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 
 class DefaultInstalledAppsRepository(
     private val context: Context
 ) : InstalledAppsRepository {
+
+    private val systemAppCache = ConcurrentHashMap<String, Boolean>()
 
     @SuppressLint("QueryPermissionsNeeded")
     override suspend fun getInstalledApps(): List<AppItem> {
@@ -39,11 +43,24 @@ class DefaultInstalledAppsRepository(
                     AppItem(
                         ai.loadLabel(pm) as String,
                         ai.packageName,
-                        isSystemApp = (ai.flags + isSystemAppMask) != 0
+                        isSystemApp = (ai.flags and isSystemAppMask) != 0
                     )
                 )
             }
         }
         return appItemList
+    }
+
+    override fun isSystemApp(packageName: String): Boolean {
+        return systemAppCache.getOrPut(packageName) {
+            try {
+                val ai = context.packageManager.getApplicationInfo(packageName, 0)
+                val isSystemAppMask =
+                    ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
+                (ai.flags and isSystemAppMask) != 0
+            } catch (e: PackageManager.NameNotFoundException) {
+                false
+            }
+        }
     }
 }
