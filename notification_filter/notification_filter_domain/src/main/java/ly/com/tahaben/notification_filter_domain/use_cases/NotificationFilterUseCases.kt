@@ -1,11 +1,15 @@
 package ly.com.tahaben.notification_filter_domain.use_cases
 
-import android.content.pm.LauncherApps
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.CanScheduleExactAlarms
+import ly.com.tahaben.notification_filter_domain.use_cases.settings.GetFilterSchedule
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.GetNotifyMeHour
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.GetNotifyMeMinute
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.OpenExactAlarmsPermissionScreen
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.OpenSettings
+import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetFilterScheduleDays
+import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetFilterScheduleEnabled
+import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetFilterScheduleEndTime
+import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetFilterScheduleStartTime
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetNotifyMeScheduleDate
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetNotifyMeTime
 import ly.com.tahaben.notification_filter_domain.use_cases.settings.SetServiceState
@@ -36,5 +40,11 @@ data class NotificationFilterUseCases(
     val loadShouldShowOnBoarding: LoadShouldShowOnBoarding,
     val openAppSettings: OpenSettings,
     val canScheduleExactAlarms: CanScheduleExactAlarms,
-    val openExactAlarmsPermissionScreen: OpenExactAlarmsPermissionScreen
+    val openExactAlarmsPermissionScreen: OpenExactAlarmsPermissionScreen,
+    val getFilterSchedule: GetFilterSchedule,
+    val setFilterScheduleEnabled: SetFilterScheduleEnabled,
+    val setFilterScheduleDays: SetFilterScheduleDays,
+    val setFilterScheduleStartTime: SetFilterScheduleStartTime,
+    val setFilterScheduleEndTime: SetFilterScheduleEndTime,
+    val isCurrentTimeWithinFilterSchedule: IsCurrentTimeWithinFilterSchedule
 )

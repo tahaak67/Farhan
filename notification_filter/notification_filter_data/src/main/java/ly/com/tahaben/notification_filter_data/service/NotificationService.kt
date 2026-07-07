@@ -35,7 +35,7 @@ class NotificationService : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         val isNotificationFilterEnabled = runBlocking { notificationFilterUseCases.checkIfNotificationServiceIsEnabled() }
-        if (isNotificationFilterEnabled) {
+        if (isNotificationFilterEnabled && notificationFilterUseCases.isCurrentTimeWithinFilterSchedule()) {
             Timber.d("notification Posted")
             val notification = sbn?.notification
             val appPackageName = sbn?.packageName ?: ""

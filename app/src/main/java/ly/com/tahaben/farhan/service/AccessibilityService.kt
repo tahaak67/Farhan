@@ -1,6 +1,7 @@
 package ly.com.tahaben.farhan.service
 
 import android.accessibilityservice.AccessibilityService
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
@@ -17,9 +18,31 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -29,11 +52,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
@@ -43,7 +75,6 @@ import ly.com.tahaben.core_ui.util.isCurrentlyDark
 import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.launcher_domain.preferences.Preference
-import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
 import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchActivity
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
@@ -53,6 +84,10 @@ import kotlin.time.Duration.Companion.seconds
 
 const val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
 const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
+
+// A delayed app re-opened within this window after leaving the foreground is not delayed
+// again, so quick round-trips (checking a notification, fast app switching) stay smooth.
+private val RELAUNCH_GRACE_PERIOD = 30.seconds
 
 @AndroidEntryPoint
 class AccessibilityService : AccessibilityService() {
@@ -68,9 +103,6 @@ class AccessibilityService : AccessibilityService() {
 
     @Inject
     lateinit var uiUseCases: UiUseCases
-
-    @Inject
-    lateinit var timeLimitUseCases: TimeLimitUseCases
 
     @Inject
     lateinit var launcherPref: Preference
@@ -102,8 +134,29 @@ class AccessibilityService : AccessibilityService() {
         }
     }
 
-    private var lastLaunchedPackage = ""
-    private var lastLaunchedTimeMillis = 0L
+    private val activityClassCache = HashMap<String, Boolean>()
+    private val appLaunchDetector = AppLaunchDetector(
+        isActivityClass = { pkg, cls ->
+            activityClassCache.getOrPut("$pkg/$cls") {
+                try {
+                    packageManager.getActivityInfo(ComponentName(pkg, cls), 0)
+                    true
+                } catch (e: PackageManager.NameNotFoundException) {
+                    false
+                }
+            }
+        },
+        ignoredClassNames = setOf(DelayedLaunchActivity::class.java.name)
+    )
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        // If the service (re)starts while the user is already inside an app, treat that app
+        // as the current foreground so its next window event isn't mistaken for a launch.
+        val foregroundPackage = rootInActiveWindow?.packageName?.toString()
+        Timber.d("service connected, current foreground: $foregroundPackage")
+        appLaunchDetector.seed(foregroundPackage)
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         Timber.d("event received for class: ${event.className}")
@@ -121,15 +174,6 @@ class AccessibilityService : AccessibilityService() {
             if (event.eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
                 if (!infiniteScrollUseCases.isPackageInInfiniteScrollExceptions(packageName)) {
                     listenToScrollEvent(event)
-                }
-            }
-            if (timeLimitUseCases.isTimeLimiterEnabled()) {
-                if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.isFullScreen && packageName != lastLaunchedPackage) {
-                    Timber.d("new app $packageName")
-                    if (timeLimitUseCases.isPackageInTimeLimitWhiteList(packageName)) {
-                        Timber.d("app in timelimit whitelist!! $packageName")
-                        // showDelayedLaunchOverlay()
-                    }
                 }
             }
         }
@@ -153,25 +197,17 @@ class AccessibilityService : AccessibilityService() {
             }
         }
         Timber.d("isDelayed launch on?? $isDelayedLaunchEnabled")
-        if (isDelayedLaunchEnabled) {
-            Timber.d("last launched package $lastLaunchedPackage")
-            val differenceInSeconds = (System.currentTimeMillis() - lastLaunchedTimeMillis).milliseconds.inWholeSeconds
-            if (
-                event.isFullScreen &&
-                packageName != lastLaunchedPackage &&
-                packageName != this.packageName &&
-                !softInputPackages.contains(packageName) &&
-                differenceInSeconds > 5
-            ) {
-                Timber.d("new app ${packageName}")
-
-                if (delayedPackages.contains(packageName)) {
-                    Timber.d("app in delayed launch whitelist!! $packageName")
-                    showDelayedLaunchOverlay(packageName)
+        if (isDelayedLaunchEnabled && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            val appSwitch =
+                appLaunchDetector.onWindowStateChanged(packageName, event.className?.toString())
+            if (appSwitch != null) {
+                Timber.d("new app ${appSwitch.packageName}, away for ${appSwitch.awayTimeMillis.milliseconds}")
+                if (appSwitch.awayTimeMillis > RELAUNCH_GRACE_PERIOD.inWholeMilliseconds &&
+                    delayedPackages.contains(appSwitch.packageName)
+                ) {
+                    Timber.d("app in delayed launch whitelist!! ${appSwitch.packageName}")
+                    showDelayedLaunchOverlay(appSwitch.packageName)
                 }
-
-                lastLaunchedPackage = packageName
-                lastLaunchedTimeMillis = System.currentTimeMillis()
             }
         }
     }
@@ -466,12 +502,14 @@ class AccessibilityService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         recentScrollViews.clear()
         softInputPackages.clear()
+        appLaunchDetector.reset()
         return super.onUnbind(intent)
     }
 
     override fun onDestroy() {
         recentScrollViews.clear()
         softInputPackages.clear()
+        appLaunchDetector.reset()
         scope.cancel()
         super.onDestroy()
     }

@@ -44,6 +44,12 @@
     <string name="notify_me_description">Notify me to check filtered notifications daily</string>
     <string name="exceptions">Exceptions</string>
     <string name="notifications_filter">Notifications Filter</string>
+    <string name="notification_filter_schedule">Filter schedule</string>
+    <string name="notification_filter_schedule_description">Filter notifications only on the days and times you choose</string>
+    <string name="notification_filter_schedule_start_time">Start time</string>
+    <string name="notification_filter_schedule_end_time">End time</string>
+    <string name="notification_filter_schedule_all_day">Filter is active all day when start and end times are the same</string>
+    <string name="notification_filter_schedule_no_days">No days selected, notifications won\'t be filtered</string>
     <string name="percent" translatable="false">%</string>
     <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
     <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>

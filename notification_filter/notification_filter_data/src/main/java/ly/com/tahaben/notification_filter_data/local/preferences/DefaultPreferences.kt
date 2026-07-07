@@ -2,13 +2,17 @@ package ly.com.tahaben.notification_filter_data.local.preferences
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import ly.com.tahaben.core.util.GlobalKey
+import ly.com.tahaben.notification_filter_domain.model.FilterSchedule
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import timber.log.Timber
+import java.time.DayOfWeek
+import java.time.LocalTime
 import java.util.Calendar
 
 class DefaultPreferences(
@@ -142,13 +146,64 @@ class DefaultPreferences(
                 calendar.get(Calendar.YEAR) == scheduleDate.get(Calendar.YEAR)
     }
 
+    override fun getFilterSchedule(): FilterSchedule {
+        val days = sharedPref.getStringSet(
+            Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_DAYS,
+            null
+        )?.mapNotNull { value ->
+            value.toIntOrNull()?.takeIf { it in 1..7 }?.let(DayOfWeek::of)
+        }?.toSet() ?: DayOfWeek.entries.toSet()
+        return FilterSchedule(
+            isEnabled = sharedPref.getBoolean(
+                Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_ENABLED,
+                false
+            ),
+            days = days,
+            startTime = LocalTime.ofSecondOfDay(
+                sharedPref.getInt(Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_START, 0)
+                    .coerceIn(0, 86399).toLong()
+            ),
+            endTime = LocalTime.ofSecondOfDay(
+                sharedPref.getInt(Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_END, 0)
+                    .coerceIn(0, 86399).toLong()
+            )
+        )
+    }
+
+    override fun setFilterScheduleEnabled(isEnabled: Boolean) {
+        sharedPref.edit {
+            putBoolean(Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_ENABLED, isEnabled)
+        }
+    }
+
+    override fun setFilterScheduleDays(days: Set<DayOfWeek>) {
+        sharedPref.edit {
+            putStringSet(
+                Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_DAYS,
+                days.map { it.value.toString() }.toSet()
+            )
+        }
+    }
+
+    override fun setFilterScheduleStartTime(time: LocalTime) {
+        sharedPref.edit {
+            putInt(Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_START, time.toSecondOfDay())
+        }
+    }
+
+    override fun setFilterScheduleEndTime(time: LocalTime) {
+        sharedPref.edit {
+            putInt(Preferences.KEY_NOTIFICATION_FILTER_SCHEDULE_END, time.toSecondOfDay())
+        }
+    }
+
     override fun getSettingsShouldShowWarning(): Boolean {
         return sharedPref.getBoolean(Preferences.KEY_NOTIFICATION_FILTER_WARNING, true)
     }
 
     override fun setSettingsShouldShowWarning(shouldShow: Boolean) {
-        sharedPref.edit()
-            .putBoolean(Preferences.KEY_NOTIFICATION_FILTER_WARNING, shouldShow)
-            .apply()
+        sharedPref.edit {
+            putBoolean(Preferences.KEY_NOTIFICATION_FILTER_WARNING, shouldShow)
+        }
     }
 }

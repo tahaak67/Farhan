@@ -1,5 +1,9 @@
 package ly.com.tahaben.notification_filter_domain.preferences
 
+import ly.com.tahaben.notification_filter_domain.model.FilterSchedule
+import java.time.DayOfWeek
+import java.time.LocalTime
+
 interface Preferences {
 
     fun loadShouldShowOnBoarding(): Boolean
@@ -19,6 +23,11 @@ interface Preferences {
     fun getNotifyMeMinutes(): Int
     fun getSettingsShouldShowWarning(): Boolean
     fun setSettingsShouldShowWarning(shouldShow: Boolean)
+    fun getFilterSchedule(): FilterSchedule
+    fun setFilterScheduleEnabled(isEnabled: Boolean)
+    fun setFilterScheduleDays(days: Set<DayOfWeek>)
+    fun setFilterScheduleStartTime(time: LocalTime)
+    fun setFilterScheduleEndTime(time: LocalTime)
 
 
     companion object {
@@ -32,5 +41,9 @@ interface Preferences {
         const val KEY_NOTIFICATION_FILTER_SHOULD_SHOWCASE =
             "notification_filter_should_showcase"
         const val KEY_NOTIFICATION_FILTER_WARNING = "notification_filter_settings_warning"
+        const val KEY_NOTIFICATION_FILTER_SCHEDULE_ENABLED = "notification_filter_schedule_enabled"
+        const val KEY_NOTIFICATION_FILTER_SCHEDULE_DAYS = "notification_filter_schedule_days"
+        const val KEY_NOTIFICATION_FILTER_SCHEDULE_START = "notification_filter_schedule_start"
+        const val KEY_NOTIFICATION_FILTER_SCHEDULE_END = "notification_filter_schedule_end"
     }
 }
