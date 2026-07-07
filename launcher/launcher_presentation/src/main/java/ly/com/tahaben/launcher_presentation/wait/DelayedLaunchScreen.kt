@@ -73,6 +73,7 @@ fun DelayedLaunchScreen(
     var openHowAccessibilityDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     var delayDurationDialogVisible by remember { mutableStateOf(false) }
+    var unlockDelayDurationDialogVisible by remember { mutableStateOf(false) }
     var delayMsgDialogVisible by remember { mutableStateOf(false) }
     var delayMsgDialogEditMode by remember { mutableStateOf(false) }
 
@@ -177,6 +178,39 @@ fun DelayedLaunchScreen(
                     },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
                 )
+                HorizontalDivider(modifier = Modifier.padding(horizontal = spacing.spaceMedium))
+                SwitchRow(
+                    Modifier
+                        .fillMaxWidth(),
+                    stringResource(R.string.delayed_unlock),
+                    selected = state.isDelayedUnlockEnabled,
+                    verticalAlignment = Alignment.CenterVertically,
+                    supportingText = stringResource(R.string.delayed_unlock_sub)
+                ) {
+                    onEvent(DelayedLaunchEvent.OnDelayedUnlockEnabled(it))
+                }
+                HorizontalDivider(modifier = Modifier.padding(horizontal = spacing.spaceMedium))
+                ListItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            unlockDelayDurationDialogVisible = true
+                        },
+                    headlineContent = {
+                        Row(modifier = Modifier) {
+                            Text(
+                                text = stringResource(R.string.delay_in_seconds),
+                                textAlign = TextAlign.Start,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = ": ${state.unlockDelayDurationSeconds}",
+                                textAlign = TextAlign.Start
+                            )
+                        }
+                    },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+                )
 
             } else {
 // accessibility not running
@@ -230,6 +264,38 @@ fun DelayedLaunchScreen(
                         Text(stringResource(R.string.save))
                     }
                     Button(onClick = {delayDurationDialogVisible = false}) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            }
+        }
+        if (unlockDelayDurationDialogVisible){
+            MyDialog(onDismissRequest = {unlockDelayDurationDialogVisible = false}) {
+                var text by remember { mutableStateOf(state.unlockDelayDurationSeconds.toString()) }
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = {
+                        if (it.isBlank()) text = ""
+                        if (it.toIntOrNull() == null) return@OutlinedTextField
+                        text = it },
+                    label = {
+                        Text(
+                            stringResource(R.string.delay_in_seconds)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Row(modifier = Modifier, horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)) {
+                    Button(
+                        onClick = {
+                            onEvent(DelayedLaunchEvent.OnSetUnlockDelayDuration(text.toInt()))
+                            unlockDelayDurationDialogVisible = false
+                                  },
+                        enabled = text.isNotBlank()
+                        ) {
+                        Text(stringResource(R.string.save))
+                    }
+                    Button(onClick = {unlockDelayDurationDialogVisible = false}) {
                         Text(stringResource(R.string.cancel))
                     }
                 }

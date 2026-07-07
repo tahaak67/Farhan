@@ -14,4 +14,6 @@ sealed interface DelayedLaunchEvent {
     data class SetDelayMsg(val msg: String):DelayedLaunchEvent
     data class DeleteDelayMsg(val msg: String): DelayedLaunchEvent
     data object ResetDelayMessages: DelayedLaunchEvent
+    data class OnDelayedUnlockEnabled(val enabled: Boolean) : DelayedLaunchEvent
+    data class OnSetUnlockDelayDuration(val durationInSeconds: Int): DelayedLaunchEvent
 }

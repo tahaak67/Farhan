@@ -323,6 +323,8 @@
     <string name="you_attempted_to_launch_this_app_times">You attempted to launch %s app %d times within the last 24 hours</string>
     <string name="delay_message">Message</string>
     <string name="delay_message_sub">Choose a message to show during the delay</string>
+    <string name="delayed_unlock">Delay after unlock</string>
+    <string name="delayed_unlock_sub">Wait a few seconds after unlocking your phone before you can use it</string>
 
     <array name="delayed_launch_messages">
         <item>@string/take_deep_breath</item>

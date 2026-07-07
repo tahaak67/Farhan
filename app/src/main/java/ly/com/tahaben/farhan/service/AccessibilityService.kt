@@ -1,8 +1,12 @@
 package ly.com.tahaben.farhan.service
 
 import android.accessibilityservice.AccessibilityService
+import android.app.KeyguardManager
+import android.content.BroadcastReceiver
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.graphics.Rect
@@ -76,6 +80,7 @@ import ly.com.tahaben.infinite_scroll_blocker_domain.model.ScrollViewInfo
 import ly.com.tahaben.infinite_scroll_blocker_domain.use_cases.InfiniteScrollUseCases
 import ly.com.tahaben.launcher_domain.preferences.Preference
 import ly.com.tahaben.launcher_presentation.wait.DelayedLaunchActivity
+import ly.com.tahaben.launcher_presentation.wait.DelayedUnlockActivity
 import ly.com.tahaben.screen_grayscale_domain.model.GrayscaleAppState
 import ly.com.tahaben.screen_grayscale_domain.use_cases.GrayscaleUseCases
 import timber.log.Timber
@@ -89,6 +94,10 @@ const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
 // A delayed app re-opened within this window after leaving the foreground is not delayed
 // again, so quick round-trips (checking a notification, fast app switching) stay smooth.
 private val RELAUNCH_GRACE_PERIOD = 30.seconds
+
+// SCREEN_ON and USER_PRESENT can both fire for a single unlock; triggers within this
+// window after an unlock overlay are ignored so it is never shown twice.
+private val UNLOCK_OVERLAY_DEBOUNCE = 5.seconds
 
 @AndroidEntryPoint
 class AccessibilityService : AccessibilityService() {
@@ -109,9 +118,28 @@ class AccessibilityService : AccessibilityService() {
     lateinit var launcherPref: Preference
 
     private var isDelayedLaunchEnabled = false
+    private var isDelayedUnlockEnabled = false
+    private var lastUnlockOverlayShownAt = 0L
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var delayedPackages = emptySet<String>()
+
+    private val unlockReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Timber.d("unlock receiver: ${intent.action}, enabled: $isDelayedUnlockEnabled")
+            if (!isDelayedUnlockEnabled) return
+            if (intent.action == Intent.ACTION_SCREEN_ON) {
+                // With any keyguard (even swipe) the unlock moment is ACTION_USER_PRESENT;
+                // SCREEN_ON only counts as an unlock on devices with lock screen set to None.
+                val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+                if (keyguardManager.isKeyguardLocked) return
+            }
+            val now = System.currentTimeMillis()
+            if (now - lastUnlockOverlayShownAt < UNLOCK_OVERLAY_DEBOUNCE.inWholeMilliseconds) return
+            lastUnlockOverlayShownAt = now
+            showDelayedUnlockOverlay()
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -119,11 +147,21 @@ class AccessibilityService : AccessibilityService() {
             Timber.d("packageName: $it")
             softInputPackages.add(it.packageName)
         }
+        registerReceiver(unlockReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_USER_PRESENT)
+            addAction(Intent.ACTION_SCREEN_ON)
+        })
         scope.launch {
             launch {
                 launcherPref.isDelayedLaunchEnabled().collectLatest { enabled ->
                     Timber.d("isDelayedLaunchEnabled: $enabled")
                     isDelayedLaunchEnabled = enabled
+                }
+            }
+            launch {
+                launcherPref.isDelayedUnlockEnabled().collectLatest { enabled ->
+                    Timber.d("isDelayedUnlockEnabled: $enabled")
+                    isDelayedUnlockEnabled = enabled
                 }
             }
             launch {
@@ -147,7 +185,10 @@ class AccessibilityService : AccessibilityService() {
                 }
             }
         },
-        ignoredClassNames = setOf(DelayedLaunchActivity::class.java.name)
+        ignoredClassNames = setOf(
+            DelayedLaunchActivity::class.java.name,
+            DelayedUnlockActivity::class.java.name
+        )
     )
 
     override fun onServiceConnected() {
@@ -469,6 +510,15 @@ class AccessibilityService : AccessibilityService() {
         startActivity(intent)
     }
 
+    private fun showDelayedUnlockOverlay() {
+        Timber.d("showing delayed unlock overlay")
+
+        val intent = Intent(this.applicationContext, DelayedUnlockActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        startActivity(intent)
+    }
+
     private fun grayscaleScreen() {
         if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
             != PackageManager.PERMISSION_GRANTED
@@ -520,6 +570,7 @@ class AccessibilityService : AccessibilityService() {
         recentScrollViews.clear()
         softInputPackages.clear()
         appLaunchDetector.reset()
+        unregisterReceiver(unlockReceiver)
         scope.cancel()
         super.onDestroy()
     }

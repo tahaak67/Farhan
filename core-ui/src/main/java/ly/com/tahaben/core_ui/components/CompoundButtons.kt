@@ -55,7 +55,7 @@ fun CheckboxRow(modifier: Modifier = Modifier, string: String, selected: Boolean
 }
 
 @Composable
-fun SwitchRow(modifier: Modifier = Modifier, string: String, selected: Boolean, verticalAlignment: Alignment.Vertical = Alignment.Top, horizontalArrangement: Arrangement.Horizontal = Arrangement.Start, onCheckedChange: (Boolean) -> Unit) {
+fun SwitchRow(modifier: Modifier = Modifier, string: String, selected: Boolean, verticalAlignment: Alignment.Vertical = Alignment.Top, horizontalArrangement: Arrangement.Horizontal = Arrangement.Start, supportingText: String? = null, onCheckedChange: (Boolean) -> Unit) {
    /* Row(
         modifier = modifier.toggleable(
             value = selected,
@@ -77,6 +77,7 @@ fun SwitchRow(modifier: Modifier = Modifier, string: String, selected: Boolean, 
 //        leadingContent = { Text(modifier = Modifier, text = string) },
         trailingContent = {Switch(checked = selected, onCheckedChange = null)},
         headlineContent = {Text(modifier = Modifier, text = string)},
+        supportingContent = supportingText?.let { { Text(text = it) } },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
     )
 }

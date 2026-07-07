@@ -27,6 +27,8 @@ class DefaultPreferences(
 
     private val mainSwitchKey = booleanPreferencesKey(GlobalKey.Pref_KEY_APP_MAIN_SWITCH)
     private val delayedLaunchDurationKey = intPreferencesKey(Preference.DELAYED_LAUNCH_DURATION_KEY)
+    private val delayedUnlockEnabledKey = booleanPreferencesKey(Preference.DELAYED_UNLOCK_ENABLED_KEY)
+    private val delayedUnlockDurationKey = intPreferencesKey(Preference.DELAYED_UNLOCK_DURATION_KEY)
     private val delayedMessageKey = stringSetPreferencesKey(Preference.DELAYED_LAUNCH_MESSAGES_KEY)
     private val selectedDelayedMessageKey = stringPreferencesKey(Preference.SELECTED_DELAYED_LAUNCH_MESSAGES_KEY)
 
@@ -128,8 +130,8 @@ class DefaultPreferences(
 
     override suspend fun isDelayedLaunchEnabled(): Flow<Boolean> {
         return dataStore.data.map {
-            it[keyMindfulLaunchEnabled] ?: false &&
-            it[mainSwitchKey] ?: true
+            (it[keyMindfulLaunchEnabled] ?: false) &&
+                    (it[mainSwitchKey] ?: true)
         }
     }
 
@@ -184,6 +186,31 @@ class DefaultPreferences(
     override suspend fun resetDelayedLaunchMessages() {
         dataStore.edit { prefs ->
             prefs[delayedMessageKey] = defaultMessages.toSet()
+        }
+    }
+
+    override suspend fun isDelayedUnlockEnabled(): Flow<Boolean> {
+        return dataStore.data.map {
+            (it[delayedUnlockEnabledKey] ?: false) &&
+                    (it[mainSwitchKey] ?: true)
+        }
+    }
+
+    override suspend fun setDelayedUnlockEnabled(isEnabled: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[delayedUnlockEnabledKey] = isEnabled
+        }
+    }
+
+    override suspend fun setDelayedUnlockDuration(seconds: Int) {
+        dataStore.edit { prefs ->
+            prefs[delayedUnlockDurationKey] = seconds
+        }
+    }
+
+    override suspend fun getDelayedUnlockDuration(): Flow<Int> {
+        return dataStore.data.map { prefs ->
+            prefs[delayedUnlockDurationKey] ?: 5
         }
     }
 }

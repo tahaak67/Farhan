@@ -11,6 +11,17 @@
             android:launchMode="singleTask"
             android:label="@string/title_activity_hold_up"
             android:theme="@style/Theme.Farhan" />
+        <!-- Empty taskAffinity: the overlay must open in its own task so finishing it
+             reveals whatever the user was in before locking, instead of dragging the
+             rest of the Farhan task (MainActivity) to the foreground with it. -->
+        <activity
+            android:name=".wait.DelayedUnlockActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_hold_up"
+            android:theme="@style/Theme.Farhan" />
     </application>
 
 </manifest>
