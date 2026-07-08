@@ -1,0 +1,7 @@
+New Features: Farhan Launcher (RC) – first release‑candidate of a minimal home launcher with an overhauled screen, updated settings, and integrated time‑limiter. Added a clean, distraction‑free app launcher to replace the default. Introduced a time‑limiter that prompts for desired usage duration on selected apps and notifies when time expires. Implemented delayed unlock with a configurable post‑unlock delay. Added a persistent notification indicating when the time‑limiter/accessibility service is active. Provided a grayscale‑agnostic option allowing per‑app exclusion from grayscale mode independent of the global affected apps list. Created a notification‑filter schedule to automatically enable or disable the filter based on custom days and times. Enabled search within filtered notification history.
+
+Improvements: Added a confirmation dialog before deleting all notifications to avoid accidental loss. Performed general UI cleanup and refactored launcher and time‑limiter code.
+
+Bug Fixes: Fixed grayscale mode getting stuck on certain Pixel devices. Resolved delayed launch triggering duplicate blockers.
+
+Localization: Added new localized strings, including Arabic translations.
