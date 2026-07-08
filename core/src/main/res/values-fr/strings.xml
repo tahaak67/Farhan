@@ -35,7 +35,7 @@
     <string name="search">Recherche</string>
     <string name="close_search">Fermer la recherche</string>
     <string name="notify_me_channel">Me notifier</string>
-    <string name="white_lited_apps">Applications sur liste blanche</string>
+    <string name="white_lited_apps">Applications concernées</string>
     <string name="grayscale_onboarding_message">L\'une des façons dont les applications se disputent votre temps et votre attention est par le biais des couleurs. En utilisant les niveaux de gris, Farhan peut désactiver les couleurs pour les applications sélectionnées lorsque vous les déjeunez, ce qui élimine leur effet sur vous !</string>
     <string name="usage">Utilisation</string>
     <string name="grayscale">Niveaux de gris</string>
@@ -53,7 +53,7 @@
     <string name="continue_scrolling">Continuer à défiler/scroller…</string>
     <string name="exclude_this_app_press_and_hold">Exclure cette application (appuyer et maintenir)</string>
     <string name="app_excluded">Application exclut</string>
-    <string name="enable_grayscale_for_white_listed_apps">Activer les niveaux de gris pour les applications sur liste blanche</string>
+    <string name="enable_grayscale_for_white_listed_apps">Activer les niveaux de gris pour les applications concernées</string>
     <string name="next">Suivant</string>
     <string name="enabled">Activé</string>
     <string name="disabled">Désactivé</string>

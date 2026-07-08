@@ -8,7 +8,9 @@ data class DelayedLaunchState(
     val isLoading: Boolean = false,
     val delayDurationSeconds: Int = 0,
     val selectedDelayedLaunchMessage: String = "",
-    val delayedLaunchMessages: Set<String> = emptySet()
+    val delayedLaunchMessages: Set<String> = emptySet(),
+    val isDelayedUnlockEnabled: Boolean = false,
+    val unlockDelayDurationSeconds: Int = 0
 
 )
 

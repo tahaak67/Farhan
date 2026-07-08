@@ -1,16 +1,12 @@
 package ly.com.tahaben.launcher_data.service
 
 import android.app.AlarmManager
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
@@ -19,13 +15,17 @@ import android.os.SystemClock
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,6 +46,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.service.RunningService
+import ly.com.tahaben.core.service.RunningServicesNotifier
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.core_ui.use_cases.UiUseCases
@@ -74,6 +76,9 @@ class TimeLimitService : Service() {
 
     @Inject
     lateinit var uiUseCases: UiUseCases
+
+    @Inject
+    lateinit var runningServicesNotifier: RunningServicesNotifier
 
 
     override fun onBind(intent: Intent): IBinder? {
@@ -104,11 +109,16 @@ class TimeLimitService : Service() {
     override fun onCreate() {
         super.onCreate()
         Timber.d("The service has been created")
-        val notification = createNotification()
+        runningServicesNotifier.serviceStarted(RunningService.TIME_LIMITER)
+        val notification = runningServicesNotifier.buildNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(1, notification, FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            startForeground(
+                RunningServicesNotifier.NOTIFICATION_ID,
+                notification,
+                FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+            )
         } else {
-            startForeground(1, notification)
+            startForeground(RunningServicesNotifier.NOTIFICATION_ID, notification)
         }
         serviceScope = CoroutineScope(Dispatchers.IO)
     }
@@ -116,8 +126,8 @@ class TimeLimitService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         serviceScope = null
+        runningServicesNotifier.serviceStopped(RunningService.TIME_LIMITER)
         Timber.d("The service has been destroyed")
-        Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
@@ -139,7 +149,6 @@ class TimeLimitService : Service() {
     private fun startService() {
         if (isServiceStarted) return
         Timber.d("Starting the foreground service task")
-        Toast.makeText(this, ".", Toast.LENGTH_SHORT).show()
         isServiceStarted = true
         // setServiceState(this, ServiceState.STARTED)
 
@@ -190,7 +199,6 @@ class TimeLimitService : Service() {
 
     private fun stopService() {
         Timber.d("Stopping the foreground service")
-        Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show()
         try {
             wakeLock?.let {
                 if (it.isHeld) {
@@ -226,128 +234,15 @@ class TimeLimitService : Service() {
     }
 
 
-    private fun createNotification(): Notification {
-        val notificationChannelId = getString(R.string.time_limit_notification_channel)
-
-        // depending on the Android API that we're dealing with we will have
-        // to use a specific method to create the notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(
-                notificationChannelId,
-                getString(R.string.time_limiter_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).let {
-                it.description = getString(R.string.time_limiter_channel_description)
-                it.enableLights(true)
-                it.lightColor = Color.RED
-                it.enableVibration(true)
-                it.importance = NotificationManager.IMPORTANCE_HIGH
-                it.vibrationPattern = longArrayOf(100, 200, 300, 400)
-                it
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
-        val pm = this.packageManager
-        val pendingIntent: PendingIntent =
-            pm.getLaunchIntentForPackage(packageName).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-            }
-
-        val builder: Notification.Builder =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Notification.Builder(
-                this,
-                notificationChannelId
-            ) else Notification.Builder(this)
-
-        return builder
-            .setContentTitle("TimeLimit Service")
-            .setContentText("TimeLimiter background service")
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.ic_farhan_transparent)
-            .setTicker("Ticker text")
-            //.setPriority(Notification.PRIORITY_HIGH)
-            .build()
-    }
-
     enum class Actions {
         START,
         STOP
     }
 
     private val windowManager get() = getSystemService(WINDOW_SERVICE) as WindowManager
+
+    @OptIn(ExperimentalMaterial3Api::class)
     private fun showTimeUpDialog(timeLimit: TimeLimit) {
-        /*val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            layoutFlag,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-
-        val composeView = ComposeView(this)
-        composeView.setContent {
-            var isDialogVisible by remember { mutableStateOf(false) }
-            MyDialog(
-                onDismissRequest = {isDialogVisible = false}
-            ){
-
-            }
-        }*/
-        /*Dialog(this).apply {
-            setContentView(R.layout.timeout_dialog)
-            window!!.setType(
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                else WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-            )
-            findViewById<Button>(R.id.btn_leave).setOnClickListener {
-                context.startActivity(
-                    Intent(Intent.ACTION_MAIN)
-                        .addCategory(Intent.CATEGORY_HOME)
-                        .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                )
-                dismiss()
-            }
-            findViewById<TextView>(R.id.btn_1min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 1.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_one_min)
-            }
-            findViewById<TextView>(R.id.btn_3min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 3.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_three_min)
-            }
-            findViewById<TextView>(R.id.btn_5min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 5.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_five_min)
-            }
-            setCanceledOnTouchOutside(false)
-            setCancelable(false)
-            try {
-                show()
-            } catch (e: Exception) {
-                // can't show dialog
-                // draw over other apps permission might be revoked!
-                e.printStackTrace()
-            }
-        }*/
         val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -370,59 +265,67 @@ class TimeLimitService : Service() {
                 }
 
                 val spacing = LocalSpacing.current
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    tonalElevation = AlertDialogDefaults.TonalElevation,
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+                // The window is MATCH_PARENT so the composition root gets tight full-screen
+                // constraints; this Box loosens them so the dialog card can wrap its content,
+                // and doubles as the dialog scrim.
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(BottomSheetDefaults.ScrimColor),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(spacing.spaceMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium, Alignment.CenterVertically)
+                    Surface(
+                        modifier = Modifier.padding(spacing.spaceLarge),
+                        shape = MaterialTheme.shapes.extraLarge,
+                        tonalElevation = AlertDialogDefaults.TonalElevation,
+                        color = MaterialTheme.colorScheme.surface,
                     ) {
-                        Text(stringResource(R.string.time_is_up))
-                        Text(stringResource(R.string.or_add_more_time))
-                        Button(onClick = {
-                            dismiss()
-                            this@TimeLimitService.startActivity(
-                                Intent(Intent.ACTION_MAIN)
-                                    .addCategory(Intent.CATEGORY_HOME)
-                                    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                            )
-                        }) {
-                            Text(stringResource(R.string.take_me_out_of_here))
-                        }
-                        Row(horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)) {
+                        Column(
+                            modifier = Modifier.padding(spacing.spaceMedium),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(spacing.spaceMedium)
+                        ) {
+                            Text(stringResource(R.string.time_is_up))
                             Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 1.seconds.inWholeMilliseconds
-                                )
                                 dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.one_min)) }
-                            Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 3.seconds.inWholeMilliseconds
+                                this@TimeLimitService.startActivity(
+                                    Intent(Intent.ACTION_MAIN)
+                                        .addCategory(Intent.CATEGORY_HOME)
+                                        .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
                                 )
-                                dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.three_min)) }
-                            Button(onClick = {
-                                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                                    timeAtAddingInMilli = System.currentTimeMillis(),
-                                    timeLimitInMilli = 5.seconds.inWholeMilliseconds
-                                )
-                                dismiss()
-                                showToast(R.string.will_remind_you_in_five_min)
-                            }) { Text(stringResource(R.string.five_min)) }
+                            }) {
+                                Text(stringResource(R.string.take_me_out_of_here))
+                            }
+                            Text(stringResource(R.string.or_add_more_time))
+                            Row(horizontalArrangement = Arrangement.spacedBy(spacing.spaceMedium)) {
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 1.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_one_min)
+                                }) { Text(stringResource(R.string.one_min)) }
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 3.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_three_min)
+                                }) { Text(stringResource(R.string.three_min)) }
+                                Button(onClick = {
+                                    timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
+                                        timeAtAddingInMilli = System.currentTimeMillis(),
+                                        timeLimitInMilli = 5.seconds.inWholeMilliseconds
+                                    )
+                                    dismiss()
+                                    showToast(R.string.will_remind_you_in_five_min)
+                                }) { Text(stringResource(R.string.five_min)) }
+                            }
                         }
                     }
                 }
-
             }
         }
         // Trick The ComposeView into thinking we are tracking lifecycle

@@ -9,6 +9,8 @@ import android.service.notification.StatusBarNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import ly.com.tahaben.core.service.RunningService
+import ly.com.tahaben.core.service.RunningServicesNotifier
 import ly.com.tahaben.notification_filter_data.mapper.toNotificationItem
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import timber.log.Timber
@@ -19,6 +21,9 @@ class NotificationService : NotificationListenerService() {
 
     @Inject
     lateinit var notificationFilterUseCases: NotificationFilterUseCases
+
+    @Inject
+    lateinit var runningServicesNotifier: RunningServicesNotifier
 
     companion object {
         private var intentHashmap: HashMap<String, PendingIntent> = HashMap()
@@ -33,9 +38,21 @@ class NotificationService : NotificationListenerService() {
     }
 
 
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        Timber.d("notification listener connected")
+        runningServicesNotifier.serviceStarted(RunningService.NOTIFICATION_FILTER)
+    }
+
+    override fun onListenerDisconnected() {
+        Timber.d("notification listener disconnected")
+        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_FILTER)
+        super.onListenerDisconnected()
+    }
+
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         val isNotificationFilterEnabled = runBlocking { notificationFilterUseCases.checkIfNotificationServiceIsEnabled() }
-        if (isNotificationFilterEnabled) {
+        if (isNotificationFilterEnabled && notificationFilterUseCases.isCurrentTimeWithinFilterSchedule()) {
             Timber.d("notification Posted")
             val notification = sbn?.notification
             val appPackageName = sbn?.packageName ?: ""
@@ -102,6 +119,7 @@ class NotificationService : NotificationListenerService() {
 
     override fun onDestroy() {
         intentHashmap.clear()
+        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_FILTER)
         super.onDestroy()
     }
 }

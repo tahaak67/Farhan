@@ -8,12 +8,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,7 +53,7 @@ fun SearchTextFieldLauncher(
         BasicTextField(
             modifier = modifier
                 .clip(RoundedCornerShape(5.dp))
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colorScheme.surface)
                 .fillMaxWidth()
                 .padding(spacing.spaceMedium)
                 .padding(end = spacing.spaceMedium)
@@ -76,7 +76,7 @@ fun SearchTextFieldLauncher(
         if (shouldShowHint) {
             Text(
                 text = hint,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Light,
                 color = Color.LightGray,
                 modifier = Modifier

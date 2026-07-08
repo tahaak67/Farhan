@@ -59,6 +59,8 @@
             android:name="ly.com.tahaben.launcher_presentation.launcher.LauncherActivity"
             android:enabled="true"
             android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
             android:theme="@style/Theme.FarhanLauncher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

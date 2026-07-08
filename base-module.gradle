@@ -1,6 +1,5 @@
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     compileSdkVersion libs.versions.android.compileSdk.get().toInteger()
@@ -28,19 +27,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-    kapt {
-        correctErrorTypes = true
-    }
-
 }
 
 dependencies {
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
     implementation(libs.timber)
 
     testImplementation(libs.junit4)

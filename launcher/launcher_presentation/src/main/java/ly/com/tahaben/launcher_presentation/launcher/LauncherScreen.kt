@@ -1,5 +1,6 @@
 package ly.com.tahaben.launcher_presentation.launcher
 
+import android.app.Activity
 import android.graphics.Color
 import android.widget.TextClock
 import androidx.compose.foundation.background
@@ -10,6 +11,8 @@ import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,6 +42,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,24 +53,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.launch
@@ -75,14 +83,15 @@ import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.DelayedLaunchOverlay
+import ly.com.tahaben.core_ui.components.MyDialog
 import ly.com.tahaben.launcher_presentation.component.AppListItem
 import ly.com.tahaben.launcher_presentation.component.SearchTextFieldLauncher
 import timber.log.Timber
-import kotlin.math.abs
 
 @OptIn(
     ExperimentalComposeUiApi::class,
-    ExperimentalMotionApi::class, ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class
+    ExperimentalMotionApi::class, ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class
 )
 @Composable
 fun LauncherScreen(
@@ -91,10 +100,11 @@ fun LauncherScreen(
 ) {
     val context = LocalContext.current
     val spacing = LocalSpacing.current
+    val resources = LocalResources.current
     val state = viewModel.state
     val keyboardController = LocalSoftwareKeyboardController.current
     val motionScene = remember {
-        context.resources
+        resources
             .openRawResource(R.raw.launcher_motion_scene)
             .readBytes()
             .decodeToString()
@@ -104,6 +114,17 @@ fun LauncherScreen(
     val anchors = mapOf(0f to "Start", componentWidth to "End")
     val scope = rememberCoroutineScope()
     val mprogress = (swipeableState.offset.value / componentWidth)
+    val view = LocalView.current
+    val isBackgroundLight = MaterialTheme.colorScheme.background.luminance() > 0.5f
+    val isAppsListVisible = mprogress < 0.5f
+    if (!view.isInEditMode) {
+        LaunchedEffect(isAppsListVisible, isBackgroundLight) {
+            val window = (view.context as? Activity)?.window ?: return@LaunchedEffect
+            // Over the wallpaper (home) keep light icons, over the apps list match the theme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                isAppsListVisible && isBackgroundLight
+        }
+    }
     homeWatcher.setOnHomePressedListener(object : HomeWatcher.OnHomePressedListener {
         override fun onHomePressed() {
             scope.launch {
@@ -173,7 +194,7 @@ fun LauncherScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                val headers = remember {
+                val headers = remember(state.appsList) {
                     state.appsList.map { it.name?.first()?.uppercase() }.toSet().toList()
                 }
                 Row {
@@ -191,13 +212,13 @@ fun LauncherScreen(
                                 })
                         }
                     }
-                    val offsets = remember { mutableStateMapOf<Int, Float>() }
+                    val offsets = remember { mutableStateMapOf<Int, Offset>() }
                     var selectedHeaderIndex by remember { mutableStateOf(0) }
                     val coroutineScope = rememberCoroutineScope()
 
-                    fun updateSelectedIndexIfNeeded(offset: Float) {
+                    fun updateSelectedIndexIfNeeded(position: Offset) {
                         val index = offsets
-                            .mapValues { abs(it.value - offset) }
+                            .mapValues { (it.value - position).getDistanceSquared() }
                             .entries
                             .minByOrNull { it.value }
                             ?.key ?: return
@@ -221,7 +242,7 @@ fun LauncherScreen(
                             .background(color = LightGray),
                     ) {
 
-                        Column(
+                        FlowColumn(
                             verticalArrangement = Arrangement.SpaceEvenly,
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -231,12 +252,12 @@ fun LauncherScreen(
                                 )
                                 .pointerInput(Unit) {
                                     detectTapGestures {
-                                        updateSelectedIndexIfNeeded(it.y)
+                                        updateSelectedIndexIfNeeded(it)
                                     }
                                 }
                                 .pointerInput(Unit) {
                                     detectVerticalDragGestures { change, _ ->
-                                        updateSelectedIndexIfNeeded(change.position.y)
+                                        updateSelectedIndexIfNeeded(change.position)
                                     }
                                 }
                         ) {
@@ -247,7 +268,7 @@ fun LauncherScreen(
                                         modifier = Modifier
                                             .padding(horizontal = spacing.spaceExtraSmall)
                                             .onGloballyPositioned {
-                                                offsets[i] = it.boundsInParent().center.y
+                                                offsets[i] = it.boundsInParent().center
                                             },
                                         color = White
                                     )
@@ -261,7 +282,8 @@ fun LauncherScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .layoutId("home_screen"),
+                .layoutId("home_screen")
+                .safeContentPadding(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -318,84 +340,77 @@ fun LauncherScreen(
         }
     }
     if (state.isTimeLimitDialogVisible) {
-        Dialog(
+        MyDialog(
             onDismissRequest = { viewModel.dismissTimeLimitDialog() },
-            properties = DialogProperties(),
         ) {
-            Column(
-                modifier = Modifier
-                    .background(androidx.compose.ui.graphics.Color.White)
-                    .padding(16.dp)
-                    .fillMaxWidth()
+            Text(
+                text = stringResource(
+                    R.string.set_time_limite_dialog_text,
+                    state.timeLimitedApp?.name.toString()
+                ),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(
-                        R.string.set_time_limite_dialog_text,
-                        state.timeLimitedApp?.name.toString()
-                    ),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(onClick = {
-                        state.timeLimitedApp?.let { app ->
-                            viewModel.setTimeLimitAndLunchApp(
-                                app = app,
-                                timeLimitInMinutes = 5
-                            )
-                        }
-                    }) {
-                        Text(
-                            text = stringResource(id = R.string.five_min),
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.labelLarge
+                Button(onClick = {
+                    state.timeLimitedApp?.let { app ->
+                        viewModel.setTimeLimitAndLunchApp(
+                            app = app,
+                            timeLimitInMinutes = 5
                         )
                     }
-                    Button(onClick = {
-                        state.timeLimitedApp?.let { app ->
-                            viewModel.setTimeLimitAndLunchApp(
-                                app = app,
-                                timeLimitInMinutes = 10
-                            )
-                        }
-                    }) {
-                        Text(
-                            text = stringResource(R.string.ten_min),
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.labelLarge
+                }) {
+                    Text(
+                        text = stringResource(id = R.string.five_min),
+                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+                Button(onClick = {
+                    state.timeLimitedApp?.let { app ->
+                        viewModel.setTimeLimitAndLunchApp(
+                            app = app,
+                            timeLimitInMinutes = 10
                         )
                     }
-                    Button(onClick = {
-                        state.timeLimitedApp?.let { app ->
-                            viewModel.setTimeLimitAndLunchApp(
-                                app = app,
-                                timeLimitInMinutes = 15
-                            )
-                        }
-                    }) {
-                        Text(
-                            text = stringResource(R.string.fifteen_min),
-                            fontSize = 12.sp,
-                            style = MaterialTheme.typography.labelLarge
+                }) {
+                    Text(
+                        text = stringResource(R.string.ten_min),
+                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+                Button(onClick = {
+                    state.timeLimitedApp?.let { app ->
+                        viewModel.setTimeLimitAndLunchApp(
+                            app = app,
+                            timeLimitInMinutes = 15
                         )
                     }
+                }) {
+                    Text(
+                        text = stringResource(R.string.fifteen_min),
+                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.labelLarge
+                    )
                 }
             }
 
         }
     }
-    var innerBoxHeight by remember { mutableStateOf(0.dp) }
-    DelayedLaunchOverlay(
-        delayInSeconds = 0,
-        launchCount = 0,
-        appName = "",
-        delayMessage = "",
-        openApp = {
-            viewModel.disableOverlay()
-            state.timeLimitedApp?.let { viewModel.launchActivityForApp(it) }
-                  },
-        dismissOverlay = { viewModel.disableOverlay() })
+    if (state.isDelayRunning) {
+        DelayedLaunchOverlay(
+            delayInSeconds = state.delayDurationSeconds,
+            launchCount = state.launchAttemptCount,
+            appName = state.timeLimitedApp?.name.orEmpty(),
+            delayMessage = state.delayMessage,
+            openApp = {
+                viewModel.disableOverlay()
+                state.timeLimitedApp?.let { viewModel.launchActivityForApp(it) }
+            },
+            dismissOverlay = { viewModel.disableOverlay() })
+    }
 }

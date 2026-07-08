@@ -1,5 +1,6 @@
 package ly.com.tahaben.farhan
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,10 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -114,6 +118,15 @@ class MainActivity : ComponentActivity() {
                 UIModeAppearance.DARK_MODE -> true
                 UIModeAppearance.LIGHT_MODE -> false
                 UIModeAppearance.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+            }
+            val view = LocalView.current
+            if (!view.isInEditMode) {
+                LaunchedEffect(isDarkMode) {
+                    val window = (view.context as? Activity)?.window ?: return@LaunchedEffect
+                    // Over the wallpaper (home) keep light icons, over the apps list match the theme
+                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                        !isDarkMode
+                }
             }
             FarhanTheme(
                 darkMode = isDarkMode,

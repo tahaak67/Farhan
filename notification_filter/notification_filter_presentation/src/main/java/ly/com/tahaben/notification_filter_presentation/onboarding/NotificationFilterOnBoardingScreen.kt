@@ -1,7 +1,10 @@
 package ly.com.tahaben.notification_filter_presentation.onboarding
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import ly.com.tahaben.core.R
@@ -23,11 +26,13 @@ fun NotificationFilterOnBoardingScreen(
             }
         }
     }
-
-    OnBoardingContent(
-        message = stringResource(id = R.string.notification_filter_onboarding_message),
-        onNextClick = viewModel::onNextClick,
-        gifId = R.drawable.notifications_onboarding,
-        gifDescription = stringResource(id = R.string.on_boarding_image_description)
-    )
+    Scaffold { paddingValues ->
+        OnBoardingContent(
+            modifier = Modifier.padding(paddingValues),
+            message = stringResource(id = R.string.notification_filter_onboarding_message),
+            onNextClick = viewModel::onNextClick,
+            gifId = R.drawable.notifications_onboarding,
+            gifDescription = stringResource(id = R.string.on_boarding_image_description)
+        )
+    }
 }

@@ -88,8 +88,8 @@
     <string name="continue_scrolling">Seguir desplazando …</string>
     <string name="exclude_this_app_press_and_hold">Excluir esta aplicación (Mantener pulsado)</string>
     <string name="app_excluded">Aplicación excluida</string>
-    <string name="enable_grayscale_for_white_listed_apps">Activar escala de grises para las aplicaciones en la lista blanca</string>
-    <string name="white_lited_apps">Aplicaciones en la lista blanca</string>
+    <string name="enable_grayscale_for_white_listed_apps">Activar escala de grises para las aplicaciones afectadas</string>
+    <string name="white_lited_apps">Aplicaciones afectadas</string>
     <string name="next">Siguiente</string>
     <string name="enabled">Activado</string>
     <string name="disabled">Desactivado</string>
@@ -133,7 +133,7 @@
     <string name="reason_know_how_much_you_scroll">Sepa cuánto se desplaza y cuántos elementos hay en la pantalla.</string>
     <string name="camera">Cámara</string>
     <string name="reason_know_if_app_in_exceptions">Saber si la aplicación actual está en la lista de excepciones o no</string>
-    <string name="reason_know_if_app_in_whitelist">Saber si la aplicación actual está en la lista blanca o no</string>
+    <string name="reason_know_if_app_in_whitelist">Saber si la aplicación actual está en la lista de aplicaciones afectadas o no</string>
     <string name="reason_display_warning_if_infinite_scroll_detected">Mostrar un mensaje si detectamos deslizamiento infinito.</string>
     <string name="notification_settings_shocase_tip">Puedes añadir excepciones o poner un recordatorio desde los ajustes del filtro de notificaciones</string>
     <string name="version">Versión de la aplicación</string>
@@ -145,7 +145,7 @@
     <string name="secure_permission_wroot_error">No se ha concedido el permiso :(, inténtalo de manera manual.</string>
     <string name="secure_permission_wroot_success">¡Permiso concedido!</string>
     <string name="show_exceptions_only">Mostrar solo las excepciones</string>
-    <string name="show_whitelist_only">Mostrar solo la lista blanca</string>
+    <string name="show_whitelist_only">Mostrar solo las aplicaciones afectadas</string>
     <string name="range_null_error">Por favor, selecciona una fecha de inicio y fin válidas.</string>
     <string name="delete_cache_for_day">Borrar caché para este día</string>
     <string name="delete_cache_dialog_title">¿Borrar los datos de %s?</string>
@@ -200,7 +200,7 @@
     <string name="productivity_tip1">Para mejorar la productividad durante las horas de trabajo, ponga el teléfono en silencio y manténgalo fuera de la vista (por ejemplo, en un cajón)</string>
     <string name="notification_filter_exception_tip">¿No quieres perderte una notificación de una aplicación? Asegúrate de excluir esa aplicación en el filtro de notificaciones</string>
     <string name="notification_filter_notifyme_tip">Utiliza Notificarme en el filtro de notificaciones y establece una hora de notificación para comprobar diariamente las notificaciones filtradas</string>
-    <string name="grayscale_whitelist_tip">Cuando la escala de grises está activada, sólo se aplica a las aplicaciones de la lista blanca</string>
+    <string name="grayscale_whitelist_tip">Cuando la escala de grises está activada, sólo se aplica a las aplicaciones afectadas</string>
     <string name="beta_version_tip">Esta es una versión beta de Farhan, asegúrate de informar de cualquier error al desarrollador y haz capturas de pantalla si es posible</string>
     <string name="if_you_choose_agree_msg">Cuando elijas Aceptar, accederás a la configuración de accesibilidad de tu dispositivo.</string>
     <string name="grant_secure_permission_manually_msg">O conceder el permiso manualmente usando ADB en tu PC, no te preocupes solo tienes que hacerlo una vez y solo toma unos minutos</string>

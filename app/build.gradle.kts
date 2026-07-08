@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
-    kotlin("android")
     alias(libs.plugins.hiltAndroidGradle)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.ksp)
@@ -43,11 +42,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget("17")
-        }
-    }
     androidResources {
         noCompress += "ttf"
         noCompress += ".ttf"
@@ -63,6 +57,12 @@ android {
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("17")
     }
 }
 

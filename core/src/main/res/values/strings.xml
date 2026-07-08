@@ -44,6 +44,12 @@
     <string name="notify_me_description">Notify me to check filtered notifications daily</string>
     <string name="exceptions">Exceptions</string>
     <string name="notifications_filter">Notifications Filter</string>
+    <string name="notification_filter_schedule">Filter schedule</string>
+    <string name="notification_filter_schedule_description">Filter notifications only on the days and times you choose</string>
+    <string name="notification_filter_schedule_start_time">Start time</string>
+    <string name="notification_filter_schedule_end_time">End time</string>
+    <string name="notification_filter_schedule_all_day">Filter is active all day when start and end times are the same</string>
+    <string name="notification_filter_schedule_no_days">No days selected, notifications won\'t be filtered</string>
     <string name="percent" translatable="false">%</string>
     <string name="infinite_scroll_blocker_settings">Infinite Scroll Blocker Settings</string>
     <string name="infinite_scroll_blocker">Infinite Scrolling Blocker</string>
@@ -53,8 +59,11 @@
     <string name="continue_scrolling">Continue scrolling …</string>
     <string name="exclude_this_app_press_and_hold">Exclude this app (Press and hold)</string>
     <string name="app_excluded">App excluded</string>
-    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for whitelisted apps</string>
-    <string name="white_lited_apps">Whitelisted apps</string>
+    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for affected apps</string>
+    <string name="white_lited_apps">Affected apps</string>
+    <string name="grayscale_state_color">Color</string>
+    <string name="grayscale_state_leave_as_is">Keep as is</string>
+    <string name="grayscale_system_apps_hint">System apps (like the app switcher and share menu) keep the screen as is by default, so they don\'t flip the color filter while you are switching between apps.</string>
     <string name="grayscale_onboarding_message">One of the ways apps compete for your time and attention is through colors, using grayscale Farhan can disable colors for selected apps when you lunch them eliminating their effect on you!</string>
     <string name="on_boarding_image_description">Onboarding image</string>
     <string name="next">Next</string>
@@ -112,12 +121,14 @@
     <string name="set_default_launcher_title">Set Farhan as your launcher</string>
     <string name="set_default_launcher_text">Please select Farhan to set it as your default launcher</string>
     <string name="set_other_default_launcher_text">Please select the other launcher you want to use</string>
+    <string name="change_default_launcher">Change default launcher</string>
+    <string name="change_default_launcher_sub">Select Farhan in the system settings to use it as your launcher, or pick another launcher to switch back</string>
     <string name="dialer">Dialer</string>
     <string name="camera">Camera</string>
     <string name="reason_know_if_app_in_exceptions">Know if current app is in exceptions list or not</string>
     <string name="reason_know_how_much_you_scroll">Know How much you scroll and how much items are on screen.</string>
     <string name="reason_display_warning_if_infinite_scroll_detected">Display a message if we detect infinite scrolling.</string>
-    <string name="reason_know_if_app_in_whitelist">Know if current app is in whitelist or not</string>
+    <string name="reason_know_if_app_in_whitelist">Know if current app is in the affected apps list or not</string>
 
     <string-array name="tips">
         <item>@string/productivity_tip1</item>
@@ -129,7 +140,7 @@
     <string name="productivity_tip1">To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</string>
     <string name="notification_filter_exception_tip">Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</string>
     <string name="notification_filter_notifyme_tip">Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</string>
-    <string name="grayscale_whitelist_tip">When Grayscale is on, only whitelisted apps will be grayscaled</string>
+    <string name="grayscale_whitelist_tip">When Grayscale is on, only affected apps will be grayscaled</string>
     <string name="beta_version_tip">This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</string>
     <string name="notification_settings_shocase_tip">You can add exceptions or set a reminder from notification filter settings</string>
     <string name="version">App Version</string>
@@ -143,7 +154,7 @@
     <string name="secure_permission_wroot_error">Permission not granted :(, try the manual method.</string>
     <string name="secure_permission_wroot_success">Permission Granted!</string>
     <string name="show_exceptions_only">Show exceptions only</string>
-    <string name="show_whitelist_only">Show whitelist only</string>
+    <string name="show_whitelist_only">Show affected apps only</string>
     <string name="range_null_error">Please select a valid start and end date.</string>
     <string name="delete_cache_for_day">Delete cache for this day</string>
     <string name="delete_cache_dialog_text">Are you sure you want to delete %s\'s data from the database and reload it again? This action cannot be undone. \nPlease note that if the data is older than 6 days, Farhan may not be able to retrieve the usage data again.</string>
@@ -290,7 +301,7 @@
     <string name="set_time_limite_dialog_text">How much time would you like to spend on %s?</string>
     <string name="ten_min">10 Min</string>
     <string name="fifteen_min">15 Min</string>
-    <string name="time_limit_notification_channel">TIME LIMIT CHANNEL</string>
+    <string name="time_limit_notification_channel" translatable="false">TIME LIMIT CHANNEL</string>
     <string name="time_limiter_notification_channel_name">Time Limiter Service notifications channel</string>
     <string name="time_limiter_channel_description">Time Limiter Service channel</string>
     <string name="please_wait">Please Wait</string>
@@ -312,6 +323,8 @@
     <string name="you_attempted_to_launch_this_app_times">You attempted to launch %s app %d times within the last 24 hours</string>
     <string name="delay_message">Message</string>
     <string name="delay_message_sub">Choose a message to show during the delay</string>
+    <string name="delayed_unlock">Delay after unlock</string>
+    <string name="delayed_unlock_sub">Wait a few seconds after unlocking your phone before you can use it</string>
 
     <array name="delayed_launch_messages">
         <item>@string/take_deep_breath</item>
@@ -337,4 +350,13 @@
     <string name="crash_reports_channel_description" >Notifications for app crash reports</string>
     <string name="verify_no_existing_issue_checkbox_message">I confirm that i have checked if the issue already exists and have not found any open issues with the same error
     </string>
+    <string name="running_services_channel_id" translatable="false">running_services</string>
+    <string name="running_services_channel_name">Background services</string>
+    <string name="running_services_channel_description">Shown while Farhan services are running in the background</string>
+    <string name="running_services_notification_title">Farhan is active</string>
+    <string name="running_services_notification_text">Running: %1$s</string>
+    <string name="running_service_accessibility">Accessibility service</string>
+    <string name="running_service_notification_filter">Notification filter</string>
+    <string name="running_service_time_limiter">App time limiter</string>
+    <string name="are_you_sure_you_want_to_delete_all_filtered_notifications">Are you sure you want to delete all filtered notifications?</string>
 </resources>

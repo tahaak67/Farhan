@@ -11,5 +11,7 @@ data class LauncherState(
     val isTimeLimitDialogVisible: Boolean = false,
     val timeLimitedApp: AppItem? = null,
     val isDelayRunning: Boolean = false,
-    val isConfirmOpenVisible: Boolean = false
+    val delayDurationSeconds: Int = 0,
+    val delayMessage: String = "",
+    val launchAttemptCount: Int = 0
 )

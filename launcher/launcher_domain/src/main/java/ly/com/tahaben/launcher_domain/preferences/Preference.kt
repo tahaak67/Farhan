@@ -28,6 +28,11 @@ interface Preference {
     suspend fun removeDelayedLaunchMessage(message: String)
     suspend fun resetDelayedLaunchMessages()
 
+    suspend fun isDelayedUnlockEnabled(): Flow<Boolean>
+    suspend fun setDelayedUnlockEnabled(isEnabled: Boolean)
+    suspend fun setDelayedUnlockDuration(seconds: Int)
+    suspend fun getDelayedUnlockDuration(): Flow<Int>
+
 
     companion object {
         const val KEY_LAUNCHER_ENABLED = "key_launcher_enabled"
@@ -36,6 +41,8 @@ interface Preference {
         const val MINDFUL_LAUNCH_WHITE_LIST_KEY = "key_mindful_launch_white_list"
         const val MINDFUL_LAUNCH_ENABLED_KEY = "key_mindful_launch_enabled"
         const val DELAYED_LAUNCH_DURATION_KEY = "key_delayed_launch_duration"
+        const val DELAYED_UNLOCK_ENABLED_KEY = "key_delayed_unlock_enabled"
+        const val DELAYED_UNLOCK_DURATION_KEY = "key_delayed_unlock_duration"
         const val DELAYED_LAUNCH_MESSAGES_KEY = "key_delayed_launch_messages"
         const val SELECTED_DELAYED_LAUNCH_MESSAGES_KEY = "key_selected_delayed_launch_messages"
     }

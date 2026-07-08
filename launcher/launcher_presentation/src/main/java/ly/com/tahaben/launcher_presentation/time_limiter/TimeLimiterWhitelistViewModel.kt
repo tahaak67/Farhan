@@ -92,7 +92,7 @@ class TimeLimiterWhitelistViewModel @Inject constructor(
                 state = state.copy(
                     isExceptionsOnly = event.showExceptionsOnly
                 )
-                filteredExceptionsOnly(event.showExceptionsOnly)
+                filterExceptionsOnly()
             }
         }
     }
@@ -120,19 +120,21 @@ class TimeLimiterWhitelistViewModel @Inject constructor(
                 }
             }
         )
-    }
-
-    private fun filteredExceptionsOnly(only: Boolean) {
-        state = if (only){
-            state.copy(
-                searchResults = state.installedApps.filter { it.isException }
-            )
-        } else {
-            state.copy(
-                searchResults = state.installedApps
+        if (state.isExceptionsOnly) {
+            state = state.copy(
+                searchResults = state.searchResults.filter { it.isException }
             )
         }
-        executeSearch()
+    }
+
+    private fun filterExceptionsOnly() {
+        if (state.isExceptionsOnly) {
+            state = state.copy(
+                searchResults = state.searchResults.filter { it.isException }
+            )
+        } else {
+            filterSystemApps()
+        }
     }
 
     fun removeAppFromWhiteList(packageName: String) {

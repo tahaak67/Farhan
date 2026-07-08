@@ -5,8 +5,10 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +16,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults
@@ -39,6 +43,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,6 +51,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -70,6 +76,12 @@ import ly.com.tahaben.showcase_layout_compose.model.ShowcaseMsg
 import ly.com.tahaben.showcase_layout_compose.model.Side
 import ly.com.tahaben.showcase_layout_compose.ui.ShowcaseLayout
 import timber.log.Timber
+import java.time.DayOfWeek
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.temporal.WeekFields
+import java.util.Locale
+import java.time.format.TextStyle as JavaTextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -225,6 +237,109 @@ fun NotificationFilterSettingsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(vertical = spacing.spaceMedium)
+                        .selectable(
+                            selected = state.isFilterScheduleEnabled,
+                            onClick = {
+                                viewModel.onEvent(
+                                    NotificationSettingsEvent.SetFilterScheduleEnabled(
+                                        !state.isFilterScheduleEnabled
+                                    )
+                                )
+                            },
+                            role = Role.Switch
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(text = stringResource(R.string.notification_filter_schedule))
+                        Text(
+                            text = stringResource(R.string.notification_filter_schedule_description),
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    Switch(
+                        checked = state.isFilterScheduleEnabled,
+                        onCheckedChange = { checked ->
+                            viewModel.onEvent(
+                                NotificationSettingsEvent.SetFilterScheduleEnabled(checked)
+                            )
+                        }
+                    )
+                }
+                AnimatedVisibility(visible = state.isFilterScheduleEnabled) {
+                    val timeFormatter = remember {
+                        DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = spacing.spaceSmall)
+                    ) {
+                        DaysOfWeekSelector(
+                            selectedDays = state.filterScheduleDays,
+                            onDayClick = { day ->
+                                viewModel.onEvent(
+                                    NotificationSettingsEvent.ToggleFilterScheduleDay(day)
+                                )
+                            }
+                        )
+                        if (state.filterScheduleDays.isEmpty()) {
+                            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+                            Text(
+                                text = stringResource(R.string.notification_filter_schedule_no_days),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(spacing.spaceSmall))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.onEvent(
+                                        NotificationSettingsEvent.ShowScheduleTimePicker(
+                                            ScheduleTimePickerTarget.START
+                                        )
+                                    )
+                                }
+                                .padding(vertical = spacing.spaceSmall),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(text = stringResource(R.string.notification_filter_schedule_start_time))
+                            Text(text = state.filterScheduleStartTime.format(timeFormatter))
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.onEvent(
+                                        NotificationSettingsEvent.ShowScheduleTimePicker(
+                                            ScheduleTimePickerTarget.END
+                                        )
+                                    )
+                                }
+                                .padding(vertical = spacing.spaceSmall),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(text = stringResource(R.string.notification_filter_schedule_end_time))
+                            Text(text = state.filterScheduleEndTime.format(timeFormatter))
+                        }
+                        if (state.filterScheduleStartTime == state.filterScheduleEndTime) {
+                            Text(
+                                text = stringResource(R.string.notification_filter_schedule_all_day),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+                Divider()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .showcase(2, exceptionsMsg1)
                         .showcase(3, exceptionsMsg2)
                         .showcase(4, exceptionsMsg3)
@@ -279,52 +394,38 @@ fun NotificationFilterSettingsScreen(
                         }
                     )
                 }
-                val timePickerState = rememberTimePickerState()
                 if (state.isTimePickerVisible) {
-                    Dialog(onDismissRequest = {
-                        viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
-                    }) {
-                        Surface(
-                            shape = MaterialTheme.shapes.extraLarge,
-                            tonalElevation = AlertDialogDefaults.TonalElevation
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(spacing.spaceLarge)
-                            ) {
-                                TimePicker(
-                                    state = timePickerState,
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
-                                ) {
-                                    TextButton(onClick = {
-                                        viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
-                                    }) {
-                                        Text(
-                                            text = stringResource(id = R.string.cancel),
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
-                                    TextButton(onClick = {
-                                        viewModel.onEvent(
-                                            NotificationSettingsEvent.SaveNotifyMeTime(
-                                                timePickerState.hour,
-                                                timePickerState.minute
-                                            )
-                                        )
-                                    }) {
-                                        Text(
-                                            text = stringResource(id = R.string.ok),
-                                            style = MaterialTheme.typography.labelLarge
-                                        )
-                                    }
-
-                                }
-                            }
+                    TimePickerDialog(
+                        initialHour = if (state.notifyMeHour != -1) state.notifyMeHour else 0,
+                        initialMinute = if (state.notifyMeMinute != -1) state.notifyMeMinute else 0,
+                        onDismiss = {
+                            viewModel.onEvent(NotificationSettingsEvent.DismissNotifyMeTimePicker)
+                        },
+                        onConfirm = { hour, minute ->
+                            viewModel.onEvent(
+                                NotificationSettingsEvent.SaveNotifyMeTime(hour, minute)
+                            )
                         }
+                    )
+                }
+                state.scheduleTimePickerTarget?.let { target ->
+                    val initialTime = when (target) {
+                        ScheduleTimePickerTarget.START -> state.filterScheduleStartTime
+                        ScheduleTimePickerTarget.END -> state.filterScheduleEndTime
+                    }
+                    key(target) {
+                        TimePickerDialog(
+                            initialHour = initialTime.hour,
+                            initialMinute = initialTime.minute,
+                            onDismiss = {
+                                viewModel.onEvent(NotificationSettingsEvent.DismissScheduleTimePicker)
+                            },
+                            onConfirm = { hour, minute ->
+                                viewModel.onEvent(
+                                    NotificationSettingsEvent.SaveScheduleTime(hour, minute)
+                                )
+                            }
+                        )
                     }
                 }
                 AnimatedVisibility(visible = state.isNotifyMeEnabled) {
@@ -417,6 +518,96 @@ fun NotificationFilterSettingsScreen(
                     Text(text = stringResource(id = R.string.tell_me_more))
                 }
 
+            }
+        }
+    }
+}
+
+@Composable
+private fun DaysOfWeekSelector(
+    selectedDays: Set<DayOfWeek>,
+    onDayClick: (DayOfWeek) -> Unit
+) {
+    val locale = Locale.getDefault()
+    val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        for (i in 0L..6L) {
+            val day = firstDayOfWeek.plus(i)
+            val isSelected = day in selectedDays
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surfaceVariant
+                    )
+                    .selectable(
+                        selected = isSelected,
+                        onClick = { onDayClick(day) },
+                        role = Role.Checkbox
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = day.getDisplayName(JavaTextStyle.NARROW, locale),
+                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimePickerDialog(
+    initialHour: Int,
+    initialMinute: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (hour: Int, minute: Int) -> Unit
+) {
+    val spacing = LocalSpacing.current
+    val timePickerState = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute
+    )
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = AlertDialogDefaults.TonalElevation
+        ) {
+            Column(
+                modifier = Modifier.padding(spacing.spaceLarge)
+            ) {
+                TimePicker(
+                    state = timePickerState,
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(
+                            text = stringResource(id = R.string.cancel),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(spacing.spaceSmall))
+                    TextButton(onClick = {
+                        onConfirm(timePickerState.hour, timePickerState.minute)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.ok),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+
+                }
             }
         }
     }

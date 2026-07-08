@@ -1,6 +1,5 @@
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 android {
@@ -30,9 +29,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
 }
 
 dependencies {
@@ -56,10 +52,10 @@ dependencies {
     implementation(libs.glance.material3)
 
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.timber)
-    kaptAndroidTest(libs.dagger.hilt.compiler)
+    kspAndroidTest(libs.dagger.hilt.compiler)
 
 
     testImplementation(libs.junit4)

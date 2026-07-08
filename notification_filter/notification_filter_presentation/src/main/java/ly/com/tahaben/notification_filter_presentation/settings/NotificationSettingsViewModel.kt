@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import ly.com.tahaben.notification_filter_domain.preferences.Preferences
 import ly.com.tahaben.notification_filter_domain.use_cases.NotificationFilterUseCases
 import timber.log.Timber
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,8 +33,21 @@ class NotificationSettingsViewModel @Inject constructor(
         getNotifyMeHour()
         checkServiceStats()
         getNotifyState()
+        getFilterSchedule()
         performPermissionSilentChecks()
         shouldShowWarningDialog()
+    }
+
+    private fun getFilterSchedule() {
+        val schedule = notificationFilterUseCases.getFilterSchedule()
+        _state.update {
+            it.copy(
+                isFilterScheduleEnabled = schedule.isEnabled,
+                filterScheduleDays = schedule.days,
+                filterScheduleStartTime = schedule.startTime,
+                filterScheduleEndTime = schedule.endTime
+            )
+        }
     }
 
 
@@ -174,6 +188,71 @@ class NotificationSettingsViewModel @Inject constructor(
                     it.copy(
                         isShowcaseOn = event.showcase
                     )
+                }
+            }
+
+            is NotificationSettingsEvent.SetFilterScheduleEnabled -> {
+                notificationFilterUseCases.setFilterScheduleEnabled(event.isEnabled)
+                _state.update {
+                    it.copy(
+                        isFilterScheduleEnabled = event.isEnabled
+                    )
+                }
+            }
+
+            is NotificationSettingsEvent.ToggleFilterScheduleDay -> {
+                val days = _state.value.filterScheduleDays.toMutableSet()
+                if (!days.add(event.day)) {
+                    days.remove(event.day)
+                }
+                notificationFilterUseCases.setFilterScheduleDays(days)
+                _state.update {
+                    it.copy(
+                        filterScheduleDays = days
+                    )
+                }
+            }
+
+            is NotificationSettingsEvent.ShowScheduleTimePicker -> {
+                _state.update {
+                    it.copy(
+                        scheduleTimePickerTarget = event.target
+                    )
+                }
+            }
+
+            NotificationSettingsEvent.DismissScheduleTimePicker -> {
+                _state.update {
+                    it.copy(
+                        scheduleTimePickerTarget = null
+                    )
+                }
+            }
+
+            is NotificationSettingsEvent.SaveScheduleTime -> {
+                val time = LocalTime.of(event.hour, event.min)
+                when (_state.value.scheduleTimePickerTarget) {
+                    ScheduleTimePickerTarget.START -> {
+                        notificationFilterUseCases.setFilterScheduleStartTime(time)
+                        _state.update {
+                            it.copy(
+                                filterScheduleStartTime = time,
+                                scheduleTimePickerTarget = null
+                            )
+                        }
+                    }
+
+                    ScheduleTimePickerTarget.END -> {
+                        notificationFilterUseCases.setFilterScheduleEndTime(time)
+                        _state.update {
+                            it.copy(
+                                filterScheduleEndTime = time,
+                                scheduleTimePickerTarget = null
+                            )
+                        }
+                    }
+
+                    null -> Unit
                 }
             }
 

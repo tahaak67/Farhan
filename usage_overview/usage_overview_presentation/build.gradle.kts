@@ -3,18 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.library")
     alias(libs.plugins.hiltAndroidGradle)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 android {
     namespace = "ly.com.tahaben.usage_overview_presentation"
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
     }
     buildFeatures {
         compose = true
@@ -33,6 +27,12 @@ android {
 }
 apply {
     from("$rootDir/compose-module.gradle")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }
 
 dependencies {

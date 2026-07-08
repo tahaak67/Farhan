@@ -1,18 +1,19 @@
 package ly.com.tahaben.launcher_presentation.time_limiter
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Switch
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
+import ly.com.tahaben.core_ui.components.SwitchRow
 import ly.com.tahaben.core_ui.mirror
 
 /**
@@ -113,38 +115,29 @@ fun TimeLimiterSettingsScreen(
             Column(
                 Modifier.fillMaxSize()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
-                    Text(text = stringResource(id = R.string.app_time_limiter))
-                    Switch(
-                        checked = state.isTimeLimiterEnabled,
-                        onCheckedChange = { checked ->
-                            viewModel.setTimeLimiterEnabled(checked)
-                            //isServiceChecked.value = checked
-                        }
-                    )
+                SwitchRow(
+                    Modifier.fillMaxWidth(),
+                    stringResource(id = R.string.app_time_limiter),
+                    selected = state.isTimeLimiterEnabled,
+                    verticalAlignment = Alignment.CenterVertically
+                ) { checked ->
+                    viewModel.setTimeLimiterEnabled(checked)
                 }
-                Row(
+                HorizontalDivider(modifier = Modifier.padding(horizontal = spacing.spaceMedium))
+                ListItem(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceMedium)
                         .clickable {
                             onNavigateToWhitelist()
                         },
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.white_lited_apps),
-                        textAlign = TextAlign.Start
-                    )
-                }
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.white_lited_apps),
+                            textAlign = TextAlign.Start
+                        )
+                    },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+                )
             }
         }
     }

@@ -6,19 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -26,9 +23,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -47,16 +45,15 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core.util.SearchEvent
 import ly.com.tahaben.core.util.UiEvent
 import ly.com.tahaben.core_ui.LocalSpacing
+import ly.com.tahaben.core_ui.components.AppExceptionListItem
 import ly.com.tahaben.core_ui.components.SearchTextField
-import ly.com.tahaben.core_ui.mirror
-import ly.com.tahaben.launcher_presentation.component.AppExceptionListItem
 import timber.log.Timber
 
 /**
  * Created by Taha Ben Ashur (https://github.com/tahaak67) on 18,Feb,2023
  */
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeLimiterWhitelistScreen(
     snackbarHostState: SnackbarHostState,
@@ -69,9 +66,6 @@ fun TimeLimiterWhitelistScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     var mDisplayMenu by remember { mutableStateOf(false) }
     var displaySearchField by remember { mutableStateOf(false) }
-    val isShowSystemApps = remember { mutableStateOf(state.showSystemApps) }
-
-
 
     LaunchedEffect(key1 = keyboardController) {
         viewModel.uiEvent.collect { event ->
@@ -82,107 +76,139 @@ fun TimeLimiterWhitelistScreen(
                     )
                     keyboardController?.hide()
                 }
+
                 is UiEvent.NavigateUp -> onNavigateUp()
                 else -> Unit
             }
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {
-                AnimatedVisibility(
-                    visible = !displaySearchField,
-                    enter = fadeIn(animationSpec = tween(1000)),
-                    exit = fadeOut(animationSpec = tween(1))
-                ) {
-                    Text(text = stringResource(id = R.string.white_lited_apps))
-                }
-            },
-//            backgroundColor = White,
-            navigationIcon = {
-                IconButton(onClick = onNavigateUp) {
-                    Icon(
-                        modifier = Modifier.mirror(),
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back)
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = {
-                    displaySearchField = !displaySearchField
-                    if (!displaySearchField) {
-                        viewModel.onEvent(SearchEvent.HideSearch)
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    AnimatedVisibility(
+                        visible = !displaySearchField,
+                        enter = fadeIn(animationSpec = tween(1000)),
+                        exit = fadeOut(animationSpec = tween(1))
+                    ) {
+                        Text(text = stringResource(id = R.string.white_lited_apps))
                     }
-                }) {
-                    if (displaySearchField) {
-                        Icon(Icons.Default.Close, stringResource(id = R.string.close_search))
-                    } else {
-                        Icon(Icons.Default.Search, stringResource(id = R.string.open_search_field))
-                    }
-                }
-
-                AnimatedVisibility(visible = displaySearchField) {
-                    SearchTextField(
-                        text = state.query,
-                        onValueChange = {
-                            viewModel.onEvent(SearchEvent.OnQueryChange(it))
-                        },
-                        shouldShowHint = state.isHintVisible,
-                        onSearch = {
-                            keyboardController?.hide()
-                            viewModel.onEvent(SearchEvent.OnSearch)
-                        },
-                        onFocusChanged = {
-                            viewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
-                        }
-                    )
-                }
-
-                // Creating Icon button for dropdown menu
-                IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
-                    Icon(Icons.Default.MoreVert, "")
-                }
-
-                // Creating a dropdown menu
-                DropdownMenu(
-                    expanded = mDisplayMenu,
-                    onDismissRequest = { mDisplayMenu = false }
-                ) {
-                    DropdownMenuItem(onClick = {
-
-                    }, text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = isShowSystemApps.value,
-                                onCheckedChange = { checked ->
-                                    isShowSystemApps.value = checked
-                                    viewModel.onEvent(
-                                        SearchEvent.OnSystemAppsVisibilityChange(
-                                            checked
-                                        )
-                                    )
-                                },
-                                colors = CheckboxDefaults.colors(MaterialTheme.colorScheme.primary)
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                navigationIcon = {
+                    AnimatedVisibility(
+                        visible = !displaySearchField,
+                        enter = fadeIn(animationSpec = tween(1000)),
+                        exit = fadeOut(animationSpec = tween(1))
+                    ) {
+                        IconButton(onClick = onNavigateUp) {
+                            Icon(
+                                modifier = Modifier,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(id = R.string.back)
                             )
+                        }
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        displaySearchField = !displaySearchField
+                        if (!displaySearchField) {
+                            viewModel.onEvent(SearchEvent.HideSearch)
+                        }
+                    }) {
+                        if (displaySearchField) {
+                            Icon(Icons.Default.Close, stringResource(id = R.string.close_search))
+                        } else {
+                            Icon(
+                                Icons.Default.Search,
+                                stringResource(id = R.string.open_search_field)
+                            )
+                        }
+                    }
+
+                    AnimatedVisibility(visible = displaySearchField) {
+                        SearchTextField(
+                            text = state.query,
+                            onValueChange = {
+                                viewModel.onEvent(SearchEvent.OnQueryChange(it))
+                            },
+                            shouldShowHint = state.isHintVisible,
+                            onSearch = {
+                                keyboardController?.hide()
+                                viewModel.onEvent(SearchEvent.OnSearch)
+                            },
+                            onFocusChanged = {
+                                viewModel.onEvent(SearchEvent.OnSearchFocusChange(it.isFocused))
+                            }
+                        )
+                    }
+
+                    // Creating Icon button for dropdown menu
+                    IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
+                        Icon(Icons.Default.MoreVert, "")
+                    }
+
+                    // Creating a dropdown menu
+                    DropdownMenu(
+                        expanded = mDisplayMenu,
+                        onDismissRequest = { mDisplayMenu = false }
+                    ) {
+                        DropdownMenuItem(onClick = {
+                            viewModel.onEvent(
+                                SearchEvent.OnSystemAppsVisibilityChange(!state.showSystemApps)
+                            )
+                        }, text = {
                             Text(
                                 text = stringResource(R.string.show_system_apps),
                                 textAlign = TextAlign.Center
                             )
-                        }
-                    })
+                        },
+                            trailingIcon = {
+                                Checkbox(
+                                    checked = state.showSystemApps,
+                                    onCheckedChange = { checked ->
+                                        viewModel.onEvent(
+                                            SearchEvent.OnSystemAppsVisibilityChange(checked)
+                                        )
+                                    }
+                                )
+                            })
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.show_whitelist_only),
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            onClick = {
+                                viewModel.onEvent(
+                                    SearchEvent.OnExceptionsOnlyChange(!state.isExceptionsOnly)
+                                )
+                            },
+                            trailingIcon = {
+                                Checkbox(
+                                    checked = state.isExceptionsOnly,
+                                    onCheckedChange = { checked ->
+                                        viewModel.onEvent(
+                                            SearchEvent.OnExceptionsOnlyChange(checked)
+                                        )
+                                    }
+                                )
+                            })
+                    }
                 }
-            }
-        )
-        Crossfade(targetState = state.isLoading) {
+            )
+        }
+    ) { paddingValues ->
+        Crossfade(targetState = state.isLoading, label = "search results crossfade") {
 
             if (it) {
                 Box(
                     modifier =
-                    Modifier.fillMaxSize(),
+                        Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -192,9 +218,9 @@ fun TimeLimiterWhitelistScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(paddingValues)
                         .padding(horizontal = spacing.spaceMedium, vertical = spacing.spaceSmall),
                 ) {
-                    //Timber.d("app: list  $list")
                     items(state.searchResults) { app ->
                         Timber.d("app: $app")
                         AppExceptionListItem(
@@ -203,7 +229,6 @@ fun TimeLimiterWhitelistScreen(
                                 Timber.d("switched $isChecked")
                                 if (isChecked) {
                                     viewModel.addAppToWhiteList(app.packageName)
-
                                 } else {
                                     viewModel.removeAppFromWhiteList(app.packageName)
                                 }
@@ -214,6 +239,4 @@ fun TimeLimiterWhitelistScreen(
             }
         }
     }
-
-
 }

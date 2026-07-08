@@ -32,6 +32,10 @@ class NotificationFilterViewModel @Inject constructor(
 
     private var getNotificationsJob: Job? = null
 
+    // Full, unfiltered list straight from the DB. Kept as the source of truth so the
+    // in-memory search can re-filter without re-querying Room.
+    private var allNotifications: List<NotificationItem> = emptyList()
+
     init {
         checkServiceStats()
         getNotifications()
@@ -64,14 +68,30 @@ class NotificationFilterViewModel @Inject constructor(
         getNotificationsJob =
             notificationFilterUseCases.getNotificationsFromDB()
                 .onEach { notifications ->
+                    allNotifications = notifications
                     state = state.copy(
                         isServiceEnabled = true,
-                        filteredNotifications = notifications
+                        filteredNotifications = filterBy(state.searchQuery)
                     )
                 }
                 .launchIn(viewModelScope)
 
     }
+
+    // Pure in-memory filter over the already-loaded list. Matches the query (case
+    // insensitive) against the app name, title, text and package name so users can find
+    // a notification by what it says, not just which app sent it. Blank query => everything.
+    private fun filterBy(query: String): List<NotificationItem> {
+        val q = query.trim()
+        if (q.isEmpty()) return allNotifications
+        return allNotifications.filter { it.matches(q) }
+    }
+
+    private fun NotificationItem.matches(query: String): Boolean =
+        appName?.contains(query, ignoreCase = true) == true ||
+                title?.contains(query, ignoreCase = true) == true ||
+                text?.contains(query, ignoreCase = true) == true ||
+                packageName.contains(query, ignoreCase = true)
 
     fun onEvent(event: NotificationFilterEvent) {
         when (event) {
@@ -98,6 +118,23 @@ class NotificationFilterViewModel @Inject constructor(
 
             is NotificationFilterEvent.OnLaunchAppInfoClick -> {
                 serviceUtil.launchAppInfo(event.appPackageName)
+            }
+
+            is NotificationFilterEvent.OnToggleSearch -> {
+                val active = !state.isSearchActive
+                // Closing search clears the query and restores the full list.
+                state = state.copy(
+                    isSearchActive = active,
+                    searchQuery = "",
+                    filteredNotifications = allNotifications
+                )
+            }
+
+            is NotificationFilterEvent.OnSearchQueryChange -> {
+                state = state.copy(
+                    searchQuery = event.query,
+                    filteredNotifications = filterBy(event.query)
+                )
             }
         }
     }

@@ -86,6 +86,20 @@ class DelayedLaunchViewModel @Inject constructor(
                     }
                 }
             }
+            launch {
+                preference.isDelayedUnlockEnabled().collectLatest { isEnabled ->
+                    _state.update {
+                        it.copy(isDelayedUnlockEnabled = isEnabled)
+                    }
+                }
+            }
+            launch {
+                preference.getDelayedUnlockDuration().collectLatest { duration ->
+                    _state.update {
+                        it.copy(unlockDelayDurationSeconds = duration)
+                    }
+                }
+            }
         }
     }
 
@@ -174,6 +188,24 @@ class DelayedLaunchViewModel @Inject constructor(
             DelayedLaunchEvent.ResetDelayMessages -> {
                 viewModelScope.launch {
                     preference.resetDelayedLaunchMessages()
+                }
+            }
+
+            is DelayedLaunchEvent.OnDelayedUnlockEnabled -> {
+                if (event.enabled) {
+                    checkIfAccessibilityEnabled()
+                }
+                viewModelScope.launch {
+                    preference.setDelayedUnlockEnabled(event.enabled)
+                }
+                _state.update {
+                    it.copy(isDelayedUnlockEnabled = event.enabled)
+                }
+            }
+
+            is DelayedLaunchEvent.OnSetUnlockDelayDuration -> {
+                viewModelScope.launch {
+                    preference.setDelayedUnlockDuration(event.durationInSeconds)
                 }
             }
         }
