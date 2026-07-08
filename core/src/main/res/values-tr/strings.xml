@@ -53,8 +53,8 @@
     <string name="continue_scrolling">Kaydırmaya devam et…</string>
     <string name="exclude_this_app_press_and_hold">Bu uygulamayı hariç tut (Basılı tutun)</string>
     <string name="app_excluded">Uygulama hariç tutuldu</string>
-    <string name="enable_grayscale_for_white_listed_apps">Beyaz listedeki uygulamalar için Gri Tonlamayı etkinleştir</string>
-    <string name="white_lited_apps">Beyaz listedeki uygulamalar</string>
+    <string name="enable_grayscale_for_white_listed_apps">Etkilenen uygulamalar için Gri Tonlamayı etkinleştir</string>
+    <string name="white_lited_apps">Etkilenen uygulamalar</string>
     <string name="grayscale_onboarding_message">Uygulamaların zamanınız ve dikkatiniz için rekabet etme yollarından biri de renklerdir. Farhan, gri tonlama kullanarak seçili uygulamaları başlattığınızda renkleri devre dışı bırakarak sizi etkilemelerini ortadan kaldırabilir!</string>
     <string name="on_boarding_image_description">Tanıtım görseli</string>
     <string name="next">İleri</string>
@@ -117,7 +117,7 @@
     <string name="reason_know_if_app_in_exceptions">Mevcut uygulamanın istisnalar listesinde olup olmadığını bilme</string>
     <string name="reason_know_how_much_you_scroll">Ne kadar kaydırdığınızı ve ekranda kaç öğe olduğunu bilme.</string>
     <string name="reason_display_warning_if_infinite_scroll_detected">Sonsuz kaydırma tespit edersek bir mesaj gösterme.</string>
-    <string name="reason_know_if_app_in_whitelist">Mevcut uygulamanın beyaz listede olup olmadığını bilme</string>
+    <string name="reason_know_if_app_in_whitelist">Mevcut uygulamanın etkilenen uygulamalar listesinde olup olmadığını bilme</string>
 
     <string-array name="tips">
         <item>@string/productivity_tip1</item>
@@ -129,7 +129,7 @@
     <string name="productivity_tip1">Çalışma saatlerinde verimliliği artırmak için telefonunuzu sessize alın ve gözden uzak bir yerde tutun (Örn: bir çekmecede)</string>
     <string name="notification_filter_exception_tip">Bir uygulamadan gelen bildirimi kaçırmak istemiyor musunuz? O uygulamayı bildirim filtresinde hariç tuttuğunuzdan emin olun</string>
     <string name="notification_filter_notifyme_tip">Bildirim filtresinde \"Beni bilgilendir\" özelliğini kullanın ve filtrelenmiş bildirimlerinizi günlük olarak kontrol etmek için bir zaman ayarlayın</string>
-    <string name="grayscale_whitelist_tip">Gri Tonlama açıkken, yalnızca beyaz listedeki uygulamalar gri tonlamalı olacaktır</string>
+    <string name="grayscale_whitelist_tip">Gri Tonlama açıkken, yalnızca etkilenen uygulamalar gri tonlamalı olacaktır</string>
     <string name="beta_version_tip">Bu, Farhan\'ın beta sürümüdür. Herhangi bir hatayı geliştiriciye bildirdiğinizden ve mümkünse ekran görüntüsü aldığınızdan emin olun</string>
     <string name="notification_settings_shocase_tip">Bildirim filtresi ayarlarından istisnalar ekleyebilir veya bir hatırlatıcı ayarlayabilirsiniz</string>
     <string name="version">Uygulama Sürümü</string>
@@ -143,7 +143,7 @@
     <string name="secure_permission_wroot_error">İzin verilmedi :(, manuel yöntemi deneyin.</string>
     <string name="secure_permission_wroot_success">İzin Verildi!</string>
     <string name="show_exceptions_only">Sadece istisnaları göster</string>
-    <string name="show_whitelist_only">Sadece beyaz listeyi göster</string>
+    <string name="show_whitelist_only">Sadece etkilenen uygulamaları göster</string>
     <string name="range_null_error">Lütfen geçerli bir başlangıç ve bitiş tarihi seçin.</string>
     <string name="delete_cache_for_day">Bu günün önbelleğini sil</string>
     <string name="delete_cache_dialog_text">%s\'ın verilerini veritabanından silip yeniden yüklemek istediğinizden emin misiniz? Bu işlem geri alınamaz. \nLütfen veriler 6 günden eskiyse, Farhan\'ın kullanım verilerini tekrar alamayabileceğini unutmayın.</string>

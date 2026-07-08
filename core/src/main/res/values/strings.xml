@@ -59,8 +59,8 @@
     <string name="continue_scrolling">Continue scrolling …</string>
     <string name="exclude_this_app_press_and_hold">Exclude this app (Press and hold)</string>
     <string name="app_excluded">App excluded</string>
-    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for whitelisted apps</string>
-    <string name="white_lited_apps">Whitelisted apps</string>
+    <string name="enable_grayscale_for_white_listed_apps">Enable Grayscale for affected apps</string>
+    <string name="white_lited_apps">Affected apps</string>
     <string name="grayscale_state_color">Color</string>
     <string name="grayscale_state_leave_as_is">Keep as is</string>
     <string name="grayscale_system_apps_hint">System apps (like the app switcher and share menu) keep the screen as is by default, so they don\'t flip the color filter while you are switching between apps.</string>
@@ -128,7 +128,7 @@
     <string name="reason_know_if_app_in_exceptions">Know if current app is in exceptions list or not</string>
     <string name="reason_know_how_much_you_scroll">Know How much you scroll and how much items are on screen.</string>
     <string name="reason_display_warning_if_infinite_scroll_detected">Display a message if we detect infinite scrolling.</string>
-    <string name="reason_know_if_app_in_whitelist">Know if current app is in whitelist or not</string>
+    <string name="reason_know_if_app_in_whitelist">Know if current app is in the affected apps list or not</string>
 
     <string-array name="tips">
         <item>@string/productivity_tip1</item>
@@ -140,7 +140,7 @@
     <string name="productivity_tip1">To improve productivity during work hours switch your phone to silent and keep it out of sight (Ex: in a drawer)</string>
     <string name="notification_filter_exception_tip">Don\'t want to miss a notification from an app? make sure to exclude that app in notification filter</string>
     <string name="notification_filter_notifyme_tip">Use notify me in notifications filter and set a time to be notified to check your filtered notifications daily</string>
-    <string name="grayscale_whitelist_tip">When Grayscale is on, only whitelisted apps will be grayscaled</string>
+    <string name="grayscale_whitelist_tip">When Grayscale is on, only affected apps will be grayscaled</string>
     <string name="beta_version_tip">This is a beta version of Farhan, make sure to report any bugs to the developer and take screenshots if possible</string>
     <string name="notification_settings_shocase_tip">You can add exceptions or set a reminder from notification filter settings</string>
     <string name="version">App Version</string>
@@ -154,7 +154,7 @@
     <string name="secure_permission_wroot_error">Permission not granted :(, try the manual method.</string>
     <string name="secure_permission_wroot_success">Permission Granted!</string>
     <string name="show_exceptions_only">Show exceptions only</string>
-    <string name="show_whitelist_only">Show whitelist only</string>
+    <string name="show_whitelist_only">Show affected apps only</string>
     <string name="range_null_error">Please select a valid start and end date.</string>
     <string name="delete_cache_for_day">Delete cache for this day</string>
     <string name="delete_cache_dialog_text">Are you sure you want to delete %s\'s data from the database and reload it again? This action cannot be undone. \nPlease note that if the data is older than 6 days, Farhan may not be able to retrieve the usage data again.</string>

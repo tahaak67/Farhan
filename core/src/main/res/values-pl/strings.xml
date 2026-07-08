@@ -34,8 +34,8 @@
     <string name="hey">Hej, Farhan z tej strony!!</string>
     <string name="infinite_scroll_dialog_message">Wygląda na to, że utknąłeś w pętli ciągłego przewijania.</string>
     <string name="exclude_this_app_press_and_hold">Wyklucz tę aplikację (Dotknij i przytrzymaj)</string>
-    <string name="enable_grayscale_for_white_listed_apps">Włącz Filtr szarości dla dozwolonych aplikacji</string>
-    <string name="white_lited_apps">Dozwolone aplikacje</string>
+    <string name="enable_grayscale_for_white_listed_apps">Włącz Filtr szarości dla aplikacji objętych filtrem</string>
+    <string name="white_lited_apps">Aplikacje objęte filtrem</string>
     <string name="on_boarding_image_description">Grafika wprowadzająca</string>
     <string name="next">Następny</string>
     <string name="enabled">Włączone</string>

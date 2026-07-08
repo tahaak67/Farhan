@@ -57,7 +57,7 @@
     <string name="notification_filter_notifyme_tip">அறிவிப்பு வடிகட்டியில் எனக்கு அறிவிக்கவும், உங்கள் வடிகட்டப்பட்ட அறிவிப்புகளை தினமும் சரிபார்க்க அறிவிக்க வேண்டிய நேரத்தை அமைக்கவும்</string>
     <string name="version">பயன்பாட்டு பதிப்பு</string>
     <string name="show_exceptions_only">விதிவிலக்குகளை மட்டும் காட்டு</string>
-    <string name="show_whitelist_only">அனுமதிப்பட்டியலை மட்டும் காட்டு</string>
+    <string name="show_whitelist_only">பாதிக்கப்பட்ட பயன்பாடுகளை மட்டும் காட்டு</string>
     <string name="range_null_error">சரியான தொடக்க மற்றும் இறுதி தேதியைத் தேர்ந்தெடுக்கவும்.</string>
     <string name="delete_cache_for_day">இந்த நாளுக்கான தற்காலிக சேமிப்பை நீக்கு</string>
     <string name="delete_cache_dialog_title">%s இன் தரவை நீக்கவா?</string>
@@ -124,8 +124,8 @@
     <string name="infinite_scroll_blocker_settings">எல்லையற்ற உருள் தடுப்பான் அமைப்புகள்</string>
     <string name="infinite_scroll_blocker">எல்லையற்ற ச்க்ரோலிங் தடுப்பான்</string>
     <string name="take_me_out_of_here">என்னை இங்கிருந்து வெளியே அழைத்துச் செல்லுங்கள்</string>
-    <string name="enable_grayscale_for_white_listed_apps">அனுமதிப்பட்டியல் பயன்பாடுகளுக்கு கிரேச்கேலை இயக்கவும்</string>
-    <string name="white_lited_apps">அனுமதிப்பட்டிய பயன்பாடுகள்</string>
+    <string name="enable_grayscale_for_white_listed_apps">பாதிக்கப்பட்ட பயன்பாடுகளுக்கு கிரேச்கேலை இயக்கவும்</string>
+    <string name="white_lited_apps">பாதிக்கப்பட்ட பயன்பாடுகள்</string>
     <string name="grayscale_onboarding_message">உங்கள் நேரத்திற்கும் கவனத்திற்கும் பயன்பாடுகள் போட்டியிடும் வழிகளில் ஒன்று வண்ணங்கள் வழியாகும், கிரேச்கேல் ஃபர்ஆனைப் பயன்படுத்துவது தேர்ந்தெடுக்கப்பட்ட பயன்பாடுகளுக்கான வண்ணங்களை முடக்கலாம், அவற்றை உங்கள் மதிய உணவு உங்கள் மீதான அவற்றின் விளைவை நீக்குகிறது!</string>
     <string name="disabled">முடக்கப்பட்டது</string>
     <string name="on_boarding_image_description">ஆன் போர்டிங் படம்</string>
@@ -155,10 +155,10 @@
     <string name="set_default_launcher_title">ஃபர்ஆனை உங்கள் துவக்கியாக அமைக்கவும்</string>
     <string name="reason_know_how_much_you_scroll">நீங்கள் எவ்வளவு உருட்டுகிறீர்கள், திரையில் எவ்வளவு உருப்படிகள் உள்ளன என்பதை அறிந்து கொள்ளுங்கள்.</string>
     <string name="reason_display_warning_if_infinite_scroll_detected">எல்லையற்ற ச்க்ரோலிங் கண்டறிந்தால் ஒரு செய்தியைக் காண்பி.</string>
-    <string name="reason_know_if_app_in_whitelist">தற்போதைய பயன்பாடு அனுமதிப்பட்டியலில் உள்ளதா இல்லையா என்பதை அறிந்து கொள்ளுங்கள்</string>
+    <string name="reason_know_if_app_in_whitelist">தற்போதைய பயன்பாடு பாதிக்கப்பட்ட பயன்பாடுகள் பட்டியலில் உள்ளதா இல்லையா என்பதை அறிந்து கொள்ளுங்கள்</string>
     <string name="productivity_tip1">வேலை நேரங்களில் உற்பத்தித்திறனை மேம்படுத்த உங்கள் தொலைபேசியை அமைதியாக மாற்றி அதை பார்வைக்கு வெளியே வைக்கவும் (எ.கா: ஒரு அலமாரியில்)</string>
     <string name="notification_filter_exception_tip">பயன்பாட்டிலிருந்து அறிவிப்பை இழக்க விரும்பவில்லையா? அந்த பயன்பாட்டை அறிவிப்பு வடிகட்டியில் விலக்குவதை உறுதிசெய்க</string>
-    <string name="grayscale_whitelist_tip">கிரேச்கேல் இயக்கத்தில் இருக்கும்போது, அனுமதிப்பட்டியல் பயன்பாடுகள் மட்டுமே கிரேச்கேல்கள் செய்யப்படும்</string>
+    <string name="grayscale_whitelist_tip">கிரேச்கேல் இயக்கத்தில் இருக்கும்போது, பாதிக்கப்பட்ட பயன்பாடுகள் மட்டுமே கிரேச்கேல் செய்யப்படும்</string>
     <string name="beta_version_tip">இது ஃபர்ஆனின் பீட்டா பதிப்பாகும், டெவலப்பருக்கு ஏதேனும் பிழைகள் புகாரளிக்கவும், முடிந்தால் திரை சாட்களை எடுக்கவும் உறுதிசெய்க</string>
     <string name="notification_settings_shocase_tip">நீங்கள் விதிவிலக்குகளைச் சேர்க்கலாம் அல்லது அறிவிப்பு வடிகட்டி அமைப்புகளிலிருந்து நினைவூட்டலை அமைக்கலாம்</string>
     <string name="notification_filter_showcase_greeting">அறிவிப்புகள் வடிப்பானுக்கு வருக, உங்கள் வடிகட்டப்பட்ட அறிவிப்புகள் இங்கே தோன்றும்!</string>
