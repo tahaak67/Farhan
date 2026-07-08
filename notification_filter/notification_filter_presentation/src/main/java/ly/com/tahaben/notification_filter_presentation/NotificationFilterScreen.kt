@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -70,6 +72,7 @@ import ly.com.tahaben.core.R
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.OnLifecycleEvent
 import ly.com.tahaben.core_ui.components.HowDialog
+import ly.com.tahaben.core_ui.components.MyDialog
 import ly.com.tahaben.core_ui.components.PermissionNotGrantedContent
 import ly.com.tahaben.core_ui.mirror
 import ly.com.tahaben.notification_filter_domain.model.NotificationItem
@@ -121,6 +124,7 @@ fun NotificationFilterScreen(
     }
 
     var isShowcasing by remember { mutableStateOf(false) }
+    var confirmDeleteAllDialogVisible by remember { mutableStateOf(false) }
     Timber.d("isShowcasing value = $isShowcasing")
     ShowcaseLayout(
         isShowcasing = isShowcasing,
@@ -427,12 +431,37 @@ fun NotificationFilterScreen(
                                             horizontal = spacing.spaceMedium
                                         )
                                         .align(Alignment.BottomCenter),
-                                    onClick = { viewModel.onEvent(NotificationFilterEvent.OnDeleteAllNotifications) }) {
+                                    onClick = {
+                                        confirmDeleteAllDialogVisible = true
+                                    }) {
                                     Text(
                                         text = stringResource(id = R.string.clear_all),
                                         style = MaterialTheme.typography.labelLarge,
                                         textAlign = TextAlign.Center
                                     )
+                                }
+                            }
+                            if (confirmDeleteAllDialogVisible){
+                                MyDialog(
+                                    onDismissRequest = {confirmDeleteAllDialogVisible = false}
+                                ) {
+                                    Text("Are you sure you want to delete all filtered notifications?")
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp,
+                                        Alignment.End)) {
+                                        TextButton(onClick = {
+                                            confirmDeleteAllDialogVisible = false
+                                        }) {
+                                            Text(stringResource(R.string.cancel))
+                                        }
+                                        TextButton(onClick = {
+                                            viewModel.onEvent(NotificationFilterEvent.OnDeleteAllNotifications)
+                                            confirmDeleteAllDialogVisible = false
+                                        }) {
+                                            Text(stringResource(R.string.ok))
+                                        }
+                                    }
                                 }
                             }
                         }
