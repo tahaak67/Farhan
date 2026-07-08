@@ -128,7 +128,6 @@ class TimeLimitService : Service() {
         serviceScope = null
         runningServicesNotifier.serviceStopped(RunningService.TIME_LIMITER)
         Timber.d("The service has been destroyed")
-        Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
@@ -150,7 +149,6 @@ class TimeLimitService : Service() {
     private fun startService() {
         if (isServiceStarted) return
         Timber.d("Starting the foreground service task")
-        Toast.makeText(this, ".", Toast.LENGTH_SHORT).show()
         isServiceStarted = true
         // setServiceState(this, ServiceState.STARTED)
 
@@ -201,7 +199,6 @@ class TimeLimitService : Service() {
 
     private fun stopService() {
         Timber.d("Stopping the foreground service")
-        Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show()
         try {
             wakeLock?.let {
                 if (it.isHeld) {
@@ -246,76 +243,6 @@ class TimeLimitService : Service() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     private fun showTimeUpDialog(timeLimit: TimeLimit) {
-        /*val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            layoutFlag,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-
-        val composeView = ComposeView(this)
-        composeView.setContent {
-            var isDialogVisible by remember { mutableStateOf(false) }
-            MyDialog(
-                onDismissRequest = {isDialogVisible = false}
-            ){
-
-            }
-        }*/
-        /*Dialog(this).apply {
-            setContentView(R.layout.timeout_dialog)
-            window!!.setType(
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                else WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-            )
-            findViewById<Button>(R.id.btn_leave).setOnClickListener {
-                context.startActivity(
-                    Intent(Intent.ACTION_MAIN)
-                        .addCategory(Intent.CATEGORY_HOME)
-                        .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-                )
-                dismiss()
-            }
-            findViewById<TextView>(R.id.btn_1min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 1.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_one_min)
-            }
-            findViewById<TextView>(R.id.btn_3min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 3.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_three_min)
-            }
-            findViewById<TextView>(R.id.btn_5min).setOnClickListener {
-                timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
-                    timeAtAddingInMilli = System.currentTimeMillis(),
-                    timeLimitInMilli = 5.seconds.inWholeMilliseconds
-                )
-                dismiss()
-                showToast(R.string.will_remind_you_in_five_min)
-            }
-            setCanceledOnTouchOutside(false)
-            setCancelable(false)
-            try {
-                show()
-            } catch (e: Exception) {
-                // can't show dialog
-                // draw over other apps permission might be revoked!
-                e.printStackTrace()
-            }
-        }*/
         val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {

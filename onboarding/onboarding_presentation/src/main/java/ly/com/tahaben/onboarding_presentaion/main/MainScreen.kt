@@ -363,10 +363,8 @@ fun MainScreen(
                     )
                     MainScreenCard(
                         text = stringResource(R.string.launcher),
-                        status = if (isLauncherEnabled) stringResource(id = R.string.enabled) else stringResource(
-                            id = R.string.disabled
-                        ),
-                        iconId = null,
+                        status = "",
+                        iconId = R.drawable.ic_apps_24,
                         onClick = { navController.navigate(Routes.LAUNCHER_SETTINGS) },
                         mainSwitchEnabled = state.isMainSwitchEnabled,
                         showSnackBar = {
