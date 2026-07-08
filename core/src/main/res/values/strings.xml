@@ -350,4 +350,12 @@
     <string name="crash_reports_channel_description" >Notifications for app crash reports</string>
     <string name="verify_no_existing_issue_checkbox_message">I confirm that i have checked if the issue already exists and have not found any open issues with the same error
     </string>
+    <string name="running_services_channel_id" translatable="false">running_services</string>
+    <string name="running_services_channel_name">Background services</string>
+    <string name="running_services_channel_description">Shown while Farhan services are running in the background</string>
+    <string name="running_services_notification_title">Farhan is active</string>
+    <string name="running_services_notification_text">Running: %1$s</string>
+    <string name="running_service_accessibility">Accessibility service</string>
+    <string name="running_service_notification_filter">Notification filter</string>
+    <string name="running_service_time_limiter">App time limiter</string>
 </resources>

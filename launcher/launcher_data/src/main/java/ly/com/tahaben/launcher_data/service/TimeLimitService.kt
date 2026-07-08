@@ -1,16 +1,12 @@
 package ly.com.tahaben.launcher_data.service
 
 import android.app.AlarmManager
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
@@ -50,6 +46,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.service.RunningService
+import ly.com.tahaben.core.service.RunningServicesNotifier
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.core_ui.use_cases.UiUseCases
@@ -78,6 +76,9 @@ class TimeLimitService : Service() {
 
     @Inject
     lateinit var uiUseCases: UiUseCases
+
+    @Inject
+    lateinit var runningServicesNotifier: RunningServicesNotifier
 
 
     override fun onBind(intent: Intent): IBinder? {
@@ -108,11 +109,16 @@ class TimeLimitService : Service() {
     override fun onCreate() {
         super.onCreate()
         Timber.d("The service has been created")
-        val notification = createNotification()
+        runningServicesNotifier.serviceStarted(RunningService.TIME_LIMITER)
+        val notification = runningServicesNotifier.buildNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(1, notification, FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            startForeground(
+                RunningServicesNotifier.NOTIFICATION_ID,
+                notification,
+                FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+            )
         } else {
-            startForeground(1, notification)
+            startForeground(RunningServicesNotifier.NOTIFICATION_ID, notification)
         }
         serviceScope = CoroutineScope(Dispatchers.IO)
     }
@@ -120,6 +126,7 @@ class TimeLimitService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         serviceScope = null
+        runningServicesNotifier.serviceStopped(RunningService.TIME_LIMITER)
         Timber.d("The service has been destroyed")
         Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show()
     }
@@ -229,51 +236,6 @@ class TimeLimitService : Service() {
         return currentPackageName
     }
 
-
-    private fun createNotification(): Notification {
-        val notificationChannelId = getString(R.string.time_limit_notification_channel)
-
-        // depending on the Android API that we're dealing with we will have
-        // to use a specific method to create the notification
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(
-                notificationChannelId,
-                getString(R.string.time_limiter_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).let {
-                it.description = getString(R.string.time_limiter_channel_description)
-                it.enableLights(true)
-                it.lightColor = Color.RED
-                it.enableVibration(true)
-                it.importance = NotificationManager.IMPORTANCE_HIGH
-                it.vibrationPattern = longArrayOf(100, 200, 300, 400)
-                it
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
-        val pm = this.packageManager
-        val pendingIntent: PendingIntent =
-            pm.getLaunchIntentForPackage(packageName).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-            }
-
-        val builder: Notification.Builder =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Notification.Builder(
-                this,
-                notificationChannelId
-            ) else Notification.Builder(this)
-
-        return builder
-            .setContentTitle("TimeLimit Service")
-            .setContentText("TimeLimiter background service")
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.ic_farhan_transparent)
-            .setTicker("Ticker text")
-            //.setPriority(Notification.PRIORITY_HIGH)
-            .build()
-    }
 
     enum class Actions {
         START,

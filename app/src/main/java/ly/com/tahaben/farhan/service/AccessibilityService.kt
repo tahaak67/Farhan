@@ -71,6 +71,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ly.com.tahaben.core.R
+import ly.com.tahaben.core.service.RunningService
+import ly.com.tahaben.core.service.RunningServicesNotifier
 import ly.com.tahaben.core_ui.LocalSpacing
 import ly.com.tahaben.core_ui.theme.FarhanTheme
 import ly.com.tahaben.core_ui.use_cases.UiUseCases
@@ -116,6 +118,9 @@ class AccessibilityService : AccessibilityService() {
 
     @Inject
     lateinit var launcherPref: Preference
+
+    @Inject
+    lateinit var runningServicesNotifier: RunningServicesNotifier
 
     private var isDelayedLaunchEnabled = false
     private var isDelayedUnlockEnabled = false
@@ -198,6 +203,7 @@ class AccessibilityService : AccessibilityService() {
         val foregroundPackage = rootInActiveWindow?.packageName?.toString()
         Timber.d("service connected, current foreground: $foregroundPackage")
         appLaunchDetector.seed(foregroundPackage)
+        runningServicesNotifier.serviceStarted(RunningService.ACCESSIBILITY)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
@@ -563,6 +569,7 @@ class AccessibilityService : AccessibilityService() {
         recentScrollViews.clear()
         softInputPackages.clear()
         appLaunchDetector.reset()
+        runningServicesNotifier.serviceStopped(RunningService.ACCESSIBILITY)
         return super.onUnbind(intent)
     }
 
@@ -570,6 +577,7 @@ class AccessibilityService : AccessibilityService() {
         recentScrollViews.clear()
         softInputPackages.clear()
         appLaunchDetector.reset()
+        runningServicesNotifier.serviceStopped(RunningService.ACCESSIBILITY)
         unregisterReceiver(unlockReceiver)
         scope.cancel()
         super.onDestroy()
