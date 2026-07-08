@@ -5,7 +5,7 @@ android-compileSdk = "36"
 android-minSdk = "23"
 android-targetSdk = "36"
 app-versionCode = "13"
-app-versionName = "0.3.0"
+app-versionName = "1.0.0-RC"
 
 # Dependencies
 coreSplashscreen = "1.2.0"
