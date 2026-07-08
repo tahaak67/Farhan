@@ -58,7 +58,6 @@ import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Created by Taha Ben Ashur (https://github.com/tahaak67) on 11,Feb,2023
@@ -301,7 +300,7 @@ class TimeLimitService : Service() {
                                 Button(onClick = {
                                     timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
                                         timeAtAddingInMilli = System.currentTimeMillis(),
-                                        timeLimitInMilli = 1.seconds.inWholeMilliseconds
+                                        timeLimitInMilli = 1.minutes.inWholeMilliseconds
                                     )
                                     dismiss()
                                     showToast(R.string.will_remind_you_in_one_min)
@@ -309,7 +308,7 @@ class TimeLimitService : Service() {
                                 Button(onClick = {
                                     timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
                                         timeAtAddingInMilli = System.currentTimeMillis(),
-                                        timeLimitInMilli = 3.seconds.inWholeMilliseconds
+                                        timeLimitInMilli = 3.minutes.inWholeMilliseconds
                                     )
                                     dismiss()
                                     showToast(R.string.will_remind_you_in_three_min)
@@ -317,7 +316,7 @@ class TimeLimitService : Service() {
                                 Button(onClick = {
                                     timeLimitedApps[timeLimit.packageName] = timeLimit.copy(
                                         timeAtAddingInMilli = System.currentTimeMillis(),
-                                        timeLimitInMilli = 5.seconds.inWholeMilliseconds
+                                        timeLimitInMilli = 5.minutes.inWholeMilliseconds
                                     )
                                     dismiss()
                                     showToast(R.string.will_remind_you_in_five_min)

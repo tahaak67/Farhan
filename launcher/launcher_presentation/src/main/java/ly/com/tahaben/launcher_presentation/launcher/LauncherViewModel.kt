@@ -22,7 +22,7 @@ import ly.com.tahaben.launcher_domain.use_case.time_limit.TimeLimitUseCases
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class LauncherViewModel @Inject constructor(
@@ -161,8 +161,7 @@ class LauncherViewModel @Inject constructor(
             timeLimitUseCases.addTimeLimitToDb(
                 TimeLimit(
                     app.packageName,
-                    // TODO: Change back to minutes
-                    timeLimitInMinutes.seconds.inWholeMilliseconds,
+                    timeLimitInMinutes.minutes.inWholeMilliseconds,
                     System.currentTimeMillis()
                 )
             )
