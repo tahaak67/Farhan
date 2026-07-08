@@ -65,11 +65,15 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import ly.com.tahaben.core.R
 import ly.com.tahaben.core.service.RunningService
 import ly.com.tahaben.core.service.RunningServicesNotifier
@@ -92,6 +96,12 @@ import kotlin.time.Duration.Companion.seconds
 
 const val DISPLAY_DALTONIZER_ENABLED = "accessibility_display_daltonizer_enabled"
 const val DISPLAY_DALTONIZER = "accessibility_display_daltonizer"
+const val NIGHT_DISPLAY_ACTIVATED = "night_display_activated"
+
+// How long to let Night Light engage before/after clearing the daltonizer during the
+// Pixel color-pipeline flush (see unGrayscaleScreen). Night Light fades in over ~3s,
+// so 200ms only reaches a faint warmth while still pushing explicit matrix frames.
+private val NIGHT_LIGHT_PULSE_DELAY = 200.milliseconds
 
 // A delayed app re-opened within this window after leaving the foreground is not delayed
 // again, so quick round-trips (checking a notification, fast app switching) stay smooth.
@@ -234,14 +244,18 @@ class AccessibilityService : AccessibilityService() {
             if (event.isFullScreen || event.contentChangeTypes == AccessibilityEvent.CONTENT_CHANGE_TYPE_UNDEFINED
                 || !softInputPackages.contains(packageName)
             ) {
+                val isForegroundWindowEvent = event.isFullScreen ||
+                        event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
                 when (grayscaleUseCases.getAppGrayscaleState(packageName)) {
                     GrayscaleAppState.GRAYSCALE -> {
-                        Timber.d("package $packageName in whitelist")
-                        grayscaleScreen()
+                        if (isForegroundWindowEvent) {
+                            Timber.d("package $packageName in whitelist")
+                            grayscaleScreen()
+                        }
                     }
 
                     GrayscaleAppState.COLOR -> {
-                        if (event.isFullScreen) {
+                        if (isForegroundWindowEvent) {
                             Timber.d("package $packageName not in whitelist")
                             unGrayscaleScreen()
                         }
@@ -525,40 +539,96 @@ class AccessibilityService : AccessibilityService() {
         startActivity(intent)
     }
 
+    // Serializes all color-filter writes so a night-light pulse in flight can never
+    // interleave with (and undo) a grayscale re-apply from a fast app switch back.
+    private val filterWriteLock = Mutex()
+    private var unGrayscalePulseJob: Job? = null
+
     private fun grayscaleScreen() {
         if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
             != PackageManager.PERMISSION_GRANTED
         ) return
 
+        unGrayscalePulseJob?.cancel()
         val contentResolver = this.contentResolver
-        Settings.Secure.putInt(
-            contentResolver,
-            DISPLAY_DALTONIZER_ENABLED,
-            1
-        )
-        Settings.Secure.putInt(
-            contentResolver,
-            DISPLAY_DALTONIZER,
-            0
-        )
+        scope.launch {
+            filterWriteLock.withLock {
+                val enabledSet = Settings.Secure.putInt(
+                    contentResolver,
+                    DISPLAY_DALTONIZER_ENABLED,
+                    1
+                )
+                val modeSet = Settings.Secure.putInt(
+                    contentResolver,
+                    DISPLAY_DALTONIZER,
+                    0
+                )
+                Timber.d("daltonizer set to grayscale (enabled write: $enabledSet, mode write: $modeSet)")
+            }
+        }
     }
 
     private fun unGrayscaleScreen() {
         if (this.checkCallingOrSelfPermission("android.permission.WRITE_SECURE_SETTINGS")
             != PackageManager.PERMISSION_GRANTED
-        ) return
+        ) {
+            Timber.d("Secure settings permission not granted, skipping")
+            return
+        }
+        if (unGrayscalePulseJob?.isActive == true) return
 
         val contentResolver = this.contentResolver
-        Settings.Secure.putInt(
-            contentResolver,
-            DISPLAY_DALTONIZER_ENABLED,
-            0
-        )
-        Settings.Secure.putInt(
-            contentResolver,
-            DISPLAY_DALTONIZER,
-            -1
-        )
+        val wasGrayscaleOn =
+            Settings.Secure.getInt(contentResolver, DISPLAY_DALTONIZER_ENABLED, 0) == 1
+        val nightLightOn =
+            Settings.Secure.getInt(contentResolver, NIGHT_DISPLAY_ACTIVATED, 0) == 1
+       /*  Pixel color-pipeline bug (stock and GrapheneOS, tracked upstream as
+         GrapheneOS/os-issue-tracker#6001): SurfaceFlinger ignores the "clear color
+         transform" message sent when the last color matrix is removed, so disabling the
+         daltonizer leaves the screen stuck in grayscale until reboot. Removing the matrix
+         while another one (Night Light) is active works, because the composed transform
+         is then pushed as an explicit matrix instead of a clear — and Night Light fades
+         out through explicit near-identity frames, so its own removal is invisible.
+         We replicate that here: briefly activate Night Light around the daltonizer clear,
+         but only when actually leaving grayscale and Night Light isn't already on.
+         */
+        val needsPipelineFlush = wasGrayscaleOn && !nightLightOn &&
+                Build.MANUFACTURER.equals("Google", ignoreCase = true)
+        unGrayscalePulseJob = scope.launch {
+            filterWriteLock.withLock {
+                try {
+                    if (needsPipelineFlush) {
+                        Settings.Secure.putInt(contentResolver, NIGHT_DISPLAY_ACTIVATED, 1)
+                        delay(NIGHT_LIGHT_PULSE_DELAY)
+                    }
+                    val enabledCleared = Settings.Secure.putInt(
+                        contentResolver,
+                        DISPLAY_DALTONIZER_ENABLED,
+                        0
+                    )
+                    val modeCleared = Settings.Secure.putInt(
+                        contentResolver,
+                        DISPLAY_DALTONIZER,
+                        -1
+                    )
+                    Timber.d(
+                        "daltonizer disabled (enabled write: $enabledCleared, " +
+                                "mode write: $modeCleared, pipeline flush: $needsPipelineFlush)"
+                    )
+                    if (needsPipelineFlush) {
+                        delay(NIGHT_LIGHT_PULSE_DELAY)
+                    }
+                } finally {
+                     /*
+                     Runs on cancellation too (e.g. grayscaleScreen cancelled the pulse
+                     because the user switched back), so Night Light is never left on.
+                     */
+                    if (needsPipelineFlush) {
+                        Settings.Secure.putInt(contentResolver, NIGHT_DISPLAY_ACTIVATED, 0)
+                    }
+                }
+            }
+        }
     }
 
     override fun onInterrupt() {
