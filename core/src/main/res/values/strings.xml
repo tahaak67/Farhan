@@ -301,7 +301,7 @@
     <string name="set_time_limite_dialog_text">How much time would you like to spend on %s?</string>
     <string name="ten_min">10 Min</string>
     <string name="fifteen_min">15 Min</string>
-    <string name="time_limit_notification_channel">TIME LIMIT CHANNEL</string>
+    <string name="time_limit_notification_channel" translatable="false">TIME LIMIT CHANNEL</string>
     <string name="time_limiter_notification_channel_name">Time Limiter Service notifications channel</string>
     <string name="time_limiter_channel_description">Time Limiter Service channel</string>
     <string name="please_wait">Please Wait</string>
@@ -358,4 +358,5 @@
     <string name="running_service_accessibility">Accessibility service</string>
     <string name="running_service_notification_filter">Notification filter</string>
     <string name="running_service_time_limiter">App time limiter</string>
+    <string name="are_you_sure_you_want_to_delete_all_filtered_notifications">Are you sure you want to delete all filtered notifications?</string>
 </resources>

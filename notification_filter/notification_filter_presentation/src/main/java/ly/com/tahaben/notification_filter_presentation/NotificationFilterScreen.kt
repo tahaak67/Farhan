@@ -445,7 +445,7 @@ fun NotificationFilterScreen(
                                 MyDialog(
                                     onDismissRequest = {confirmDeleteAllDialogVisible = false}
                                 ) {
-                                    Text("Are you sure you want to delete all filtered notifications?")
+                                    Text(stringResource(R.string.are_you_sure_you_want_to_delete_all_filtered_notifications))
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(8.dp,

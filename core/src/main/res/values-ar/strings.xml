@@ -258,6 +258,7 @@
     <string name="ten_min">10 د</string>
     <string name="fifteen_min">15 د</string>
     <string name="db_combine_dialog_text">لقد قمنا ببعض التحديثات لتحسين تطبيق فرحان! لضمان أن كل شيء يعمل بسلاسة، نحتاج إلى نقل بياناتك إلى نظام جديد. قد يستغرق ذلك بضع دقائق، ولن تتمكن من استخدام فرحان خلال هذه الفترة. يرجى إبقاء التطبيق مفتوحًا حتى تكتمل العملية.</string>
+    <string name="time_limiter_channel_description">قناة إشعارات مؤقت التطبيقات</string>
     <string name="please_wait">يرجى الإنتظار</string>
     <string name="db_combine_dialog_title">يبدو انك قمت بتحديث التطبيق!</string>
     <string name="start_migrating">ابدأ النقل</string>
@@ -290,8 +291,20 @@
     <string name="continuee">استمرار</string>
     <string name="confirm_issue_not_exist_msg">لطفاً قبل التبليغ ان اي مشكلة تأكد من انه لم يتم التبليغ عنها من قبل</string>
     <string name="ignore_this_screen_unkown">اذا كنت لا تفهم ما هي هذه الشاشة يمكنك تجاهلها والضغط على زر اغلاق في الأسفل</string>
+    <string name="crash_reports_channel_description">إشعارات التبليغ عن مشاكل توقف التطبيق</string>
     <string name="verify_no_existing_issue_checkbox_message">لقد تفقدت ان كانت المشكلة تم التبيغ عنها بالفغل ولم اجد اي
         مشكلة بنفس التفاصيل مفتوحة حالياً على GitHub
     </string>
+    <string name="running_service_time_limiter">مؤقت التطبيقات</string>
+    <string name="are_you_sure_you_want_to_delete_all_filtered_notifications">هل أنت متأكد من رغبتك في حذف جميع الإشعارات؟.</string>
+    <string name="running_services_channel_name">خدمات الخلفية</string>
+    <string name="running_services_channel_description">تظهر بينما خدمات فرحان تعمل في الخلفية</string>
+    <string name="running_services_notification_title">فرحان نشط</string>
+    <string name="running_services_notification_text">يتم تشغيل: %1$s</string>
+    <string name="running_service_accessibility">خدمة إمكانية الوصول</string>
+    <string name="running_service_notification_filter">فلتر الإشعارات</string>
+    <string name="crash_reports_channel">بلاغات توقف التطبيق</string>
+    <string name="delayed_unlock">تأخير بعد فتح قفل الشاشة</string>
+    <string name="time_limiter_notification_channel_name">قناة إشعارات مؤقت التطبيقات</string>
 
 </resources>
