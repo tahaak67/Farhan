@@ -269,18 +269,45 @@
 \nNo te preocupes, puedes añadir aplicaciones importantes (como mensajería o alarmas) a la lista de excepciones para no perderte nada crucial.
 \n
 \n¿Quieres un recordatorio diario para comprobar tus notificaciones filtradas? ¡Puedes hacerlo con Notify!</string>
-    <string name="notification_filter_settings_showcase_msg2">Puedes abrir las <b>excepciones</b> desde aquí y añadir aplicaciones para las que no quieras filtrar las notificaciones</string>
-    <string name="notification_filter_settings_showcase_msg3">Supongamos que quieres tener una notificación cuando recibas un nuevo mensaje en la aplicación <b>Signal</b></string>
-    <string name="notification_filter_settings_showcase_msg4">Puedes abrir <b>Excepción</b>, encontrar la aplicación Signal en la lista y <b>activar el interruptor</b> junto a ella y ¡ya está!</string>
-    <string name="notification_filter_settings_showcase_msg5">¡Es bueno que no te distraigas con las notificaciones a lo largo del día, pero a veces puedes olvidarte de revisar Farhan para ver qué notificaciones tuviste durante días! 🙁</string>
-    <string name="notification_filter_settings_greeting">¡Hola! Bienvenido a la configuración del filtro de notificaciones.
-\nDéjeme guiarte por un recorrido rápido. <b>Pulse en cualquier lugar</b> para continuar.</string>
-    <string name="notification_filter_settings_showcase_msg1">Este es el interruptor del filtro, cuando el interruptor está activado las notificaciones <b>serán filtradas</b></string>
-    <string name="notification_filter_settings_showcase_msg6">¡No te preocupes 😀 puedes configurar <b>Notifícame</b> desde aquí! , cuando se activa se le notificará en un <b>tiempo que estableciste</b> para venir a comprobar sus notificaciones</string>
+    <string name="notification_filter_settings_showcase_msg2"><![CDATA[Puedes abrir las <b>excepciones</b> desde aquí y añadir aplicaciones para las que no quieras filtrar las notificaciones]]></string>
+    <string name="notification_filter_settings_showcase_msg3"><![CDATA[Supongamos que quieres tener una notificación cuando recibas un nuevo mensaje en la aplicación <b>Signal</b>]]></string>
+    <string name="notification_filter_settings_showcase_msg4"><![CDATA[Puedes abrir <b>Excepción</b>, encontrar la aplicación Signal en la lista y <b>activar el interruptor</b> junto a ella y ¡ya está!]]></string>
+    <string name="notification_filter_settings_showcase_msg5"><![CDATA[¡Es bueno que no te distraigas con las notificaciones a lo largo del día, pero a veces puedes olvidarte de revisar Farhan para ver qué notificaciones tuviste durante días! 🙁]]></string>
+    <string name="notification_filter_settings_greeting"><![CDATA[¡Hola! Bienvenido a la configuración del filtro de notificaciones.\nDéjeme guiarte por un recorrido rápido. <b>Pulse en cualquier lugar</b> para continuar.]]></string>
+    <string name="notification_filter_settings_showcase_msg1"><![CDATA[Este es el interruptor del filtro, cuando el interruptor está activado las notificaciones <b>serán filtradas</b>]]></string>
+    <string name="notification_filter_settings_showcase_msg6"><![CDATA[¡No te preocupes 😀 puedes configurar <b>Notifícame</b> desde aquí! , cuando se activa se le notificará en un <b>tiempo que estableciste</b> para venir a comprobar sus notificaciones]]></string>
     <string name="ignore_farhan_usage">Ignora a Farhan cuando hagas cálculos de uso</string>
     <string name="ignore_launcher_usage">Ignorar las aplicaciones del launcher (por ejemplo, la aplicación de la pantalla de inicio) al realizar los cálculos de uso</string>
     <string name="today_usage_widget_description">Widget de uso actual</string>
     <string name="classic_colors_description">Fabulosos colores clásicos de Farhan</string>
     <string name="time_limiter_notification_channel_name">Limitador de la duración de las notificaciones</string>
     <string name="time_limiter_channel_description">Tiempo límite para las notificaciones</string>
+    <string name="delayed_launch">Lanzamiento retrasado</string>
+    <string name="reason_know_what_app_launched">Sepa cuándo y qué aplicación lanza</string>
+    <string name="delay_in_seconds">Retraso en segundos</string>
+    <string name="continue_to_app">Continuar con la aplicación</string>
+    <string name="leave">Abandonar</string>
+    <string name="take_deep_breath">¡Respira hondo!</string>
+    <string name="bananas_are_yellow">¡Los plátanos son amarillos!</string>
+    <string name="look_around_you">Mira a tu alrededor</string>
+    <string name="you_attempted_to_launch_this_app_times">Intentaste iniciar la aplicación %s %d veces en las últimas 24 horas</string>
+    <string name="delay_message">Mensaje</string>
+    <string name="delay_message_sub">Elija un mensaje para mostrar durante la demora</string>
+    <string name="contact_channels">Contacto:</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="blog">Blog</string>
+    <string name="youtube">Youtube</string>
+    <string name="donate">Donar</string>
+    <string name="close">Cerrar</string>
+    <string name="create_github_issue">Crear incidencia en GitHub</string>
+    <string name="copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
+    <string name="open_github_msg">Esto abrirá GitHub en tu navegador con los detalles del fallo ya rellenados.</string>
+    <string name="open_github">Abrir GitHub</string>
+    <string name="continuee">Continuar</string>
+    <string name="confirm_issue_not_exist_msg">Por favor, antes de informar de un problema, confirme que no existe ya.</string>
+    <string name="ignore_this_screen_unkown">Si no sabes qué es esta pantalla, puedes ignorarla y pulsar el botón Cerrar en la parte inferior</string>
+    <string name="crash_reports_channel">Informes de fallo</string>
+    <string name="crash_reports_channel_description">Notificaciones para informes de fallos de la aplicación</string>
+    <string name="verify_no_existing_issue_checkbox_message">Confirmo que he comprobado si el incidente ya existe y no he encontrado ningún incidente abierto con el mismo error</string>
 </resources>
