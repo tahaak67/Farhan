@@ -1,0 +1,2 @@
+Fix notification filter notifications not opening
+Add adaptive icon
