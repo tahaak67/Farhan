@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Insets the glyph into the adaptive-icon 66dp safe zone; the raw PNG
+     extends past it and gets clipped by round launcher masks. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/farhan_transparent_bg"
+    android:inset="10%" />
