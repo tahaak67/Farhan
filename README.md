@@ -22,7 +22,8 @@ Included features:
 
 Sometimes you find your self tapping on an app without thinking, delayed app launching will delay
 the launch of selected apps by a few seconds so you can think twice before launching them, you can
-customize the delay time and the message to display during the delay.
+customize the delay time and the message to display during the delay, you can also add a delay
+after unlock so you have to wait a few seconds after unlocking your phone.
 
 ## 2. Notifications filter
 
@@ -45,6 +46,12 @@ attention.
 ## 5. Check your usage
 
 Check your usage for every app & for different categories with a simple easy to use interface.
+
+## 6. Minimal app launcher
+
+Set Farhan as your home launcher for a minimal, distraction free home screen that shows your apps as
+a simple list with no colorful icons competing for your attention, you can also set daily time
+limits for selected apps and Farhan will remind you to take a break when the time is up.
 
 ## Screenshots
 
