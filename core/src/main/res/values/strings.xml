@@ -354,9 +354,12 @@
     <string name="running_services_channel_name">Background services</string>
     <string name="running_services_channel_description">Shown while Farhan services are running in the background</string>
     <string name="running_services_notification_title">Farhan is active</string>
-    <string name="running_services_notification_text">Running: %1$s</string>
-    <string name="running_service_accessibility">Accessibility service</string>
-    <string name="running_service_notification_filter">Notification filter</string>
-    <string name="running_service_time_limiter">App time limiter</string>
+    <string name="running_services_notification_text">Active: %1$s</string>
+    <string name="active_feature_notification_filter">Notification filter</string>
+    <string name="active_feature_grayscale">Grayscale</string>
+    <string name="active_feature_infinite_scroll">Infinite scrolling blocker</string>
+    <string name="active_feature_delayed_launch">Delayed launch</string>
+    <string name="active_feature_delayed_unlock">Delay after unlock</string>
+    <string name="active_feature_time_limiter">App time limiter</string>
     <string name="are_you_sure_you_want_to_delete_all_filtered_notifications">Are you sure you want to delete all filtered notifications?</string>
 </resources>

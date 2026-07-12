@@ -41,12 +41,12 @@ class NotificationService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         Timber.d("notification listener connected")
-        runningServicesNotifier.serviceStarted(RunningService.NOTIFICATION_FILTER)
+        runningServicesNotifier.serviceStarted(RunningService.NOTIFICATION_LISTENER)
     }
 
     override fun onListenerDisconnected() {
         Timber.d("notification listener disconnected")
-        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_FILTER)
+        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_LISTENER)
         super.onListenerDisconnected()
     }
 
@@ -119,7 +119,7 @@ class NotificationService : NotificationListenerService() {
 
     override fun onDestroy() {
         intentHashmap.clear()
-        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_FILTER)
+        runningServicesNotifier.serviceStopped(RunningService.NOTIFICATION_LISTENER)
         super.onDestroy()
     }
 }

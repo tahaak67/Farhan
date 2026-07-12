@@ -295,14 +295,13 @@
     <string name="verify_no_existing_issue_checkbox_message">لقد تفقدت ان كانت المشكلة تم التبيغ عنها بالفغل ولم اجد اي
         مشكلة بنفس التفاصيل مفتوحة حالياً على GitHub
     </string>
-    <string name="running_service_time_limiter">مؤقت التطبيقات</string>
+    <string name="active_feature_time_limiter">مؤقت التطبيقات</string>
     <string name="are_you_sure_you_want_to_delete_all_filtered_notifications">هل أنت متأكد من رغبتك في حذف جميع الإشعارات؟.</string>
     <string name="running_services_channel_name">خدمات الخلفية</string>
     <string name="running_services_channel_description">تظهر بينما خدمات فرحان تعمل في الخلفية</string>
     <string name="running_services_notification_title">فرحان نشط</string>
-    <string name="running_services_notification_text">يتم تشغيل: %1$s</string>
-    <string name="running_service_accessibility">خدمة إمكانية الوصول</string>
-    <string name="running_service_notification_filter">فلتر الإشعارات</string>
+    <string name="running_services_notification_text">المفعّل حالياً: %1$s</string>
+    <string name="active_feature_notification_filter">فلتر الإشعارات</string>
     <string name="crash_reports_channel">بلاغات توقف التطبيق</string>
     <string name="delayed_unlock">تأخير بعد فتح قفل الشاشة</string>
     <string name="time_limiter_notification_channel_name">قناة إشعارات مؤقت التطبيقات</string>
