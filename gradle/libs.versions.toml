@@ -4,8 +4,8 @@ acraVersion = "5.13.1"
 android-compileSdk = "36"
 android-minSdk = "23"
 android-targetSdk = "36"
-app-versionCode = "15"
-app-versionName = "1.0.0-RC3"
+app-versionCode = "16"
+app-versionName = "1.0.0-RC4"
 
 # Dependencies
 coreSplashscreen = "1.2.0"
