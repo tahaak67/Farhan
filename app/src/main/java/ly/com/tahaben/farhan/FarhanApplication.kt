@@ -9,6 +9,7 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import ly.com.tahaben.core.R
+import ly.com.tahaben.farhan.service.ActiveFeaturesTracker
 import org.acra.ReportField
 import org.acra.data.StringFormat
 import org.acra.ktx.initAcra
@@ -20,6 +21,9 @@ class FarhanApplication : Application() {
 
     @Inject
     lateinit var farhanWorkerConfiguration: Configuration
+
+    @Inject
+    lateinit var activeFeaturesTracker: ActiveFeaturesTracker
 
     init {
         if (BuildConfig.DEBUG) {
@@ -63,6 +67,7 @@ class FarhanApplication : Application() {
             notificationManager.createNotificationChannel(crashReportChannel)
         }
         WorkManager.initialize(this, farhanWorkerConfiguration)
+        activeFeaturesTracker.start()
     }
 
 }
