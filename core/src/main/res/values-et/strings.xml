@@ -62,4 +62,23 @@
     <string name="grayscale_state_color">Värv</string>
     <string name="grayscale_state_leave_as_is">Jäta samaks</string>
     <string name="grayscale_system_apps_hint">Süsteemirakendused (nagu rakenduste vahetaja ja jagamismenüü) hoiavad ekraani vaikimisi muutmata, seega ei vaheta need värvifiltrit rakenduste vahel vahetades.</string>
+    <string name="grayscale_onboarding_message">Üks viis, kuidas rakendused teie aja ja tähelepanu pärast konkureerivad, on värvide kaudu. Halltoonide kasutamine Farhanil võimaldab valitud rakendustel värvid keelata, kui need käivitate, kõrvaldades seeläbi nende mõju teile!</string>
+    <string name="next">Järgmine</string>
+    <string name="enabled">Lubatud</string>
+    <string name="disabled">Keelatud</string>
+    <string name="accessibility_service_name">Farhan-i ligipääsetavuse teenus</string>
+    <string name="accessibility_service_description">See teenus on vajalik funktsioonide jaoks nagu lõpmatu kerimise blokeerija või ekraani halltoonide toimimiseks</string>
+    <string name="usage_permission_msg">Kasutuse luba pole antud :(</string>
+    <string name="usage_permission_sub_msg">Farhan vajab kasutuse juurdepääsu teie kasutusteabe kuvamiseks</string>
+    <string name="grant_access">Anna juurdepääs</string>
+    <string name="how">Kuidas?</string>
+    <string name="how_to_enable_permission">Kuidas lubada</string>
+    <string name="ok">Okei</string>
+    <string name="show_system_apps">Kuva süsteemirakendused</string>
+    <string name="appear_on_top_permission_not_granted">Kuva peal luba pole antud :(</string>
+    <string name="appear_on_top_permission_needed_message">Farhan vajab kuva peal juurdepääsu, et aidata teid lõpmatu kerimise katkestamisega</string>
+    <string name="remind_me_to_stop_scrolling_after">Tuleta mulle meelde, et peatuda peale</string>
+    <string name="confirm">Kinnita</string>
+    <string name="accessibility_permission_not_granted">Ligipääsetavuse teenus ei jookse :(</string>
+    <string name="accessibility_permission_needed_message">Farhan vajab ligipääsetavuse teenust, et saaks teha järgmist:</string>
 </resources>
