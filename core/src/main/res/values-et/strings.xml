@@ -81,4 +81,9 @@
     <string name="confirm">Kinnita</string>
     <string name="accessibility_permission_not_granted">Ligipääsetavuse teenus ei jookse :(</string>
     <string name="accessibility_permission_needed_message">Farhan vajab ligipääsetavuse teenust, et saaks teha järgmist:</string>
+    <string name="one_more_thing">Veel üks asi!</string>
+    <string name="infinite_scroll_onboarding_message">Lõputu kerimine on tehnika, mida rakendused kasutavad uue sisu pakkumiseks olenemata sellest, kui palju te kerite, vähendades seeläbi teie kontrolli oma aja üle. Farhan saab proovida tuvastada, millal olete lõpmatusse kerimisse kinni jäänud, ja tuletada teile meelde, et peaksite rakendusest väljuma!</string>
+    <string name="notification_filter_onboarding_message">Teavitused on nagu äratuskell, välja arvatud see, et need võivad igal ajal teie tähelepanu hajutada, ilma et te isegi teaksite, millal. Farhan saab selle tähelepanu hajutamise kõrvaldada, filtreerides teateid, et te ei saaks oma tähelepanu hajutatud. Saate välistada olulised rakendused, millelt soovite teavitusi saada, ja ülejäänud filtreeritakse ning saate rakendusse tulla ja neid igal ajal näha!</string>
+    <string name="notification_permission_not_granted">Teavituste luba pole antud :(</string>
+    <string name="notification_filter_needed_message">Farhan vajab juurdepääsu teavitustele, et teavituste filter töötaks</string>
 </resources>
